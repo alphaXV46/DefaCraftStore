@@ -89,7 +89,7 @@
     <!-- Promo Banner -->
     <div class="card bg-primary text-white mb-5">
         <div class="card-body text-center py-5">
-            <h3 class="fw-bold">🎉 Promo Spesial!</h3>
+            <h3 class="fw-bold">🎉 Promwadadao Spesial!</h3>
             <p class="lead">Gratis ongkir untuk pembelian di atas Rp 200.000</p>
             <a href="{{ route('produk.index') }}" class="btn btn-light btn-lg">Belanja Sekarang</a>
         </div>
