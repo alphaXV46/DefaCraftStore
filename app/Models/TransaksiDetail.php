@@ -4,22 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Keranjang extends Model
+class TransaksiDetail extends Model
 {
-    protected $table = 'keranjang';
+    protected $table = 'transaksi_detail';
     
     protected $fillable = [
-        'user_id',
+        'transaksi_id',
         'produk_id',
+        'nama_produk',
+        'harga',
         'jumlah',
-        'checked' // TAMBAH INI
+        'subtotal'
     ];
 
-    public function user()
+    public function transaksi()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Transaksi::class);
     }
-
+    
     public function produk()
     {
         return $this->belongsTo(Produk::class);

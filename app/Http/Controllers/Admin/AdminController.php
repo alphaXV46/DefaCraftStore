@@ -15,17 +15,19 @@ class AdminController extends Controller
         $totalTransaksi = Transaksi::count();
         $totalUser = User::where('role', 'user')->count();
         $totalPendapatan = Transaksi::sum('total_harga');
+        $totalWishlist = \App\Models\Wishlist::count(); // TAMBAH INI
         
         $transaksi = Transaksi::with('user')
-                              ->latest()
-                              ->limit(10)
-                              ->get();
+                            ->latest()
+                            ->limit(10)
+                            ->get();
         
         return view('admin.dashboard', compact(
             'totalProduk',
             'totalTransaksi',
             'totalUser',
             'totalPendapatan',
+            'totalWishlist', // TAMBAH INI
             'transaksi'
         ));
     }

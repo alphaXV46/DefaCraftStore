@@ -56,11 +56,25 @@
                                 Harga (Rp) <span class="text-danger">*</span>
                             </label>
                             <input type="number" name="harga" 
-                                   class="form-control @error('harga') is-invalid @enderror" 
-                                   value="{{ old('harga', $produk->harga) }}" min="0" required>
+                                class="form-control @error('harga') is-invalid @enderror" 
+                                value="{{ old('harga', $produk->harga) }}" min="0" required>
                             @error('harga')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                        </div>
+
+                        <!-- TAMBAH INPUT STOK DI SINI 👇 -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                Stok <span class="text-danger">*</span>
+                            </label>
+                            <input type="number" name="stok" 
+                                class="form-control @error('stok') is-invalid @enderror" 
+                                value="{{ old('stok', $produk->stok) }}" min="0" required>
+                            @error('stok')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="text-muted">Jumlah stok barang yang tersedia</small>
                         </div>
                         
                         <!-- Deskripsi -->

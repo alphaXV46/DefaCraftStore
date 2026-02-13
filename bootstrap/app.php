@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\URL;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -11,9 +12,20 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // trust ngrok proxy
+        $middleware->trustProxies(at: '*');
+        
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
+
+        // kita paksa url di sini saja supaya aman
+        if (env('APP_URL') && str_contains(env('APP_URL'), 'ngrok-free')) {
+            URL::forceRootUrl(env('APP_URL'));
+            if (str_contains(env('APP_URL'), 'https://')) {
+                URL::forceScheme('https');
+            }
+        }
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

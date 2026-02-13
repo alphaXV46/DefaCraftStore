@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Produk;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class AdminProdukController extends Controller
 {
@@ -30,6 +29,7 @@ class AdminProdukController extends Controller
             'deskripsi' => 'required|string',
             'harga' => 'required|numeric|min:0',
             'kategori' => 'required|string|max:50',
+            'stok' => 'required|integer|min:0',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
         
@@ -64,6 +64,7 @@ class AdminProdukController extends Controller
             'deskripsi' => 'required|string',
             'harga' => 'required|numeric|min:0',
             'kategori' => 'required|string|max:50',
+            'stok' => 'required|integer|min:0',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
         

@@ -37,6 +37,7 @@
                                 <th>Nama Produk</th>
                                 <th>Kategori</th>
                                 <th>Harga</th>
+                                <th>Stok</th>  <!-- TAMBAH INI -->
                                 <th>Deskripsi</th>
                                 <th width="200" class="text-center">Aksi</th>
                             </tr>
@@ -48,11 +49,11 @@
                                     <td>
                                         @if($item->gambar && file_exists(public_path('images/produk/' . $item->gambar)))
                                             <img src="{{ asset('images/produk/' . $item->gambar) }}" 
-                                                 class="rounded" width="60" height="60" 
-                                                 style="object-fit: cover;" alt="{{ $item->nama }}">
+                                                class="rounded" width="60" height="60" 
+                                                style="object-fit: cover;" alt="{{ $item->nama }}">
                                         @else
                                             <div class="bg-secondary rounded d-flex align-items-center justify-content-center" 
-                                                 style="width: 60px; height: 60px;">
+                                                style="width: 60px; height: 60px;">
                                                 <span>📦</span>
                                             </div>
                                         @endif
@@ -75,6 +76,17 @@
                                         </span>
                                     </td>
                                     
+                                    <!-- STOK 👇 TAMBAH INI -->
+                                    <td>
+                                        @if($item->stok > 10)
+                                            <span class="badge bg-success">{{ $item->stok }}</span>
+                                        @elseif($item->stok > 0)
+                                            <span class="badge bg-warning">{{ $item->stok }}</span>
+                                        @else
+                                            <span class="badge bg-danger">Habis</span>
+                                        @endif
+                                    </td>
+                                    
                                     <!-- Deskripsi -->
                                     <td>
                                         <small class="text-muted">
@@ -85,22 +97,17 @@
                                     <!-- Aksi -->
                                     <td class="text-center">
                                         <div class="btn-group" role="group">
-                                            <!-- Lihat -->
                                             <a href="{{ route('produk.show', $item->id) }}" 
-                                               class="btn btn-sm btn-info" title="Lihat" target="_blank">
+                                            class="btn btn-sm btn-info" title="Lihat" target="_blank">
                                                 👁️
                                             </a>
-                                            
-                                            <!-- Edit -->
                                             <a href="{{ route('admin.produk.edit', $item->id) }}" 
-                                               class="btn btn-sm btn-warning" title="Edit">
+                                            class="btn btn-sm btn-warning" title="Ed    it">
                                                 ✏️
                                             </a>
-                                            
-                                            <!-- Hapus -->
                                             <form action="{{ route('admin.produk.destroy', $item->id) }}" 
-                                                  method="POST" class="d-inline"
-                                                  onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+                                                method="POST" class="d-inline"
+                                                onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" title="Hapus">

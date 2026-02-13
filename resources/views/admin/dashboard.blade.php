@@ -78,7 +78,7 @@
     
     <!-- Menu Admin -->
     <div class="row g-4 mb-5">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <a href="{{ route('admin.produk.index') }}" class="text-decoration-none">
                 <div class="card shadow hover-card">
                     <div class="card-body text-center py-5">
@@ -90,11 +90,24 @@
             </a>
         </div>
         
-        <div class="col-md-6">
+        <!-- TAMBAH CARD INI 👇 -->
+        <div class="col-md-4">
+            <a href="{{ route('admin.transaksi.index') }}" class="text-decoration-none">
+                <div class="card shadow hover-card">
+                    <div class="card-body text-center py-5">
+                        <span class="display-3 mb-3">📊</span>
+                        <h4 class="fw-bold">Kelola Transaksi</h4>
+                        <p class="text-muted mb-0">Approve Pembayaran & Update Status</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <div class="col-md-4">
             <div class="card shadow">
                 <div class="card-body text-center py-5">
-                    <span class="display-3 mb-3">📊</span>
-                    <h4 class="fw-bold">Laporan Transaksi</h4>
+                    <span class="display-3 mb-3">📈</span>
+                    <h4 class="fw-bold">Laporan</h4>
                     <p class="text-muted mb-0">Coming Soon</p>
                 </div>
             </div>

@@ -45,4 +45,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function hasWishlist($produkId)
+    {
+        return $this->hasMany(\App\Models\Wishlist::class)->where('produk_id', $produkId)->exists();
+    }
 }

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'DefaCraftStore') }} - @yield('title', 'Login')</title>
+    <title>{{ config('app.name', 'DefaCraftStore') }} - @yield('title', 'Login/Register')</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -414,27 +414,28 @@
             box-shadow: 0 10px 25px rgba(79, 70, 229, 0.2);
         }
         
-        .btn-social i {
-            font-size: 1.25rem;
+        .btn-social svg {
+            width: 18px;
+            height: 18px;
         }
         
-        /* Auth Footer - DIPERBAIKI */
+        /* Auth Footer */
         .auth-footer {
             padding: 2rem 2.5rem;
-            background: rgba(255, 255, 255, 0.1); /* ← Background lebih gelap */
+            background: rgba(255, 255, 255, 0.1);
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0 0 24px 24px; /* ← Border radius bawah card */
+            border-radius: 0 0 24px 24px;
         }
         
         .auth-footer p {
-            color: rgba(255, 255, 255, 0.9); /* ← Warna teks lebih terang */
+            color: rgba(255, 255, 255, 0.9);
             margin: 0;
             font-size: 1rem;
         }
         
         .auth-footer a {
-            color: #818cf8; /* ← Warna link tetap */
+            color: #818cf8;
             text-decoration: none;
             font-weight: 700;
             font-size: 1rem;
@@ -455,7 +456,7 @@
         
         .auth-footer a:hover {
             color: #a5b4fc;
-            text-decoration: none; /* ← Hapus garis bawah default */
+            text-decoration: none;
         }
         
         .auth-footer a:hover::after {
@@ -571,67 +572,8 @@
     <div class="auth-container">
         
         
-        <!-- Auth Card -->
-        <div class="auth-card">
-            <div class="auth-card-header">
-                <h2 class="auth-card-title">Selamat Datang</h2>
-                <p class="auth-card-subtitle">Silakan masuk untuk melanjutkan</p>
-            </div>
-            <div class="auth-card-body">
-                <!-- Form login akan ditambahkan di sini -->
-                <form method="POST" action="{{ route('login') }}">
-                    @csrf
-                    
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email</label>
-                        <div class="input-group-icon">
-                            <i class="fas fa-envelope input-icon"></i>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="password" class="form-label">Kata Sandi</label>
-                        <div class="input-group-icon">
-                            <i class="fas fa-lock input-icon"></i>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-extras">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="remember" name="remember">
-                            <label class="form-check-label" for="remember">Ingat Saya</label>
-                        </div>
-                        <a href="#" class="forgot-link">Lupa Kata Sandi?</a>
-                    </div>
-                    
-                    <button type="submit" class="btn-submit">
-                        Masuk
-                    </button>
-                </form>
-                
-                <div class="divider">
-                    <span>Atau</span>
-                </div>
-                
-                <div class="social-login">
-                    <button class="btn-social">
-                        <i class="fab fa-google"></i>
-                        Google
-                    </button>
-                    <button class="btn-social">
-                        <i class="fab fa-facebook"></i>
-                        Facebook
-                    </button>
-                </div>
-                
-                <!-- Auth Footer - DIPERBAIKI -->
-                <div class="auth-footer">
-                    <p>Belum punya akun? <a href="{{ route('register') }}">Daftar di sini</a></p>
-                </div>
-            </div>
-        </div>
+        <!-- Content Slot -->
+        @yield('content')
         
         <!-- Back to Home -->
         <div class="back-home">
