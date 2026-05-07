@@ -26,9 +26,26 @@ class MidtransWebhookController extends Controller
             $notification = $this->midtrans->verifyWebhook();
 
             $orderId           = $notification->order_id;
+            $statusCode        = $notification->status_code;
+            $grossAmount       = $notification->gross_amount;
+            $signatureKey      = $notification->signature_key;
             $transactionStatus = $notification->transaction_status;
             $fraudStatus       = $notification->fraud_status ?? null;
             $paymentType       = $notification->payment_type ?? null;
+
+            // ✅ VALIDASI SIGNATURE SHA512 (CRITICAL)
+            $serverKey = env('MIDTRANS_SERVER_KEY');
+            $calculatedSignature = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
+
+            if ($calculatedSignature !== $signatureKey) {
+                Log::error('Midtrans Webhook: Invalid Signature', [
+                    'order_id' => $orderId,
+                    'expected' => $calculatedSignature,
+                    'received' => $signatureKey,
+                ]);
+                // Tolak request jika signature tidak cocok (bisa 403 atau 400)
+                return response()->json(['message' => 'Invalid Signature'], 403);
+            }
 
             Log::info('Midtrans Webhook', [
                 'order_id' => $orderId,

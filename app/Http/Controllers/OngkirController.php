@@ -22,12 +22,7 @@ class OngkirController extends Controller
 
         $keyword = trim($request->search);
 
-        // Rate limit: max 30 request search per menit per IP
-        $key = 'ongkir_search_' . $request->ip();
-        if (RateLimiter::tooManyAttempts($key, 30)) {
-            return response()->json(['error' => 'Terlalu banyak request, coba lagi nanti.'], 429);
-        }
-        RateLimiter::hit($key, 60);
+        // Rate limit sekarang ditangani oleh middleware `throttle:ongkir` di routes/web.php
 
         $results = $this->rajaOngkir->searchDestination($keyword);
         return response()->json($results);
@@ -45,12 +40,7 @@ class OngkirController extends Controller
             return response()->json(['error' => 'Destination tidak valid.'], 422);
         }
 
-        // Rate limit: max 20 request calculate per menit per IP
-        $key = 'ongkir_calculate_' . $request->ip();
-        if (RateLimiter::tooManyAttempts($key, 20)) {
-            return response()->json(['error' => 'Terlalu banyak request, coba lagi nanti.'], 429);
-        }
-        RateLimiter::hit($key, 60);
+        // Rate limit sekarang ditangani oleh middleware `throttle:ongkir` di routes/web.php
 
         $weight  = $request->weight ?? 1000;
         $results = $this->rajaOngkir->calculateAllCouriers($request->destination_id, $weight);

@@ -30,7 +30,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
 Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
 
-Route::prefix('ongkir')->group(function () {
+Route::prefix('ongkir')->middleware('throttle:ongkir')->group(function () {
     Route::get('/search', [OngkirController::class, 'searchDestination'])->name('ongkir.search');
     Route::post('/calculate', [OngkirController::class, 'calculate'])->name('ongkir.calculate');
 });
