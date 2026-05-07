@@ -38,7 +38,7 @@ class MidtransWebhookController extends Controller
             $calculatedSignature = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
 
             if ($calculatedSignature !== $signatureKey) {
-                Log::error('Midtrans Webhook: Invalid Signature', [
+                \Illuminate\Support\Facades\Log::warning('Midtrans Webhook: Invalid Signature', [
                     'order_id' => $orderId,
                     'expected' => $calculatedSignature,
                     'received' => $signatureKey,

@@ -22,14 +22,29 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Rate Limiter untuk Login: 5 percobaan per menit per IP
+        // ══════════════════════════════════════════════════════
+        // RATE LIMITER: LOGIN
+        // ══════════════════════════════════════════════════════
         RateLimiter::for('login', function (Request $request) {
             return Limit::perMinute(5)->by($request->ip());
         });
 
-        // Rate Limiter untuk Ongkir Check (Biteship/RajaOngkir): 10 percobaan per menit per user (atau IP)
+        // ══════════════════════════════════════════════════════
+        // RATE LIMITER: ONGKIR (Shipping Cost API)
+        // ══════════════════════════════════════════════════════
         RateLimiter::for('ongkir', function (Request $request) {
-            return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
+            $key = $request->user()
+                ? 'user_' . $request->user()->id
+                : $request->ip();
+
+            return Limit::perMinute(10)->by($key);
+        });
+
+        // ══════════════════════════════════════════════════════
+        // RATE LIMITER: WEBHOOK (Midtrans Notifications)
+        // ══════════════════════════════════════════════════════
+        RateLimiter::for('webhook', function (Request $request) {
+            return Limit::perMinute(60)->by($request->ip());
         });
     }
 }

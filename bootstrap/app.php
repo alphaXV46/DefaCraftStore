@@ -37,8 +37,12 @@ return Application::configure(basePath: dirname(__DIR__))
     }
 })
     ->withExceptions(function (Exceptions $exceptions) {
-        // Tangani limit rate (429) untuk menampilkan alert, bukan halaman error
         $exceptions->render(function (\Illuminate\Http\Exceptions\ThrottleRequestsException $e, \Illuminate\Http\Request $request) {
+            \Illuminate\Support\Facades\Log::warning('Rate Limit Exceeded', [
+                'ip' => $request->ip(),
+                'url' => $request->fullUrl()
+            ]);
+
             if ($request->is('api/*') || $request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'error' => 'Terlalu banyak request. Silakan coba beberapa saat lagi.'
