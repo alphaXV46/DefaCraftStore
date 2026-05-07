@@ -18,9 +18,6 @@
             </div>
         </div>
     @else
-        <div class="alert alert-info">
-            <strong>💡 Tips:</strong> Klik tombol <span class="badge bg-primary">Pindah ke Keranjang</span> untuk langsung checkout produk favorit Anda!
-        </div>
         
         <div class="row g-4">
             @foreach($wishlist as $item)
@@ -88,7 +85,7 @@
                                 
                                 <a href="{{ route('produk.show', $item->produk_id) }}" 
                                    class="btn btn-outline-primary">
-                                    👁️ Lihat Detail
+                                     Lihat Detail
                                 </a>
                             </div>
                         </div>

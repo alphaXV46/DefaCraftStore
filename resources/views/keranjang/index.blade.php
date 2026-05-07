@@ -248,23 +248,14 @@
                                 <span class="fw-bold">Rp {{ number_format($total, 0, ',', '.') }}</span>
                             </div>
                             
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Ongkir</span>
-                                <span class="text-muted">
-                                    @if($total >= 200000)
-                                        <span class="badge bg-success">GRATIS</span>
-                                    @else
-                                        Rp 15.000
-                                    @endif
-                                </span>
-                            </div>
+                            
                             
                             <hr>
                             
                             <div class="d-flex justify-content-between mb-4">
                                 <span class="fw-bold">Total</span>
                                 <span class="fw-bold price-tag">
-                                    Rp {{ number_format($total >= 200000 ? $total : $total + 15000, 0, ',', '.') }}
+                                    Rp {{ number_format($total >= 200000 ? $total : $total , 0, ',', '.') }}
                                 </span>
                             </div>
                             

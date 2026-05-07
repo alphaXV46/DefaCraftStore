@@ -8,21 +8,40 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminProdukController;
 use App\Http\Controllers\Admin\AdminTransaksiController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\MidtransWebhookController;
+use App\Http\Controllers\OngkirController;
+use App\Http\Controllers\Auth\PasswordController;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;    // ← TAMBAH INI
+use Illuminate\Support\Str;             // ← TAMBAH INI
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\WishlistController; // Pastikan ini di-import
+use App\Models\User;
 
-// ... routes ...
+require __DIR__.'/auth.php';  // ← Hanya sekali, di atas saja
 
-// Halaman Home (Public)
+// =====================
+// HALAMAN PUBLIC
+// =====================
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Halaman Produk (Public)
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
 Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
 
-// Route yang butuh Login
+Route::prefix('ongkir')->group(function () {
+    Route::get('/search', [OngkirController::class, 'searchDestination'])->name('ongkir.search');
+    Route::post('/calculate', [OngkirController::class, 'calculate'])->name('ongkir.calculate');
+});
+
+// =====================
+// ROUTE YANG BUTUH LOGIN
+// =====================
+
 Route::middleware('auth')->group(function () {
-    // Keranjang (existing)
+
+    // Keranjang
     Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
     Route::post('/keranjang', [KeranjangController::class, 'store'])->name('keranjang.store');
     Route::patch('/keranjang/{id}', [KeranjangController::class, 'update'])->name('keranjang.update');
@@ -31,32 +50,34 @@ Route::middleware('auth')->group(function () {
 
     // Wishlist
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    // Perbaiki rute: tanpa {id} di URL, karena ID dikirim via JSON body
     Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
     Route::post('/wishlist/{id}/move-to-cart', [WishlistController::class, 'moveToCart'])->name('wishlist.move.cart');
 
-    // Checkout & Transaksi
+    // Checkout & Transaksi (HAPUS YANG DUPLIKAT)
     Route::get('/checkout', [TransaksiController::class, 'checkout'])->name('transaksi.checkout');
     Route::post('/checkout', [TransaksiController::class, 'store'])->name('transaksi.store');
-    Route::get('/success', [TransaksiController::class, 'success'])->name('transaksi.success');
+    Route::get('/transaksi/success/{id?}', [TransaksiController::class, 'success'])->name('transaksi.success');
+    Route::get('/transaksi/riwayat', [TransaksiController::class, 'riwayat'])->name('transaksi.riwayat');
+    Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->name('transaksi.show');
+    Route::post('/transaksi/{id}/cancel', [TransaksiController::class, 'cancel'])->name('transaksi.cancel');
+    Route::post('/transaksi/{id}/received', [TransaksiController::class, 'received'])->name('transaksi.received');
+    Route::post('/transaksi/{id}/upload-bukti', [TransaksiController::class, 'uploadBukti'])->name('transaksi.upload.bukti');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Riwayat Pesanan
-    Route::get('/pesanan', [TransaksiController::class, 'riwayat'])->name('transaksi.riwayat');
-    Route::post('/pesanan/{id}/upload-bukti', [TransaksiController::class, 'uploadBukti'])->name('transaksi.upload.bukti');
+    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 });
 
-// Route Admin (Butuh login & role admin)
+// =====================
+// ROUTE ADMIN
+// =====================
+
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Dashboard Admin
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
-    // CRUD Produk
     Route::get('/produk', [AdminProdukController::class, 'index'])->name('produk.index');
     Route::get('/produk/create', [AdminProdukController::class, 'create'])->name('produk.create');
     Route::post('/produk', [AdminProdukController::class, 'store'])->name('produk.store');
@@ -64,10 +85,50 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/produk/{id}', [AdminProdukController::class, 'update'])->name('produk.update');
     Route::delete('/produk/{id}', [AdminProdukController::class, 'destroy'])->name('produk.destroy');
 
-    // Kelola Transaksi
     Route::get('/transaksi', [AdminTransaksiController::class, 'index'])->name('transaksi.index');
     Route::get('/transaksi/{id}', [AdminTransaksiController::class, 'show'])->name('transaksi.show');
     Route::post('/transaksi/{id}/update-status', [AdminTransaksiController::class, 'updateStatus'])->name('transaksi.update.status');
 });
 
-require __DIR__.'/auth.php';
+// =====================
+// GOOGLE LOGIN
+// =====================
+
+Route::get('/auth/google', function () {
+    return Socialite::driver('google')->redirect();
+});
+
+Route::get('/auth/google/callback', function () {
+    $googleUser = Socialite::driver('google')->stateless()->user();
+
+    $user = User::updateOrCreate(
+        ['email' => $googleUser->getEmail()],
+        [
+            'name' => $googleUser->getName(),
+            'google_id' => $googleUser->getId(),
+            'avatar' => $googleUser->getAvatar(),
+            'password' => Hash::make(Str::random(16)),  // ← Sekarang aman, sudah di-import
+        ]
+    );
+
+    Auth::login($user);
+
+    return redirect()->route('home');
+});
+
+// =====================
+// WEBHOOK MIDTRANS (Tanpa auth & CSRF)
+// =====================
+
+Route::post('/webhook/midtrans', [MidtransWebhookController::class, 'handle'])
+    ->name('webhook.midtrans');
+
+// =====================
+// DEBUG ROUTE (Hapus di production!)
+// =====================
+
+Route::get('/laporan-data', function () {
+    return response()->json(['ok' => true, 'total' => \App\Models\Transaksi::count()]);
+});
+
+// ← HAPUS require __DIR__.'/auth.php'; yang kedua di sini!

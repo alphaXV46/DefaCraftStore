@@ -326,20 +326,24 @@
         }
         
         /* Submit Button */
-        .btn-submit {
-            width: 100%;
-            padding: 1.125rem;
-            font-weight: 700;
-            font-size: 1.1rem;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            border: none;
-            color: white;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
-        }
+ .btn-submit {
+    width: 100%;
+    padding: 0;
+    height: 52px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
         
         .btn-submit::before {
             content: '';
@@ -390,23 +394,22 @@
             gap: 1.25rem;
             margin-bottom: 1.75rem;
         }
-        
         .btn-social {
-            padding: 1rem;
-            border-radius: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            backdrop-filter: blur(10px);
-        }
-        
+    padding: 0;
+    height: 52px;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    backdrop-filter: blur(10px);
+}
         .btn-social:hover {
             border-color: #4f46e5;
             background: rgba(79, 70, 229, 0.2);
@@ -536,10 +539,12 @@
             .auth-card-title {
                 font-size: 1.75rem;
             }
-            
             .social-login {
-                grid-template-columns: 1fr;
-            }
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+}
             
             .form-extras {
                 flex-direction: column;

@@ -131,6 +131,16 @@
     
     <!-- Mobile Menu -->
     <div class="mobile-menu">
+        <!-- Search di mobile -->
+<form action="{{ route('produk.index') }}" method="GET" class="mobile-search">
+    <div class="mobile-search-wrapper">
+        <input type="search" name="search" class="mobile-search-input"
+               placeholder="Cari produk..." value="{{ request('search') }}">
+        <button type="submit" class="mobile-search-btn">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</form>
         <ul class="mobile-nav-list">
             <li><a href="{{ route('home') }}">🏠 Home</a></li>
             <li><a href="{{ route('produk.index') }}">📦 Produk</a></li>
@@ -499,6 +509,18 @@
     transition: all 0.3s ease;
 }
 
+/* Animasi hamburger jadi X */
+.hamburger.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.hamburger.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
 /* Mobile Menu */
 .mobile-menu {
     display: none;
@@ -556,6 +578,35 @@
 .mobile-logout-btn:hover {
     background: rgba(239, 68, 68, 0.1);
     color: #ef4444;
+}
+.mobile-search {
+    padding: 0.5rem 0 1rem 0;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 0.5rem;
+}
+.mobile-search-wrapper {
+    display: flex;
+    gap: 0.5rem;
+}
+.mobile-search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    outline: none;
+}
+.mobile-search-input:focus {
+    border-color: #4f46e5;
+}
+
+.mobile-search-btn {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.75rem 1.2rem;
+    cursor: pointer;
 }
 
 /* Animations */
@@ -663,4 +714,34 @@
             clearBtn.style.display = 'none';
         }
     }
+
+    // Hamburger toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navbar     = document.querySelector('.navbar-modern');
+
+    if (hamburger && mobileMenu) {
+        hamburger.addEventListener('click', function() {
+            mobileMenu.classList.toggle('active');
+            hamburger.classList.toggle('open');
+        });
+
+        // Tutup menu kalau klik di luar
+        document.addEventListener('click', function(e) {
+            if (!navbar.contains(e.target)) {
+                mobileMenu.classList.remove('active');
+                hamburger.classList.remove('open');
+            }
+        });
+
+        // Tutup menu kalau klik link di dalam mobile menu
+        mobileMenu.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+                hamburger.classList.remove('open');
+            });
+        });
+    }
+});
 </script>

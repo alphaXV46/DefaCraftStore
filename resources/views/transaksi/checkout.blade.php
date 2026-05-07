@@ -2,150 +2,911 @@
 
 @section('title', 'Checkout - DefaCraftStore')
 
-@section('content')
-<div class="container py-5">
-    <h1 class="fw-bold mb-4">📦 Checkout</h1>
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+    .payment-card {
+        transition: all 0.2s ease;
+        border: 2px solid #dee2e6 !important;
+        cursor: pointer;
+    }
     
-    <div class="row">
-        <!-- Form Data Pembeli -->
-        <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-4">Data Pembeli</h5>
-                    
-                    <form action="{{ route('transaksi.store') }}" method="POST" id="checkoutForm">
-                        @csrf
-                        
-                        <!-- Nama -->
-                        <div class="mb-3">
-                            <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
-                            <input type="text" name="nama_pembeli" 
-                                   class="form-control @error('nama_pembeli') is-invalid @enderror" 
-                                   value="{{ old('nama_pembeli', auth()->user()->name) }}" required>
-                            @error('nama_pembeli')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        
-                        <!-- Alamat -->
-                        <div class="mb-3">
-                            <label class="form-label">Alamat Lengkap <span class="text-danger">*</span></label>
-                            <textarea name="alamat" rows="3" 
-                                      class="form-control @error('alamat') is-invalid @enderror" 
-                                      required>{{ old('alamat') }}</textarea>
-                            @error('alamat')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        
-                        <!-- Nomor WhatsApp -->
-                        <div class="mb-3">
-                            <label class="form-label">Nomor WhatsApp <span class="text-danger">*</span></label>
-                            <input type="text" name="nomor_wa" 
-                                   class="form-control @error('nomor_wa') is-invalid @enderror" 
-                                   value="{{ old('nomor_wa') }}" 
-                                   placeholder="08xxxxxxxxxx" required>
-                            @error('nomor_wa')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        
-                        <!-- Metode Pembayaran -->
-                        <div class="mb-4">
-                            <label class="form-label">Metode Pembayaran <span class="text-danger">*</span></label>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-check card p-3 h-100">
-                                        <input class="form-check-input" type="radio" name="metode_pembayaran" 
-                                               id="qris" value="QRIS" required
-                                               {{ old('metode_pembayaran') == 'QRIS' ? 'checked' : '' }}
-                                               onchange="toggleQRIS(true)">
-                                        <label class="form-check-label" for="qris">
-                                            <div class="fw-bold">📱 QRIS</div>
-                                            <small class="text-muted">Bayar pakai scan QR</small>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-check card p-3 h-100">
-                                        <input class="form-check-input" type="radio" name="metode_pembayaran" 
-                                               id="cod" value="COD" required
-                                               {{ old('metode_pembayaran') == 'COD' ? 'checked' : '' }}
-                                               onchange="toggleQRIS(false)">
-                                        <label class="form-check-label" for="cod">
-                                            <div class="fw-bold">💵 COD</div>
-                                            <small class="text-muted">Bayar di tempat</small>
-                                        </label>
-                                    </div>
-                                </div>
+    #map {
+        height: 400px;
+        width: 100%;
+        border-radius: 8px;
+        z-index: 1;
+    }
+    .checkout-wrapper {
+        min-height: 60vh;
+        padding: 2rem 0 4rem 0;
+    }
+    .summary-card {
+        position: sticky;
+        top: 80px;
+    }
+    .destination-item {
+        padding: 10px 12px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 0.875rem;
+        transition: background 0.15s;
+    }
+    .destination-item:hover {
+        background: #f0f0ff;
+    }
+    .destination-item:last-child {
+        border-bottom: none;
+    }
+    @media (max-width: 768px) {
+        .summary-card { position: static; }
+    }
+    /* ===== JUDUL CHECKOUT — SESUAI TEMA ===== */
+.checkout-wrapper > .container > h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 1.4rem !important;
+    font-weight: 800 !important;
+    color: #333 !important;
+    position: relative !important;
+    display: inline-block !important;
+    padding-bottom: 0.5rem !important;
+    margin-bottom: 1.5rem !important;
+}
+.checkout-wrapper > .container > h1::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 60px !important;
+    height: 4px !important;
+    background: linear-gradient(135deg, #FEF9C3, #EAB308, #FACC15) !important;
+    border-radius: 4px !important;
+}
+.checkout-wrapper .card-body h5 {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 1.15rem !important;
+    font-weight: 800 !important;
+    color: #333 !important;
+    margin-bottom: 1.25rem !important;
+}
+
+/* ===== WARNA KUNING (BUKAN UNGU) ===== */
+.payment-card:hover {
+    border-color: #EAB308 !important;
+    background-color: #FFFBEB !important;
+}
+.btn-check:checked + .payment-card {
+    background-color: linear-gradient(135deg, #EAB308, #CA8A04) !important;
+    background: linear-gradient(135deg, #EAB308, #CA8A04) !important;
+    color: white !important;
+    border-color: #EAB308 !important;
+}
+.btn-check:checked + .payment-card small {
+    color: rgba(255,255,255,0.85) !important;
+}
+.kurir-card:hover {
+    border-color: #EAB308;
+    background: #FFFBEB;
+}
+.kurir-card.selected {
+    border-color: #EAB308;
+    background: linear-gradient(135deg, #EAB308, #CA8A04);
+    color: white;
+}
+.kurir-card.selected small {
+    color: rgba(255,255,255,0.85) !important;
+}
+.checkout-wrapper .btn-outline-primary {
+    border-color: #EAB308 !important;
+    color: #EAB308 !important;
+}
+.checkout-wrapper .btn-outline-primary:hover {
+    background: linear-gradient(135deg, #EAB308, #CA8A04) !important;
+    color: #fff !important;
+    border-color: transparent !important;
+}
+
+/* ===== CARD STYLE PUTIH BERSIH ===== */
+.checkout-wrapper .card {
+    border: 1.5px solid rgba(0,0,0,0.06) !important;
+    border-radius: 18px !important;
+}
+.checkout-wrapper .card-body {
+    padding: 1.75rem !important;
+}
+
+/* ===== SUMMARY CARD ===== */
+.summary-card .card-body h5 {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    color: #333 !important;
+}
+</style>
+@endpush
+
+@section('content')
+<div class="checkout-wrapper">
+    <div class="container">
+        <h1 class="fw-bold mb-4">📦 Checkout</h1>
+
+        <div class="row g-4 align-items-start">
+
+            {{-- KOLOM KIRI --}}
+            <div class="col-lg-8">
+                <form action="{{ route('transaksi.store') }}" method="POST" id="checkoutForm">
+                    @csrf
+
+                    {{-- Hidden fields --}}
+                    <input type="hidden" name="destination_id" id="input_destination_id">
+                    <input type="hidden" name="city_name" id="input_city_name">
+                    <input type="hidden" name="kurir" id="input_kurir">
+                    <input type="hidden" name="layanan_kurir" id="input_layanan_kurir">
+                    <input type="hidden" name="estimasi" id="input_estimasi">
+                    <input type="hidden" name="ongkir" id="input_ongkir" value="0">
+                    <input type="hidden" name="latitude" id="input_latitude">
+                    <input type="hidden" name="longitude" id="input_longitude">
+
+                    {{-- DATA PEMBELI --}}
+                    <div class="card mb-4 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">👤 Data Pembeli</h5>
+
+                            <div class="mb-3">
+                                <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                                <input type="text" name="nama_pembeli"
+                                       class="form-control @error('nama_pembeli') is-invalid @enderror"
+                                       value="{{ old('nama_pembeli', auth()->user()->name) }}" required>
+                                @error('nama_pembeli')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                            @error('metode_pembayaran')
-                                <div class="text-danger small mt-2">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        
-                        <!-- QRIS SECTION 👇 TAMBAH INI -->
-                        <div id="qrisSection" style="display: none;" class="mb-4">
-                            <div class="alert alert-info">
-                                <h6 class="fw-bold mb-3">Cara Pembayaran QRIS:</h6>
-                                <ol class="mb-0">
-                                    <li>Scan QR Code di bawah dengan aplikasi e-wallet atau mobile banking</li>
-                                    <li>Bayar sesuai total yang tertera</li>
-                                    <li>Screenshot bukti pembayaran</li>
-                                    <li>Setelah checkout, upload bukti di halaman "Pesanan Saya"</li>
-                                </ol>
+
+                            <div class="mb-3">
+                                <label class="form-label">Nomor WhatsApp <span class="text-danger">*</span></label>
+                                <input type="text" name="nomor_wa"
+                                       class="form-control @error('nomor_wa') is-invalid @enderror"
+                                       value="{{ old('nomor_wa') }}"
+                                       placeholder="08xxxxxxxxxx" required>
+                                @error('nomor_wa')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                            
-                            <div class="card text-center p-4">
-                                <h6 class="fw-bold mb-3">Scan QR Code Ini:</h6>
-                                <img src="{{ asset('images/qris.png') }}" 
-                                     alt="QR Code QRIS" 
-                                     class="img-fluid mx-auto" 
-                                     style="max-width: 300px;"
-                                     onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23e2e8f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' fill=\'%2394a3b8\' font-size=\'20\' dy=\'.3em\'%3EQR Code QRIS%3C/text%3E%3C/svg%3E'">
-                                <p class="text-muted mt-3 mb-0">
-                                    <strong>Total Pembayaran:</strong><br>
-                                    <span class="fs-3 fw-bold text-primary">
-                                        Rp {{ number_format($total >= 200000 ? $total : $total + 15000, 0, ',', '.') }}
-                                    </span>
-                                </p>
-                                <small class="text-danger mt-2">
-                                    ⚠️ Pastikan nominal yang dibayar SAMA PERSIS dengan total di atas
-                                </small>
+
+                            <div class="mb-0">
+                                <label class="form-label">Catatan (opsional)</label>
+                                <textarea name="catatan" rows="2" class="form-control"
+                                          placeholder="Contoh: Tolong dibungkus rapi">{{ old('catatan') }}</textarea>
                             </div>
                         </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                ✅ Konfirmasi Pesanan
+                    </div>
+
+                    {{-- ALAMAT PENGIRIMAN --}}
+                    <div class="card mb-4 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">📍 Alamat Pengiriman</h5>
+
+                            {{-- Tombol peta --}}
+                            <button type="button" class="btn btn-outline-primary mb-3 w-100"
+                                    data-bs-toggle="modal" data-bs-target="#mapModal">
+                                🗺️ Pilih Lokasi dari Peta
                             </button>
+
+                            {{-- Search kecamatan --}}
+                            <div class="mb-3">
+                                <label class="form-label">Cari Kecamatan / Kelurahan <span class="text-danger">*</span></label>
+                                <div class="position-relative">
+                                    <input type="text" id="destinationSearch"
+                                           class="form-control"
+                                           placeholder="Ketik nama kecamatan... (min 3 huruf)"
+                                           autocomplete="off">
+                                    <div id="destinationDropdown"
+                                         class="position-absolute bg-white border rounded shadow"
+                                         style="z-index:99999; width:100%; max-height:220px; overflow-y:auto; display:none; top:100%; left:0;">
+                                    </div>
+                                </div>
+                                <div id="destinationSelected" class="alert alert-success mt-2 py-2 px-3 small mb-0" style="display:none;">
+                                    ✅ <strong>Terpilih:</strong> <span id="destinationSelectedText"></span>
+                                </div>
+                            </div>
+
+                            {{-- Alamat lengkap --}}
+                            <div class="mb-0">
+                                <label class="form-label">Alamat Lengkap <span class="text-danger">*</span></label>
+                                <textarea name="alamat" id="input_alamat" rows="3"
+                                          class="form-control @error('alamat') is-invalid @enderror"
+                                          placeholder="Nama jalan, nomor rumah, RT/RW"
+                                          required>{{ old('alamat') }}</textarea>
+                                @error('alamat')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- Preview dari peta --}}
+                            <div id="mapAddressPreview" class="alert alert-info mt-3 mb-0 py-2 small" style="display:none;">
+                                🗺️ <span id="mapAddressText"></span>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+
+                    {{-- PILIH KURIR --}}
+                    <div class="card mb-4 border-0 shadow-sm" id="kurirSection" style="display:none;">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">🚚 Pilih Kurir & Ongkos Kirim</h5>
+
+                            <div id="ongkirLoading" style="display:none;" class="text-center py-3">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <p class="mt-2 text-muted small">Menghitung ongkir...</p>
+                            </div>
+
+                            <div id="kurirList" class="row g-3"></div>
+
+                            <div id="kurirError" class="alert alert-warning mb-0" style="display:none;">
+                                ⚠️ Tidak dapat menghitung ongkir untuk tujuan ini.
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- METODE PEMBAYARAN --}}
+                    <div class="card mb-4 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">💳 Metode Pembayaran</h5>
+
+                            @error('metode_pembayaran')
+                                <div class="alert alert-danger py-2 mb-3">{{ $message }}</div>
+                            @enderror
+
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <input type="radio" class="btn-check" name="metode_pembayaran"
+                                           id="pay_qris" value="QRIS"
+                                           {{ old('metode_pembayaran', 'QRIS') == 'QRIS' ? 'checked' : '' }}>
+                                    <label class="payment-card d-block p-3 rounded w-100 h-100" for="pay_qris">
+                                        <div class="fw-bold">📱 QRIS / E-Wallet</div>
+                                        <small class="text-muted">GoPay, OVO, ShopeePay, DANA</small>
+                                    </label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="radio" class="btn-check" name="metode_pembayaran"
+                                           id="pay_va" value="VA"
+                                           {{ old('metode_pembayaran') == 'VA' ? 'checked' : '' }}>
+                                    <label class="payment-card d-block p-3 rounded w-100 h-100" for="pay_va">
+                                        <div class="fw-bold">🏦 Virtual Account</div>
+                                        <small class="text-muted">BCA, BNI, BRI, Mandiri</small>
+                                    </label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="radio" class="btn-check" name="metode_pembayaran"
+                                           id="pay_cc" value="CC"
+                                           {{ old('metode_pembayaran') == 'CC' ? 'checked' : '' }}>
+                                    <label class="payment-card d-block p-3 rounded w-100 h-100" for="pay_cc">
+                                        <div class="fw-bold">💳 Kartu Kredit / Debit</div>
+                                        <small class="text-muted">Visa, Mastercard</small>
+                                    </label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="radio" class="btn-check" name="metode_pembayaran"
+                                           id="pay_cod" value="COD"
+                                           {{ old('metode_pembayaran') == 'COD' ? 'checked' : '' }}>
+                                    <label class="payment-card d-block p-3 rounded w-100 h-100" for="pay_cod">
+                                        <div class="fw-bold">💵 COD</div>
+                                        <small class="text-muted">Bayar tunai saat barang sampai</small>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="infoCod" class="alert alert-warning mt-3 mb-0 py-2 small" style="display:none;">
+                                📌 Siapkan uang tunai saat kurir tiba.
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- SUBMIT --}}
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg shadow">
+                            🚀 Buat Pesanan Sekarang
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            {{-- KOLOM KANAN: RINGKASAN --}}
+            <div class="col-lg-4">
+                <div class="summary-card card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">🧾 Ringkasan Pesanan</h5>
+
+                        @foreach($keranjang as $item)
+                        <div class="d-flex justify-content-between mb-2 small">
+                            <span class="me-2" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                {{ $item->produk->nama }}
+                                <span class="text-muted">x{{ $item->jumlah }}</span>
+                            </span>
+                            <span class="text-nowrap">
+                                Rp {{ number_format($item->produk->harga * $item->jumlah, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        @endforeach
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Subtotal</span>
+                            <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2" id="ongkirRow" style="display:none!important;">
+                            <span class="text-muted" id="ongkirLabel">Ongkos Kirim</span>
+                            <span id="summaryOngkir" class="text-danger">-</span>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold fs-5">Total Bayar</span>
+                            <span class="fw-bold fs-5 text-primary" id="summaryTotal">
+                                Rp {{ number_format($subtotal, 0, ',', '.') }}
+                            </span>
+                        </div>
+
+                        <div id="estimasiInfo" class="alert alert-info mt-3 mb-0 py-2 small" style="display:none;">
+                            🚚 <span id="estimasiText"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Ringkasan Pesanan (tidak berubah) -->
-        <div class="col-md-4">
-            <!-- ... kode ringkasan yang sudah ada ... -->
+
         </div>
     </div>
 </div>
 
+{{-- MODAL PETA --}}
+<div class="modal fade" id="mapModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">🗺️ Pilih Lokasi Pengiriman</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <input type="text" id="mapSearch" class="form-control"
+                           placeholder="Cari alamat...">
+                    <button class="btn btn-primary" type="button" onclick="searchMapAddress()">🔍 Cari</button>
+                    <button class="btn btn-outline-secondary" type="button" onclick="getMyLocation()">📍 Lokasi Saya</button>
+                </div>
+                <div id="map"></div>
+                <div class="mt-3 p-3 bg-light rounded" id="selectedAddressBox" style="display:none;">
+                    <strong>📍 Alamat Terpilih:</strong>
+                    <p id="selectedAddressDetail" class="mb-0 mt-1 small"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="confirmLocationBtn"
+                        onclick="confirmLocation()" disabled>
+                    ✅ Gunakan Lokasi Ini
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
 @push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // Toggle tampilan QR Code
-    function toggleQRIS(show) {
-        document.getElementById('qrisSection').style.display = show ? 'block' : 'none';
-    }
-    
-    // Check on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        const qrisRadio = document.getElementById('qris');
-        if (qrisRadio && qrisRadio.checked) {
-            toggleQRIS(true);
-        }
+// ============================================
+// KONSTANTA & CONFIG
+// ============================================
+const SUBTOTAL           = {{ $subtotal }};
+const DEBOUNCE_SEARCH    = 800;
+const DEBOUNCE_ONGKIR    = 500;
+const MIN_SEARCH_CHARS   = 3;
+const DEFAULT_WEIGHT     = 1000;
+
+// ============================================
+// STATE GLOBAL
+// ============================================
+let selectedOngkir           = 0;
+let map                      = null;
+let marker                   = null;
+let selectedLatLng           = null;
+let selectedAddress          = null;
+let searchTimeout            = null;
+let isSelectingDestination   = false;
+let lastSearchKeyword        = '';
+let lastCalculatedId         = '';
+let lastCalculatedWeight     = 0;
+let lastDestinationId        = '';
+
+// ============================================
+// UTILITY: DEBOUNCE
+// ============================================
+function debounce(fn, delay) {
+    let timer = null;
+    return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+}
+
+// ============================================
+// ALAMAT TERSIMPAN
+// ============================================
+document.getElementById('simpanAlamat')?.addEventListener('change', function() {
+    document.getElementById('labelAlamatBox').style.display = this.checked ? 'block' : 'none';
+});
+
+function useSavedAddress(id, nama, wa, alamat, destinationId, cityName) {
+    document.querySelectorAll('.saved-address-card').forEach(c => {
+        c.classList.remove('border-primary', 'bg-light');
     });
+    event.currentTarget.classList.add('border-primary', 'bg-light');
+
+    document.querySelector('[name="nama_pembeli"]').value  = nama;
+    document.querySelector('[name="nomor_wa"]').value      = wa;
+    document.getElementById('input_alamat').value          = alamat;
+    document.getElementById('input_destination_id').value  = destinationId;
+    document.getElementById('input_city_name').value       = cityName;
+    document.getElementById('destinationSearch').value     = cityName;
+    document.getElementById('destinationSelectedText').textContent = cityName;
+    document.getElementById('destinationSelected').style.display  = 'block';
+    document.getElementById('mapAddressPreview').style.display    = 'none';
+
+    if (destinationId && String(destinationId) !== lastDestinationId) {
+        lastDestinationId = String(destinationId);
+        debouncedCalculate(String(destinationId), DEFAULT_WEIGHT);
+    }
+}
+
+// ============================================
+// PETA (LEAFLET)
+// ============================================
+document.getElementById('mapModal')?.addEventListener('shown.bs.modal', function () {
+    if (!map) {
+        map = L.map('map').setView([-6.5971, 106.8060], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        map.on('click', function(e) {
+            placeMarker(e.latlng);
+            reverseGeocode(e.latlng.lat, e.latlng.lng);
+        });
+    } else {
+        setTimeout(() => map.invalidateSize(), 100);
+    }
+});
+
+function placeMarker(latlng) {
+    if (marker) map.removeLayer(marker);
+    marker = L.marker(latlng, { draggable: true }).addTo(map);
+    selectedLatLng = latlng;
+
+    marker.on('dragend', function(e) {
+        const pos = e.target.getLatLng();
+        reverseGeocode(pos.lat, pos.lng);
+    });
+}
+
+async function reverseGeocode(lat, lng) {
+    try {
+        const res  = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`,
+            { headers: { 'Accept-Language': 'id' } }
+        );
+        const data = await res.json();
+
+        if (data?.display_name) {
+            selectedAddress = data;
+            const addr  = data.address;
+            const parts = [
+                addr.road,
+                addr.suburb || addr.village || addr.hamlet,
+                addr.city_district,
+                addr.city || addr.regency,
+                addr.state
+            ].filter(Boolean);
+
+            const display = parts.join(', ');
+            document.getElementById('selectedAddressDetail').textContent = display;
+            document.getElementById('selectedAddressBox').style.display  = 'block';
+            document.getElementById('confirmLocationBtn').disabled        = false;
+            marker.bindPopup(display).openPopup();
+        }
+    } catch(e) {
+        console.warn('Reverse geocode error:', e.message);
+    }
+}
+
+async function searchMapAddress() {
+    const query = document.getElementById('mapSearch')?.value.trim();
+    if (!query) return;
+
+    try {
+        const res     = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=1&addressdetails=1`,
+            { headers: { 'Accept-Language': 'id' } }
+        );
+        const results = await res.json();
+
+        if (results.length > 0) {
+            const r      = results[0];
+            const latlng = L.latLng(parseFloat(r.lat), parseFloat(r.lon));
+            map.setView(latlng, 16);
+            placeMarker(latlng);
+            reverseGeocode(r.lat, r.lon);
+        } else {
+            alert('Alamat tidak ditemukan.');
+        }
+    } catch(e) {
+        alert('Gagal mencari alamat.');
+        console.warn('Search map error:', e.message);
+    }
+}
+
+function getMyLocation() {
+    if (!navigator.geolocation) {
+        alert('Browser tidak support geolocation.');
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        pos => {
+            const latlng = L.latLng(pos.coords.latitude, pos.coords.longitude);
+            map.setView(latlng, 16);
+            placeMarker(latlng);
+            reverseGeocode(pos.coords.latitude, pos.coords.longitude);
+        },
+        () => alert('Tidak dapat mengakses lokasi.')
+    );
+}
+
+document.getElementById('mapSearch')?.addEventListener('keypress', e => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        searchMapAddress();
+    }
+});
+
+async function confirmLocation() {
+    if (!selectedAddress || !selectedLatLng) return;
+
+    const addr        = selectedAddress.address;
+    const cityName    = addr.city || addr.regency || addr.county || addr.town || '';
+    const subdistrict = addr.suburb || addr.village || addr.quarter || '';
+
+    document.getElementById('input_latitude').value  = selectedLatLng.lat;
+    document.getElementById('input_longitude').value = selectedLatLng.lng;
+
+    const fullAddress = [
+        addr.road, subdistrict, addr.city_district, cityName, addr.state
+    ].filter(Boolean).join(', ');
+
+    document.getElementById('input_alamat').value           = fullAddress;
+    document.getElementById('mapAddressText').textContent   = fullAddress;
+    document.getElementById('mapAddressPreview').style.display = 'block';
+
+    // Reset highlight saved address
+    document.querySelectorAll('.saved-address-card').forEach(c => {
+        c.classList.remove('border-primary', 'bg-light');
+    });
+
+    bootstrap.Modal.getInstance(document.getElementById('mapModal'))?.hide();
+
+    if (subdistrict || cityName) {
+        const searchTerm  = subdistrict || cityName;
+        const destInput   = document.getElementById('destinationSearch');
+        if (destInput) {
+            destInput.value = searchTerm;
+            await autoSearchDestination(searchTerm);
+        }
+    }
+}
+
+// ============================================
+// SEARCH DESTINATION
+// ============================================
+const debouncedSearch = debounce(async function(keyword) {
+    if (keyword.length < MIN_SEARCH_CHARS) return;
+    if (keyword === lastSearchKeyword) return;
+
+    lastSearchKeyword = keyword;
+    await doSearchDestination(keyword);
+}, DEBOUNCE_SEARCH);
+
+document.getElementById('destinationSearch')?.addEventListener('input', function() {
+    const keyword  = this.value.trim();
+    const dropdown = document.getElementById('destinationDropdown');
+
+    if (keyword.length < MIN_SEARCH_CHARS) {
+        dropdown.style.display = 'none';
+        lastSearchKeyword = '';
+        return;
+    }
+
+    dropdown.innerHTML     = '<div class="destination-item text-muted">⏳ Mengetik...</div>';
+    dropdown.style.display = 'block';
+    debouncedSearch(keyword);
+});
+
+document.getElementById('destinationSearch')?.addEventListener('blur', function() {
+    if (!isSelectingDestination) {
+        setTimeout(() => {
+            document.getElementById('destinationDropdown').style.display = 'none';
+        }, 150);
+    }
+});
+
+async function doSearchDestination(keyword) {
+    const dropdown = document.getElementById('destinationDropdown');
+    if (!dropdown || keyword.length < MIN_SEARCH_CHARS) return;
+
+    dropdown.innerHTML     = '<div class="destination-item text-muted">🔍 Mencari...</div>';
+    dropdown.style.display = 'block';
+
+    try {
+        const res  = await fetch(`{{ route('ongkir.search') }}?search=${encodeURIComponent(keyword)}`);
+        const data = await res.json();
+
+        const currentKeyword = document.getElementById('destinationSearch')?.value.trim();
+        if (currentKeyword !== keyword) return; // sudah berubah, abaikan
+
+        dropdown.innerHTML = '';
+
+        if (data.error || !Array.isArray(data) || data.length === 0) {
+            dropdown.innerHTML = '<div class="destination-item text-muted">Tidak ditemukan</div>';
+            return;
+        }
+
+        data.forEach(item => {
+            const div       = document.createElement('div');
+            div.className   = 'destination-item';
+            div.textContent = item.label;
+
+            div.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                isSelectingDestination = true;
+                selectDestination(item);
+                dropdown.style.display = 'none';
+                setTimeout(() => isSelectingDestination = false, 200);
+            });
+            dropdown.appendChild(div);
+        });
+
+    } catch(e) {
+        console.warn('Search error:', e.message);
+        dropdown.innerHTML = '<div class="destination-item text-muted">Gagal memuat. Coba lagi.</div>';
+    }
+}
+
+async function autoSearchDestination(keyword) {
+    try {
+        const res  = await fetch(`{{ route('ongkir.search') }}?search=${encodeURIComponent(keyword)}`);
+        const data = await res.json();
+
+        if (data && data.length > 0) {
+            const match = data.find(d => d.city_name?.toLowerCase().includes(keyword.toLowerCase())) || data[0];
+            selectDestination(match);
+        }
+    } catch(e) {
+        console.warn('Auto search error:', e.message);
+    }
+}
+
+function selectDestination(item) {
+    document.getElementById('input_destination_id').value  = item.id;
+    document.getElementById('input_city_name').value       = item.city_name || '';
+    document.getElementById('destinationSearch').value     = item.label;
+    document.getElementById('destinationDropdown').style.display = 'none';
+
+    const elSelText = document.getElementById('destinationSelectedText');
+    const elSelBox  = document.getElementById('destinationSelected');
+    if (elSelText) elSelText.textContent  = item.label;
+    if (elSelBox)  elSelBox.style.display = 'block';
+
+    const alamat = document.getElementById('input_alamat');
+    if (alamat && !alamat.value) {
+        alamat.value = [item.subdistrict_name, item.district_name].filter(Boolean).join(', ');
+    }
+
+    document.querySelectorAll('.saved-address-card').forEach(c => {
+        c.classList.remove('border-primary', 'bg-light');
+    });
+
+    debouncedCalculate(String(item.id), DEFAULT_WEIGHT);
+}
+
+document.addEventListener('click', function(e) {
+    const search   = document.getElementById('destinationSearch');
+    const dropdown = document.getElementById('destinationDropdown');
+    if (search && dropdown && !e.target.closest('#destinationSearch') && !e.target.closest('#destinationDropdown')) {
+        dropdown.style.display = 'none';
+    }
+});
+
+// ============================================
+// CALCULATE ONGKIR
+// ============================================
+const debouncedCalculate = debounce(async function(destinationId, weight) {
+    if (!destinationId || !/^\d+$/.test(destinationId)) return;
+    if (weight < 100 || weight > 30000) return;
+
+    if (destinationId === lastCalculatedId && weight === lastCalculatedWeight) return;
+
+    lastCalculatedId     = destinationId;
+    lastCalculatedWeight = weight;
+    await calculateOngkir(destinationId, weight);
+}, DEBOUNCE_ONGKIR);
+
+async function calculateOngkir(destinationId, weight = DEFAULT_WEIGHT) {
+    if (!destinationId || !/^\d+$/.test(String(destinationId))) {
+        console.warn('calculateOngkir: invalid destinationId');
+        return;
+    }
+
+    const kurirSection = document.getElementById('kurirSection');
+    const kurirList    = document.getElementById('kurirList');
+    const loading      = document.getElementById('ongkirLoading');
+    const kurirError   = document.getElementById('kurirError');
+
+    if (kurirSection) kurirSection.style.display = 'block';
+    if (loading)      loading.style.display      = 'block';
+    if (kurirList)    kurirList.innerHTML         = '';
+    if (kurirError)   kurirError.style.display    = 'none';
+
+    selectedOngkir = 0;
+    if (document.getElementById('input_kurir'))  document.getElementById('input_kurir').value  = '';
+    if (document.getElementById('input_ongkir')) document.getElementById('input_ongkir').value = '0';
+    updateTotal();
+
+    try {
+        const res = await fetch('{{ route("ongkir.calculate") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+            },
+            body: JSON.stringify({ destination_id: destinationId, weight: weight }),
+        });
+
+        if (loading) loading.style.display = 'none';
+
+        if (res.status === 429) {
+            if (kurirError) {
+                kurirError.innerHTML     = '⚠️ Terlalu banyak permintaan. Tunggu sebentar lalu coba lagi.';
+                kurirError.style.display = 'block';
+            }
+            return;
+        }
+
+        const results = await res.json();
+
+        if (results.error || !Array.isArray(results) || results.length === 0) {
+            if (kurirError) {
+                kurirError.innerHTML     = '⚠️ ' + (results.error || 'Ongkir tidak tersedia untuk tujuan ini.');
+                kurirError.style.display = 'block';
+            }
+            return;
+        }
+
+        results.forEach(item => {
+            const col       = document.createElement('div');
+            col.className   = 'col-sm-6';
+            col.innerHTML   = `
+                <div class="kurir-card"
+                     data-courier="${item.courier}"
+                     data-service="${item.service}"
+                     data-cost="${item.cost}"
+                     data-etd="${item.etd}">
+                    <div class="fw-bold">${item.courier} ${item.service}</div>
+                    <div class="text-primary fw-bold">Rp ${Number(item.cost).toLocaleString('id-ID')}</div>
+                    <small class="text-muted">Estimasi ${item.etd}</small>
+                </div>
+            `;
+            col.querySelector('.kurir-card').addEventListener('click', function() {
+                selectKurir(this, item.courier, item.service, item.cost, item.etd);
+            });
+            if (kurirList) kurirList.appendChild(col);
+        });
+
+    } catch(e) {
+        if (loading)    loading.style.display    = 'none';
+        if (kurirError) {
+            kurirError.innerHTML     = '⚠️ Gagal menghitung ongkir. Periksa koneksi internet.';
+            kurirError.style.display = 'block';
+        }
+        console.warn('calculateOngkir error:', e.message);
+    }
+}
+
+function selectKurir(el, courier, service, cost, etd) {
+    document.querySelectorAll('.kurir-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+
+    selectedOngkir = Number(cost);
+
+    if (document.getElementById('input_kurir'))         document.getElementById('input_kurir').value         = courier;
+    if (document.getElementById('input_layanan_kurir')) document.getElementById('input_layanan_kurir').value = service;
+    if (document.getElementById('input_estimasi'))      document.getElementById('input_estimasi').value      = etd;
+    if (document.getElementById('input_ongkir'))        document.getElementById('input_ongkir').value        = cost;
+
+    updateTotal();
+
+    const estimasiText = document.getElementById('estimasiText');
+    const estimasiInfo = document.getElementById('estimasiInfo');
+    if (estimasiText) estimasiText.textContent   = `${courier} ${service} - Estimasi ${etd}`;
+    if (estimasiInfo) estimasiInfo.style.display = 'block';
+}
+
+function updateTotal() {
+    const total         = SUBTOTAL + selectedOngkir;
+    const ongkirRow     = document.getElementById('ongkirRow');
+    const summaryOngkir = document.getElementById('summaryOngkir');
+    const summaryTotal  = document.getElementById('summaryTotal');
+
+    if (selectedOngkir > 0) {
+        if (ongkirRow)     ongkirRow.style.setProperty('display', 'flex', 'important');
+        if (summaryOngkir) summaryOngkir.textContent = 'Rp ' + Number(selectedOngkir).toLocaleString('id-ID');
+    } else {
+        if (ongkirRow) ongkirRow.style.setProperty('display', 'none', 'important');
+    }
+    if (summaryTotal) summaryTotal.textContent = 'Rp ' + total.toLocaleString('id-ID');
+}
+
+// ============================================
+// COD INFO TOGGLE
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    const radios  = document.querySelectorAll('input[name="metode_pembayaran"]');
+    const infoCod = document.getElementById('infoCod');
+
+    radios.forEach(r => {
+        r.addEventListener('change', function() {
+            if (infoCod) infoCod.style.display = this.value === 'COD' ? 'block' : 'none';
+        });
+    });
+});
+
+// ============================================
+// VALIDASI SUBMIT FORM
+// ============================================
+document.getElementById('checkoutForm')?.addEventListener('submit', function(e) {
+    const destId = document.getElementById('input_destination_id')?.value;
+    const kurir  = document.getElementById('input_kurir')?.value;
+    const metode = document.querySelector('input[name="metode_pembayaran"]:checked');
+
+    if (!destId) {
+        e.preventDefault();
+        alert('⚠️ Pilih kecamatan/kelurahan tujuan pengiriman terlebih dahulu.');
+        document.getElementById('destinationSearch')?.focus();
+        return;
+    }
+    if (!kurir) {
+        e.preventDefault();
+        alert('⚠️ Pilih kurir pengiriman terlebih dahulu.');
+        document.getElementById('kurirSection')?.scrollIntoView({ behavior: 'smooth' });
+        return;
+    }
+    if (!metode) {
+        e.preventDefault();
+        alert('⚠️ Pilih metode pembayaran terlebih dahulu.');
+        return;
+    }
+
+    // Validasi label alamat jika simpan dicentang
+    const simpanAlamat = document.getElementById('simpanAlamat');
+    const labelAlamat  = document.querySelector('[name="label_alamat"]');
+    if (simpanAlamat?.checked && labelAlamat && !labelAlamat.value.trim()) {
+        e.preventDefault();
+        alert('⚠️ Isi label alamat (contoh: Rumah, Kantor) untuk menyimpan alamat.');
+        labelAlamat.focus();
+        return;
+    }
+
+    // Semua validasi lolos — form submit normal ke halaman pembayaran
+});
 </script>
 @endpush
-@endsection

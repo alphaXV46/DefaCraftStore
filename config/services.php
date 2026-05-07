@@ -35,4 +35,27 @@ return [
         ],
     ],
 
+    'google' => [
+    'client_id' => env('GOOGLE_CLIENT_ID'),
+    'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+    'redirect' => env('GOOGLE_REDIRECT_URI'),
+],
+'midtrans' => [
+    'server_key'    => env('MIDTRANS_SERVER_KEY'),
+    'client_key'    => env('MIDTRANS_CLIENT_KEY'),
+    'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+    'merchant_id'   => env('MIDTRANS_MERCHANT_ID'),
+],
+
+'binderbyte' => [
+    'api_key'     => env('BINDERBYTE_API_KEY'),
+    'origin_city' => env('BINDERBYTE_ORIGIN_CITY', 'Bogor'),
+],
+
+'rajaongkir' => [
+    'api_key'  => env('RAJAONGKIR_API_KEY'),
+    'base_url' => env('RAJAONGKIR_BASE_URL', 'https://rajaongkir.komerce.id/api/v1'),
+    'origin'   => env('RAJAONGKIR_ORIGIN_CITY_ID', '114'),
+],
+
 ];
