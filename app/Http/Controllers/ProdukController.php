@@ -32,6 +32,11 @@ class ProdukController extends Controller
     {
         $produk = Produk::findOrFail($id);
         
-        return view('produk.show', compact('produk'));
+        $produkTerkait = Produk::where('kategori', $produk->kategori)
+                            ->where('id', '!=', $produk->id)
+                            ->limit(4)
+                            ->get();
+        
+        return view('produk.show', compact('produk', 'produkTerkait'));
     }
 }

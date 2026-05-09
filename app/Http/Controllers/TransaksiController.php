@@ -252,7 +252,13 @@ public function store(Request $request)
             ->latest()
             ->paginate(10);
 
-        return view('transaksi.riwayat', compact('transaksi'));
+        // Menghitung statistik pesanan
+        $semua = Transaksi::where('user_id', Auth::id())->count();
+        $menunggu = Transaksi::where('user_id', Auth::id())->where('status', 'pending')->count();
+        $selesai = Transaksi::where('user_id', Auth::id())->where('status', 'completed')->count();
+        $batal = Transaksi::where('user_id', Auth::id())->where('status', 'cancelled')->count();
+
+        return view('transaksi.riwayat', compact('transaksi', 'semua', 'menunggu', 'selesai', 'batal'));
     }
 
     public function received($id)

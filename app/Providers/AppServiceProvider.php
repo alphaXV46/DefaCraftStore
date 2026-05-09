@@ -46,5 +46,16 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('webhook', function (Request $request) {
             return Limit::perMinute(60)->by($request->ip());
         });
+
+        // ══════════════════════════════════════════════════════
+        // VIEW COMPOSERS
+        // ══════════════════════════════════════════════════════
+        \Illuminate\Support\Facades\View::composer('partials.header', function ($view) {
+            if (\Illuminate\Support\Facades\Auth::check()) {
+                $cartCount = \App\Models\Keranjang::where('user_id', \Illuminate\Support\Facades\Auth::id())->count();
+                $wishlistCount = \App\Models\Wishlist::where('user_id', \Illuminate\Support\Facades\Auth::id())->count();
+                $view->with(compact('cartCount', 'wishlistCount'));
+            }
+        });
     }
 }

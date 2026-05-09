@@ -21,7 +21,9 @@ class KeranjangController extends Controller
             return $item->produk->harga * $item->jumlah;
         });
         
-        return view('keranjang.index', compact('keranjang', 'total'));
+        $checkedCount = $keranjang->where('checked', true)->count();
+        
+        return view('keranjang.index', compact('keranjang', 'total', 'checkedCount'));
     }
     
     public function store(Request $request)

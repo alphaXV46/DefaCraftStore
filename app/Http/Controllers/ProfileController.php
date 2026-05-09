@@ -16,9 +16,17 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = $request->user();
+        
+        $totalPesanan  = \App\Models\Transaksi::where('user_id', $user->id)->count();
+        $totalSelesai  = \App\Models\Transaksi::where('user_id', $user->id)->where('status', 'completed')->count();
+        $totalWishlist = \App\Models\Wishlist::where('user_id', $user->id)->count();
+        $totalBelanja  = \App\Models\Transaksi::where('user_id', $user->id)->whereIn('status', ['paid','processing','shipped','completed'])->sum('total_harga');
+        $recentOrders  = \App\Models\Transaksi::with('details.produk')->where('user_id', $user->id)->orderBy('created_at', 'desc')->take(3)->get();
+
+        return view('profile.edit', compact(
+            'user', 'totalPesanan', 'totalSelesai', 'totalWishlist', 'totalBelanja', 'recentOrders'
+        ));
     }
 
     /**

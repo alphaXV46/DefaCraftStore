@@ -3,113 +3,7 @@
 @section('title', 'Keranjang - DefaCraftStore')
 
 @push('styles')
-<style>
-    .cart-checkbox {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-    }
-    
-    .cart-item {
-        transition: all 0.3s ease;
-    }
-    
-    .cart-item.unchecked {
-        opacity: 0.5;
-    }
-
-    /* Gaya untuk summary card yang sticky */
-    .summary-sticky-container {
-        position: sticky;
-        top: 100px; /* Sesuaikan dengan tinggi header jika perlu */
-        z-index: 100; /* Jaga agar tetap di atas elemen lain */
-    }
-    
-    /* Pastikan summary card tidak tumpang tindih dengan header */
-    .summary-sticky-container .card {
-        margin-top: 0;
-        width: 100%;
-    }
-    
-    /* Card untuk pesan kosong */
-    .empty-cart-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 1.5rem;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-        padding: 4rem 2rem;
-        text-align: center;
-        max-width: 600px;
-        margin: 2rem auto;
-    }
-    
-    .empty-cart-card .display-1 {
-        color: #cbd5e1;
-        font-size: 6rem;
-        margin-bottom: 1rem;
-    }
-    
-    .empty-cart-card h3 {
-        color: #1e293b;
-        font-weight: 700;
-        margin-bottom: 1rem;
-    }
-    
-    .empty-cart-card p {
-        color: #64748b;
-        margin-bottom: 2rem;
-    }
-    
-    /* Card untuk pesan checkout */
-    .checkout-message-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(220, 38, 38, 0.2);
-        border-radius: 1rem;
-        box-shadow: 0 10px 25px rgba(220, 38, 38, 0.1);
-        padding: 1.5rem;
-        text-align: center;
-        width: 100%;
-    }
-    
-    .checkout-message-card .alert-icon {
-        font-size: 2rem;
-        color: #ef4444;
-        margin-bottom: 0.5rem;
-    }
-    
-    .checkout-message-card p {
-        color: #991b1b;
-        margin: 0;
-        font-weight: 500;
-    }
-    
-    /* Card untuk pesan informasi (misalnya diskon gratis ongkir) */
-    .info-message-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(2, 132, 199, 0.2); /* Biru untuk info */
-        border-radius: 1rem;
-        box-shadow: 0 10px 25px rgba(2, 132, 199, 0.1);
-        padding: 1rem 1.5rem;
-        text-align: center;
-        width: 100%;
-    }
-    
-    .info-message-card .alert-icon {
-        font-size: 1.5rem;
-        color: #0ea5e9; /* Biru cerah */
-        margin-right: 0.5rem;
-    }
-    
-    .info-message-card p {
-        color: #0c4a6e; /* Biru gelap */
-        margin: 0;
-        font-weight: 500;
-        font-size: 0.9rem;
-    }
-</style>
+<link rel="stylesheet" href="{{ asset('css/keranjang-index.css') }}">
 @endpush
 
 @section('content')
@@ -234,9 +128,6 @@
                         <div class="card-body">
                             <h5 class="fw-bold mb-4">Ringkasan Belanja</h5>
                             
-                            @php
-                                $checkedCount = $keranjang->where('checked', true)->count();
-                            @endphp
                             
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Total Produk</span>

@@ -94,12 +94,7 @@
         </div>
     </div>
 
-    @php
-        $pendingCount = \App\Models\Transaksi::where('status', 'pending')->count();
-        $shippedCount = \App\Models\Transaksi::where('status', 'shipped')->count();
-        $completedCount = \App\Models\Transaksi::where('status', 'completed')->count();
-        $cancelledCount = \App\Models\Transaksi::where('status', 'cancelled')->count();
-    @endphp
+
    
     <!-- Menu Admin -->
     <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;">
@@ -174,17 +169,16 @@
                                 </thead>
                                 <tbody>
                                     @foreach($transaksi as $item)
-                                    @php
-                                        $statusColors = [
-                                            'pending' => ['bg' => '#FEF3C7', 'color' => '#92400E', 'icon' => '⏳'],
-                                            'paid' => ['bg' => '#DBEAFE', 'color' => '#1E40AF', 'icon' => '💳'],
-                                            'processing' => ['bg' => '#F3E8FF', 'color' => '#6B21A8', 'icon' => '📦'],
-                                            'shipped' => ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '🚚'],
-                                            'completed' => ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '✅'],
-                                            'cancelled' => ['bg' => '#FEF2F2', 'color' => '#991B1B', 'icon' => '❌'],
-                                            'expired' => ['bg' => '#FEF2F2', 'color' => '#991B1B', 'icon' => '⏰'],
-                                        ];
-                                        $sc = $statusColors[$item->status] ?? ['bg' => '#F5F5F5', 'color' => '#666', 'icon' => '❓'];
+                                        $sc = ['bg' => '#F5F5F5', 'color' => '#666', 'icon' => '❓'];
+                                        switch($item->status) {
+                                            case 'pending': $sc = ['bg' => '#FEF3C7', 'color' => '#92400E', 'icon' => '⏳']; break;
+                                            case 'paid': $sc = ['bg' => '#DBEAFE', 'color' => '#1E40AF', 'icon' => '💳']; break;
+                                            case 'processing': $sc = ['bg' => '#F3E8FF', 'color' => '#6B21A8', 'icon' => '📦']; break;
+                                            case 'shipped': $sc = ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '🚚']; break;
+                                            case 'completed': $sc = ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '✅']; break;
+                                            case 'cancelled': $sc = ['bg' => '#FEF2F2', 'color' => '#991B1B', 'icon' => '❌']; break;
+                                            case 'expired': $sc = ['bg' => '#FEF2F2', 'color' => '#991B1B', 'icon' => '⏰']; break;
+                                        }
                                     @endphp
                                     <tr style="transition:background 0.15s;" onmouseover="this.style.background='#FAFAFA'" onmouseout="this.style.background='transparent'">
                                         <td style="padding:0.8rem 0.85rem;border-bottom:1px solid #F5F5F5;font-weight:700;color:#333;">#{{ $item->id }}</td>
@@ -221,15 +215,7 @@
             <div class="card shadow" style="border:1.5px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03);overflow:hidden;">
                 <div class="card-body" style="padding:1.25rem;">
                     <h5 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.95rem;font-weight:700;color:#333;margin:0 0 1rem 0;">📊 Distribusi Status</h5>
-                    @php
-                        $totalAll = max($totalTransaksi, 1);
-                        $statusData = [
-                            ['label' => 'Menunggu', 'count' => $pendingCount, 'color' => '#F59E0B'],
-                            ['label' => 'Dikirim', 'count' => $shippedCount, 'color' => '#3B82F6'],
-                            ['label' => 'Selesai', 'count' => $completedCount, 'color' => '#10B981'],
-                            ['label' => 'Batal', 'count' => $cancelledCount, 'color' => '#EF4444'],
-                        ];
-                    @endphp
+
                     @foreach($statusData as $sd)
                     <div style="margin-bottom:0.65rem;">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.2rem;">
@@ -349,7 +335,7 @@
         </div>
 
         {{-- STATUS --}}
-        @php $totalAll = max($totalTransaksi, 1); @endphp
+
         <div style="font-size:0.92rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#888;margin-bottom:1.15rem;display:flex;align-items:center;gap:0.6rem;">
             Status Pesanan
             <span style="flex:1;height:1px;background:#E0E0E0;display:block;"></span>
@@ -382,19 +368,7 @@
         </div>
 
         {{-- METODE PEMBAYARAN --}}
-        @php
-            $metodeMap = [];
-            $metodeRevenue = [];
-            foreach($transaksi as $trx) {
-                $m = $trx->metode_pembayaran ?: 'Lainnya';
-                $metodeMap[$m] = ($metodeMap[$m] ?? 0) + 1;
-                $metodeRevenue[$m] = ($metodeRevenue[$m] ?? 0) + $trx->total_harga;
-            }
-            $barColors = ['linear-gradient(90deg,#667EEA,#764BA2)','linear-gradient(90deg,#10B981,#34D399)','linear-gradient(90deg,#3B82F6,#60A5FA)','linear-gradient(90deg,#F59E0B,#FBBF24)','linear-gradient(90deg,#F472B6,#FB7185)'];
-            $barTextColors = ['#fff','#fff','#fff','#333','#fff'];
-            $maxMetode = count($metodeMap) > 0 ? max($metodeMap) : 1;
-            $metodeIdx = 0;
-        @endphp
+
         @if(count($metodeMap) > 0)
         <div style="font-size:0.92rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#888;margin-bottom:1.15rem;display:flex;align-items:center;gap:0.6rem;">
             Metode Pembayaran
@@ -448,19 +422,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $statusLp = [
-                                    'pending'    => ['Menunggu',   '#FEF3C7', '#92400E', '⏳'],
-                                    'paid'       => ['Dibayar',    '#DBEAFE', '#1E40AF', '💳'],
-                                    'processing' => ['Diproses',   '#F3E8FF', '#6B21A8', '📦'],
-                                    'shipped'    => ['Dikirim',    '#ECFDF5', '#065F46', '🚚'],
-                                    'completed'  => ['Selesai',    '#ECFDF5', '#065F46', '✅'],
-                                    'cancelled'  => ['Dibatalkan', '#FEF2F2', '#991B1B', '❌'],
-                                    'expired'    => ['Kadaluarsa', '#FEF2F2', '#991B1B', '⏰'],
-                                ];
-                            @endphp
-                            @foreach($transaksi as $item)
-                                @php $sl = $statusLp[$item->status] ?? ['Unknown','#F5F5F5','#666','❓']; @endphp
+                                @php
+                                    $sl = ['Unknown','#F5F5F5','#666','❓'];
+                                    switch($item->status) {
+                                        case 'pending': $sl = ['Menunggu', '#FEF3C7', '#92400E', '⏳']; break;
+                                        case 'paid': $sl = ['Dibayar', '#DBEAFE', '#1E40AF', '💳']; break;
+                                        case 'processing': $sl = ['Diproses', '#F3E8FF', '#6B21A8', '📦']; break;
+                                        case 'shipped': $sl = ['Dikirim', '#ECFDF5', '#065F46', '🚚']; break;
+                                        case 'completed': $sl = ['Selesai', '#ECFDF5', '#065F46', '✅']; break;
+                                        case 'cancelled': $sl = ['Dibatalkan', '#FEF2F2', '#991B1B', '❌']; break;
+                                        case 'expired': $sl = ['Kadaluarsa', '#FEF2F2', '#991B1B', '⏰']; break;
+                                    }
+                                @endphp
                                 <tr style="cursor:default;" onmouseover="this.style.background='#FAFAFA'" onmouseout="this.style.background='transparent'">
                                     <td style="padding:1.1rem 1.35rem;font-size:0.95rem;color:#444;border-bottom:1px solid #F5F5F5;"><strong>#{{ $item->id }}</strong></td>
                                     <td style="padding:1.1rem 1.35rem;font-size:0.95rem;color:#444;border-bottom:1px solid #F5F5F5;">{{ $item->created_at->format('d M Y') }}</td>
@@ -507,7 +480,7 @@ function printLaporan() {
     var w = window.open('','_blank','width=900,height=700');
     if(!w){alert('Izinkan pop-up untuk mencetak.');return;}
     var t = new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-    w.document.write('<!DOCTYPE html><html><head><title>Laporan - DefaCraft</title><style>body{font-family:Arial,sans-serif;padding:2rem;color:#333;font-size:14px;}h2{margin:0 0 .2rem;}.sub{color:#888;font-size:12px;margin-bottom:1.5rem;}table{width:100%;border-collapse:collapse;margin-bottom:1rem;}th,td{padding:.5rem .7rem;text-align:left;border-bottom:1px solid #eee;font-size:13px;}th{background:#f8f8f8;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#777;}.r{text-align:right;}.b{padding:.15rem .45rem;border-radius:50px;font-size:11px;font-weight:600;}</style></head><body>');
+    w.document.write('<!DOCTYPE html><html><head><title>Laporan - DefaCraft</title><link rel="stylesheet" href="{{ asset('css/admin-dashboard.css') }}"></head><body>');
     w.document.write('<h2>Laporan Penjualan</h2><p class="sub">DefaCraft — '+t+'</p>');
     w.document.write(c);
     w.document.write('</body></html>');

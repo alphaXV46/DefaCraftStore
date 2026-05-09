@@ -7,10 +7,6 @@
 @endpush
 
 @section('content')
-@php
-    $heroProduk = \App\Models\Produk::inRandomOrder()->whereNotNull('gambar')
-        ->where('stok', '>', 0)->limit(3)->get();
-@endphp
 <!-- Hero Section Modern -->
 <section class="hero-modern">
     <!-- Animasi Latar Belakang -->
