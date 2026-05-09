@@ -240,22 +240,27 @@
         if (isNaN(target)) return;
         
         const duration = 2000;
-        const step = target / (duration / 16);
-        let current = 0;
+        let startTimestamp = null;
         
         const labelEl = element.parentElement ? element.parentElement.querySelector('.stat-label') : null;
         const label = labelEl ? labelEl.textContent : '';
         const suffix = label === 'Kepuasan' ? '%' : '+';
 
-        const timer = setInterval(() => {
-            current += step;
-            if (current >= target) {
-                element.textContent = target + suffix;
-                clearInterval(timer);
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const current = Math.floor(progress * target);
+            
+            element.textContent = current + suffix;
+            
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
             } else {
-                element.textContent = Math.floor(current) + suffix;
+                element.textContent = target + suffix;
             }
-        }, 16);
+        };
+        
+        window.requestAnimationFrame(step);
     }
     // Intersection Observer for counter
     const observer = new IntersectionObserver((entries) => {

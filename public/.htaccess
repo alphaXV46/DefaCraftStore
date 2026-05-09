@@ -61,7 +61,7 @@
 </IfModule>
 
 <IfModule mod_headers.c>
-    # Cache static assets aggressively
+    # Cache static assets aggressively (Vite & Fonts)
     <FilesMatch "\.(css|js|webp|jpg|jpeg|png|gif|svg|woff|woff2|ico)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
     </FilesMatch>

@@ -22,16 +22,16 @@
                         Membuat dunia lebih berwarna dengan kerajinan tangan yang penuh cinta dan kreativitas
                     </p>
                     <div class="social-icons">
-                        <a href="#" class="social-icon">
+                        <a href="#" class="social-icon" aria-label="Instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="social-icon">
+                        <a href="#" class="social-icon" aria-label="Facebook">
                             <i class="fab fa-facebook"></i>
                         </a>
-                        <a href="#" class="social-icon">
+                        <a href="#" class="social-icon" aria-label="TikTok">
                             <i class="fab fa-tiktok"></i>
                         </a>
-                        <a href="#" class="social-icon">
+                        <a href="#" class="social-icon" aria-label="YouTube">
                             <i class="fab fa-youtube"></i>
                         </a>
                     </div>

@@ -13,11 +13,11 @@
             <div class="search-input-wrapper">
                 <input class="search-input" type="search" name="search" 
                     placeholder="Cari produk lucu dan unik..." value="{{ request('search') }}">
-                <button class="search-button" type="submit">
+                <button class="search-button" type="submit" aria-label="Cari Produk">
                     <i class="fas fa-search"></i>
                 </button>
                 <!-- Tombol Clear -->
-                <button type="button" class="search-clear-btn" onclick="clearSearch()">
+                <button type="button" class="search-clear-btn" onclick="clearSearch()" aria-label="Bersihkan pencarian">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -43,7 +43,7 @@
                 @auth
                     <!-- Cart with Badge -->
                     <li class="nav-item cart-item">
-                        <a href="{{ route('keranjang.index') }}" class="nav-link cart-link">
+                        <a href="{{ route('keranjang.index') }}" class="nav-link cart-link" aria-label="Keranjang Belanja">
                             <div class="cart-icon-wrapper">
                                 <i class="fas fa-shopping-cart"></i>
                                 @if(($cartCount ?? 0) > 0)
@@ -114,13 +114,13 @@
         </div>
         
         <!-- Mobile Toggle -->
-        <div class="mobile-toggle">
+        <button class="mobile-toggle" aria-label="Buka Menu" aria-expanded="false">
             <div class="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-        </div>
+        </button>
     </div>
     
     <!-- Mobile Menu -->
@@ -130,7 +130,7 @@
     <div class="mobile-search-wrapper">
         <input type="search" name="search" class="mobile-search-input"
                placeholder="Cari produk..." value="{{ request('search') }}">
-        <button type="submit" class="mobile-search-btn">
+        <button type="submit" class="mobile-search-btn" aria-label="Cari">
             <i class="fas fa-search"></i>
         </button>
     </div>

@@ -19,9 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
     ]);
 
-    // ✅ Daftarkan Middleware Keamanan Global
+    // ✅ Daftarkan Middleware Keamanan Global & Optimasi
     $middleware->append(\App\Http\Middleware\SecurityHeadersMiddleware::class);
     $middleware->append(\App\Http\Middleware\SanitizeInputMiddleware::class);
+    $middleware->append(\App\Http\Middleware\GzipResponse::class);
+    $middleware->append(\App\Http\Middleware\CacheStaticAssets::class);
 
     // Exclude webhook dari CSRF
     $middleware->validateCsrfTokens(except: [

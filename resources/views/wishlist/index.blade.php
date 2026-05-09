@@ -62,7 +62,7 @@
                             <span class="badge badge-custom mb-2 align-self-start">
                                 {{ $item->produk->kategori }}
                             </span>
-                            <h5 class="card-title">{{ $item->produk->nama }}</h5>
+                            <h2 class="card-title h5">{{ $item->produk->nama }}</h2>
                             <p class="card-text text-muted small flex-grow-1">
                                 {{ Str::limit($item->produk->deskripsi, 60) }}
                             </p>

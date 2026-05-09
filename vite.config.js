@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import purge from 'vite-plugin-purgecss';
 
 export default defineConfig({
     server: {
@@ -28,6 +29,23 @@ export default defineConfig({
                 'resources/css/admin-transaksi-show.css'
             ],
             refresh: true,
+        }),
+        purge({
+            content: [
+                './resources/views/**/*.blade.php',
+                './resources/js/**/*.js',
+                './resources/css/**/*.css'
+            ],
+            safelist: {
+                standard: [
+                    'html', 'body', 'show', 'active', 'collapsing', 'fade', 
+                    'modal-backdrop', 'scrolled', 'navbar-modern', 'animate'
+                ],
+                greedy: [
+                    /^nav-/, /^btn-/, /^alert-/, /^modal-/, /^toast-/, 
+                    /^card-/, /^badge-/, /^fa-/
+                ]
+            }
         }),
     ],
 });

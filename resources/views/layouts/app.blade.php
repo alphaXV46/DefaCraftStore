@@ -4,17 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- PASTIKAN META TAG CSRF ADA -->
+    <meta name="description" content="DefaCraftStore - Pusat kerajinan tangan handmade, boneka rajut, aksesoris unik, dan dekorasi rumah berkualitas terbaik.">
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'DefaCraftStore - Kerajinan Tangan Modern')</title>
 
-    <!-- Bootstrap 5.3.8 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts Optimized (Non-blocking) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Preload WOFF2 Fonts from Vite Manifest -->
+    @php
+        $manifestPath = public_path('build/manifest.json');
+        if (file_exists($manifestPath)) {
+            $manifest = json_decode(file_get_contents($manifestPath), true);
+            foreach ($manifest as $key => $asset) {
+                if (isset($asset['file']) && str_ends_with($asset['file'], '.woff2')) {
+                    echo '<link rel="preload" href="/build/' . $asset['file'] . '" as="font" type="font/woff2" crossorigin>' . "\n    ";
+                }
+            }
+        }
+    @endphp
 
-    <!-- Vite Assets (Core/Critical) -->
+    <!-- Vite Assets (Core/Critical) includes Bootstrap & FontAwesome -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Deferred Non-Critical CSS -->
@@ -57,22 +74,39 @@
     <!-- Toast Container -->
     <div id="toastContainer" class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999;"></div>
 
-    <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
     <!-- Global Scripts -->
     <script>
-        // Navbar scroll effect
+        // Navbar scroll effect (Optimized to prevent forced reflow)
+        let isScrolled = false;
+        let ticking = false;
+        const navbar = document.querySelector('.navbar-modern');
+        
         window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar-modern');
-            if (navbar) {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
+            if (!navbar) return;
+            
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    const currentScrollY = window.scrollY; // DOM Read phase
+                    
+                    // DOM Write phase
+                    if (currentScrollY > 50) {
+                        if (!isScrolled) {
+                            navbar.classList.add('scrolled');
+                            isScrolled = true;
+                        }
+                    } else {
+                        if (isScrolled) {
+                            navbar.classList.remove('scrolled');
+                            isScrolled = false;
+                        }
+                    }
+                    ticking = false;
+                });
+                ticking = true;
             }
-        });
+        }, { passive: true });
 
         // Auto dismiss alerts
         setTimeout(function() {

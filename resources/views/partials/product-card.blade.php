@@ -47,7 +47,7 @@
     <!-- Info -->
     <div class="product-info">
         <div class="product-category">{{ $item->kategori }}</div>
-        <h5 class="product-name">{{ $item->nama }}</h5>
+        <h3 class="product-name">{{ $item->nama }}</h3>
         
         <!-- Rating -->
         <div class="product-rating">

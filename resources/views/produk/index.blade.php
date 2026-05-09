@@ -81,7 +81,7 @@
                             <span class="badge badge-custom mb-2 align-self-start" style="z-index: 1;">
                                 {{ $item->kategori }}
                             </span>
-                            <h5 class="card-title">{{ $item->nama }}</h5>
+                            <h2 class="card-title h5">{{ $item->nama }}</h2>
                             <!-- Deskripsi dengan jarak dan batas tinggi -->
                             <p class="card-text text-muted small flex-grow-1 mb-2" style="min-height: 60px;">
                                 {{ Str::limit($item->deskripsi, 60) }}
