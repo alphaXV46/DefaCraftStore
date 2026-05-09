@@ -30,6 +30,15 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
 Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
 
+// =====================
+// HALAMAN STATIS (BANTUAN)
+// =====================
+Route::get('/bantuan/pengembalian', fn() => view('pages.bantuan.pengembalian'))->name('bantuan.pengembalian');
+Route::get('/bantuan/cara-pesan',   fn() => view('pages.bantuan.cara-pesan'))->name('bantuan.cara-pesan');
+Route::get('/bantuan/pengiriman',   fn() => view('pages.bantuan.pengiriman'))->name('bantuan.pengiriman');
+Route::get('/bantuan/faq',          fn() => view('pages.bantuan.faq'))->name('bantuan.faq');
+Route::get('/bantuan/kontak',       fn() => view('pages.bantuan.kontak'))->name('bantuan.kontak');
+
 Route::prefix('ongkir')->middleware('throttle:ongkir')->group(function () {
     Route::get('/search', [OngkirController::class, 'searchDestination'])->name('ongkir.search');
     Route::post('/calculate', [OngkirController::class, 'calculate'])->name('ongkir.calculate');

@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Format;
 
 class AdminProdukController extends Controller
 {
@@ -30,7 +33,11 @@ class AdminProdukController extends Controller
             'harga' => 'required|numeric|min:0',
             'kategori' => 'required|string|max:50',
             'stok' => 'required|integer|min:0',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
+        ], [
+            'gambar.image' => 'File harus berupa gambar.',
+            'gambar.mimes' => 'Format gambar harus jpeg, png, jpg, atau webp.',
+            'gambar.max' => 'Ukuran gambar maksimal 2MB.'
         ]);
         
         $data = $request->all();
@@ -38,8 +45,14 @@ class AdminProdukController extends Controller
         // Upload gambar jika ada
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/produk'), $filename);
+            $filename = time() . '_' . pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '.webp';
+            
+            // Konversi dan Resize menggunakan Intervention Image
+            $manager = new ImageManager(new Driver());
+            $image = $manager->decode($file);
+            $image->scaleDown(width: 1000);
+            $image->encodeUsingFormat(Format::WEBP, quality: 80)->save(public_path('images/produk/' . $filename));
+            
             $data['gambar'] = $filename;
         }
         
@@ -65,7 +78,11 @@ class AdminProdukController extends Controller
             'harga' => 'required|numeric|min:0',
             'kategori' => 'required|string|max:50',
             'stok' => 'required|integer|min:0',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
+        ], [
+            'gambar.image' => 'File harus berupa gambar.',
+            'gambar.mimes' => 'Format gambar harus jpeg, png, jpg, atau webp.',
+            'gambar.max' => 'Ukuran gambar maksimal 2MB.'
         ]);
         
         $produk = Produk::findOrFail($id);
@@ -79,8 +96,14 @@ class AdminProdukController extends Controller
             }
             
             $file = $request->file('gambar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/produk'), $filename);
+            $filename = time() . '_' . pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '.webp';
+            
+            // Konversi dan Resize menggunakan Intervention Image
+            $manager = new ImageManager(new Driver());
+            $image = $manager->decode($file);
+            $image->scaleDown(width: 1000);
+            $image->encodeUsingFormat(Format::WEBP, quality: 80)->save(public_path('images/produk/' . $filename));
+            
             $data['gambar'] = $filename;
         }
         

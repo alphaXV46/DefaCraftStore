@@ -169,17 +169,18 @@
                                 </thead>
                                 <tbody>
                                     @foreach($transaksi as $item)
-                                        $sc = ['bg' => '#F5F5F5', 'color' => '#666', 'icon' => '❓'];
-                                        switch($item->status) {
-                                            case 'pending': $sc = ['bg' => '#FEF3C7', 'color' => '#92400E', 'icon' => '⏳']; break;
-                                            case 'paid': $sc = ['bg' => '#DBEAFE', 'color' => '#1E40AF', 'icon' => '💳']; break;
-                                            case 'processing': $sc = ['bg' => '#F3E8FF', 'color' => '#6B21A8', 'icon' => '📦']; break;
-                                            case 'shipped': $sc = ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '🚚']; break;
-                                            case 'completed': $sc = ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '✅']; break;
-                                            case 'cancelled': $sc = ['bg' => '#FEF2F2', 'color' => '#991B1B', 'icon' => '❌']; break;
-                                            case 'expired': $sc = ['bg' => '#FEF2F2', 'color' => '#991B1B', 'icon' => '⏰']; break;
-                                        }
-                                    @endphp
+                                        @php
+                                            $sc = ['bg' => '#F5F5F5', 'color' => '#666', 'icon' => '❓'];
+                                            switch($item->status) {
+                                                case 'pending': $sc = ['bg' => '#FEF3C7', 'color' => '#92400E', 'icon' => '⏳']; break;
+                                                case 'paid': $sc = ['bg' => '#DBEAFE', 'color' => '#1E40AF', 'icon' => '💳']; break;
+                                                case 'processing': $sc = ['bg' => '#F3E8FF', 'color' => '#6B21A8', 'icon' => '📦']; break;
+                                                case 'shipped': $sc = ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '🚚']; break;
+                                                case 'completed': $sc = ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '✅']; break;
+                                                case 'cancelled': $sc = ['bg' => '#FEF2F2', 'color' => '#991B1B', 'icon' => '❌']; break;
+                                                case 'expired': $sc = ['bg' => '#FEF2F2', 'color' => '#991B1B', 'icon' => '⏰']; break;
+                                            }
+                                        @endphp
                                     <tr style="transition:background 0.15s;" onmouseover="this.style.background='#FAFAFA'" onmouseout="this.style.background='transparent'">
                                         <td style="padding:0.8rem 0.85rem;border-bottom:1px solid #F5F5F5;font-weight:700;color:#333;">#{{ $item->id }}</td>
                                         <td style="padding:0.8rem 0.85rem;border-bottom:1px solid #F5F5F5;color:#444;">
@@ -422,6 +423,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($transaksi as $item)
                                 @php
                                     $sl = ['Unknown','#F5F5F5','#666','❓'];
                                     switch($item->status) {
