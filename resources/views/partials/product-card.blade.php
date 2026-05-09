@@ -9,9 +9,17 @@
     <!-- Image -->
     <div class="product-image-wrapper">
         @if($item->gambar && file_exists(public_path('images/produk/' . $item->gambar)))
-            <img src="{{ asset('images/produk/' . $item->gambar) }}" alt="{{ $item->nama }}">
+            <img src="{{ asset('images/produk/' . $item->gambar) }}"
+                 alt="{{ $item->nama }}"
+                 width="300" height="280"
+                 loading="lazy"
+                 decoding="async">
         @else
-            <img src="data:image/svg+xml,%3Csvg width='300' height='280' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='300' height='280' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%2394a3b8' font-size='60' dy='.3em'%3E📦%3C/text%3E%3C/svg%3E" alt="{{ $item->nama }}">
+            <img src="data:image/svg+xml,%3Csvg width='300' height='280' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='300' height='280' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%2394a3b8' font-size='60' dy='.3em'%3E📦%3C/text%3E%3C/svg%3E"
+                 alt="{{ $item->nama }}"
+                 width="300" height="280"
+                 loading="lazy"
+                 decoding="async">
         @endif
         
         <!-- Overlay Buttons -->

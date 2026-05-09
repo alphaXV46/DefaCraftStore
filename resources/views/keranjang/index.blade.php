@@ -3,7 +3,7 @@
 @section('title', 'Keranjang - DefaCraftStore')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/keranjang-index.css') }}">
+    @vite(['resources/css/keranjang-index.css'])
 @endpush
 
 @section('content')
@@ -50,8 +50,10 @@
                                 <!-- Gambar -->
                                 <div class="col-md-2 col-3">
                                     @if($item->produk->gambar && file_exists(public_path('images/produk/' . $item->produk->gambar)))
-                                        <img src="{{ asset('images/produk/' . $item->produk->gambar) }}" 
-                                             class="img-fluid rounded" alt="{{ $item->produk->nama }}">
+                                        <img src="{{ asset('images/produk/' . $item->produk->gambar) }}"
+                                             class="img-fluid rounded" alt="{{ $item->produk->nama }}"
+                                             width="120" height="80"
+                                             loading="lazy" decoding="async">
                                     @else
                                         <div class="bg-secondary rounded d-flex align-items-center justify-content-center" 
                                              style="height: 80px;">

@@ -3,7 +3,7 @@
 @section('title', 'Detail Transaksi #' . $transaksi->id . ' - Admin')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/admin-transaksi-show.css') }}">
+    @vite(['resources/css/admin-transaksi-show.css'])
 @endpush
 
 @section('content')

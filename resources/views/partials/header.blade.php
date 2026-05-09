@@ -159,7 +159,7 @@
     </div>
 </nav>
 
-<link rel="stylesheet" href="{{ asset('css/partials-header.css') }}">
+
 
 <script>
     // Fungsi untuk membersihkan input pencarian
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Tutup menu kalau klik di luar
         document.addEventListener('click', function(e) {
-            if (!navbar.contains(e.target)) {
+            if (navbar && !navbar.contains(e.target)) {
                 mobileMenu.classList.remove('active');
                 hamburger.classList.remove('open');
             }

@@ -3,7 +3,7 @@
 @section('title', 'Pesanan Berhasil - DefaCraftStore')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/transaksi-success.css') }}">
+    @vite(['resources/css/transaksi-success.css'])
 @endpush
 
 @section('content')

@@ -3,7 +3,7 @@
 @section('title', 'Profil Saya - DefaCraftStore')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/profile-edit.css') }}">
+    @vite(['resources/css/profile-edit.css'])
 @endpush
 
 @section('content')

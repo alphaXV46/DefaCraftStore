@@ -3,7 +3,7 @@
 @section('title', 'Home - DefaCraftStore | Kerajinan Tangan Modern')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+    @vite(['resources/css/home.css'])
 @endpush
 
 @section('content')
@@ -235,17 +235,25 @@
 <script>
     // Counter Animation
     function animateCounter(element) {
+        if (!element) return;
         const target = parseInt(element.getAttribute('data-count'));
+        if (isNaN(target)) return;
+        
         const duration = 2000;
         const step = target / (duration / 16);
         let current = 0;
+        
+        const labelEl = element.parentElement ? element.parentElement.querySelector('.stat-label') : null;
+        const label = labelEl ? labelEl.textContent : '';
+        const suffix = label === 'Kepuasan' ? '%' : '+';
+
         const timer = setInterval(() => {
             current += step;
             if (current >= target) {
-                element.textContent = target + (element.parentElement.querySelector('.stat-label').textContent === 'Kepuasan' ? '%' : '+');
+                element.textContent = target + suffix;
                 clearInterval(timer);
             } else {
-                element.textContent = Math.floor(current) + (element.parentElement.querySelector('.stat-label').textContent === 'Kepuasan' ? '%' : '+');
+                element.textContent = Math.floor(current) + suffix;
             }
         }, 16);
     }
@@ -311,7 +319,7 @@
     };
     const scrollObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
+            if (entry.isIntersecting && entry.target) {
                 entry.target.classList.add('animate');
             }
         });
@@ -320,26 +328,6 @@
         scrollObserver.observe(el);
     });
     
-    // Fungsi toggleWishlist sederhana (perlu diintegrasikan dengan AJAX dan backend)
-    function toggleWishlist(produkId, buttonElement) {
-        fetch(`/wishlist/toggle/${produkId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'added') {
-                buttonElement.innerHTML = '<span style="font-size: 1.5rem;">❤️</span>';
-            } else if (data.status === 'removed') {
-                buttonElement.innerHTML = '<span style="font-size: 1.5rem;">🤍</span>';
-            }
-        })
-        .catch(error => {
-            console.error('Error toggling wishlist:', error);
-        });
-    }
+
 </script>
 @endpush

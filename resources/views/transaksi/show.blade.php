@@ -3,7 +3,7 @@
 @section('title', 'Detail Pesanan #' . $transaksi->id . ' - DefaCraftStore')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/transaksi-show.css') }}">
+    @vite(['resources/css/transaksi-show.css'])
 @endpush
 
 @section('content')

@@ -3,7 +3,7 @@
 @section('title', 'Riwayat Pesanan - DefaCraftStore')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/transaksi-riwayat.css') }}">
+    @vite(['resources/css/transaksi-riwayat.css'])
 @endpush
 
 @section('content')
@@ -100,7 +100,10 @@
                         @foreach($order->details as $detail)
                         <div class="op-product">
                             @if($detail->produk && $detail->produk->gambar && file_exists(public_path('images/produk/' . $detail->produk->gambar)))
-                                <img src="{{ asset('images/produk/' . $detail->produk->gambar) }}" class="op-product-img" alt="{{ $detail->nama_produk }}">
+                                <img src="{{ asset('images/produk/' . $detail->produk->gambar) }}"
+                                     class="op-product-img" alt="{{ $detail->nama_produk }}"
+                                     width="80" height="80"
+                                     loading="lazy" decoding="async">
                             @else
                                 <div class="op-product-img-ph">📦</div>
                             @endif

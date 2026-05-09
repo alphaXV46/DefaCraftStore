@@ -26,9 +26,11 @@
                         <!-- Gambar Produk -->
                         <div class="position-relative">
                             @if($item->produk->gambar && file_exists(public_path('images/produk/' . $item->produk->gambar)))
-                                <img src="{{ asset('images/produk/' . $item->produk->gambar) }}" 
+                                <img src="{{ asset('images/produk/' . $item->produk->gambar) }}"
                                      class="card-img-top" alt="{{ $item->produk->nama }}"
-                                     style="height: 240px; object-fit: cover;">
+                                     width="300" height="240"
+                                     style="height: 240px; object-fit: cover;"
+                                     loading="lazy" decoding="async">
                             @else
                                 <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center text-white"
                                      style="height: 240px;">

@@ -12,10 +12,8 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Custom CSS -->
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-    
-    <link rel="stylesheet" href="{{ asset('css/layouts-auth.css') }}">
+    <!-- Vite Assets -->
+    @vite(['resources/css/app.css', 'resources/css/layouts-auth.css', 'resources/js/app.js'])
     
     @stack('styles')
 </head>

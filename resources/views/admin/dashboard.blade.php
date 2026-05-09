@@ -482,7 +482,7 @@ function printLaporan() {
     var w = window.open('','_blank','width=900,height=700');
     if(!w){alert('Izinkan pop-up untuk mencetak.');return;}
     var t = new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-    w.document.write('<!DOCTYPE html><html><head><title>Laporan - DefaCraft</title><link rel="stylesheet" href="{{ asset('css/admin-dashboard.css') }}"></head><body>');
+    w.document.write('<!DOCTYPE html><html><head><title>Laporan - DefaCraft</title><link rel="stylesheet" href="{{ Vite::asset('resources/css/admin-dashboard.css') }}"></head><body>');
     w.document.write('<h2>Laporan Penjualan</h2><p class="sub">DefaCraft — '+t+'</p>');
     w.document.write(c);
     w.document.write('</body></html>');

@@ -66,8 +66,10 @@
                         @endauth
                         
                         @if($item->gambar && file_exists(public_path('images/produk/' . $item->gambar)))
-                            <img src="{{ asset('images/produk/' . $item->gambar) }}" 
-                                 class="card-img-top" alt="{{ $item->nama }}">
+                            <img src="{{ asset('images/produk/' . $item->gambar) }}"
+                                 class="card-img-top" alt="{{ $item->nama }}"
+                                 width="300" height="200"
+                                 loading="lazy" decoding="async">
                         @else
                             <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center text-white" style="height: 200px;">
                                 <span class="fs-1">📦</span>

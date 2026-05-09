@@ -10,8 +10,15 @@
     <!-- Bootstrap 5.3.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom Modern CSS -->
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Vite Assets (Core/Critical) -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Deferred Non-Critical CSS -->
+    <link rel="stylesheet" href="{{ Vite::asset('resources/css/partials-header.css') }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ Vite::asset('resources/css/partials-footer.css') }}" media="print" onload="this.media='all'">
 
     <!-- Stack untuk CSS khusus per halaman -->
     @stack('styles')
@@ -56,11 +63,13 @@
     <script>
         // Navbar scroll effect
         window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (navbar && window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else if (navbar) {
-                navbar.classList.remove('scrolled');
+            const navbar = document.querySelector('.navbar-modern');
+            if (navbar) {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
             }
         });
 

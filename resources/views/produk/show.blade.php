@@ -3,7 +3,7 @@
 @section('title', $produk->nama . ' - DefaCraftStore')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/produk-show.css') }}">
+    @vite(['resources/css/produk-show.css'])
 @endpush
 
 @section('content')
@@ -15,8 +15,12 @@
                 <!-- Image Section -->
                 <div class="image-section">
     @if($produk->gambar && file_exists(public_path('images/produk/' . $produk->gambar)))
-        <img src="{{ asset('images/produk/' . $produk->gambar) }}" 
-             class="product-image" alt="{{ $produk->nama }}">
+        <img src="{{ asset('images/produk/' . $produk->gambar) }}"
+             class="product-image" alt="{{ $produk->nama }}"
+             width="600" height="600"
+             loading="eager"
+             fetchpriority="high"
+             decoding="sync">
     @else
         <div class="placeholder-image">
             <span class="placeholder-icon">📦</span>
@@ -106,8 +110,10 @@
                         <div class="related-product-card h-100">
                             <div class="related-product-image-wrapper">
                                 @if($item->gambar && file_exists(public_path('images/produk/' . $item->gambar)))
-                                    <img src="{{ asset('images/produk/' . $item->gambar) }}" 
-                                         class="related-product-image" alt="{{ $item->nama }}">
+                                    <img src="{{ asset('images/produk/' . $item->gambar) }}"
+                                         class="related-product-image" alt="{{ $item->nama }}"
+                                         width="300" height="280"
+                                         loading="lazy" decoding="async">
                                 @else
                                     <div class="related-product-placeholder">
                                         <span class="fs-1">📦</span>
