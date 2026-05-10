@@ -288,6 +288,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 // ============================================
 // KONSTANTA & CONFIG
 // ============================================
@@ -331,7 +332,7 @@ document.getElementById('simpanAlamat')?.addEventListener('change', function() {
     document.getElementById('labelAlamatBox').style.display = this.checked ? 'block' : 'none';
 });
 
-function useSavedAddress(id, nama, wa, alamat, destinationId, cityName) {
+window.useSavedAddress = function(id, nama, wa, alamat, destinationId, cityName) {
     document.querySelectorAll('.saved-address-card').forEach(c => {
         c.classList.remove('border-primary', 'bg-light');
     });
@@ -413,25 +414,30 @@ async function reverseGeocode(lat, lng) {
     }
 }
 
-async function searchMapAddress() {
+window.searchMapAddress = async function() {
     const query = document.getElementById('mapSearch')?.value.trim();
     if (!query) return;
 
     try {
+        // Tambahkan viewbox & bounded untuk memprioritaskan area Bogor / Jawa Barat
+        // Koordinat bounding box kasar area Jabodetabek/Bogor (106.4, -7.0) to (107.2, -6.1)
+        const bboxParams = '&viewbox=106.4,-7.0,107.2,-6.1&bounded=1';
         const res     = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=1&addressdetails=1`,
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=3&addressdetails=1${bboxParams}`,
             { headers: { 'Accept-Language': 'id' } }
         );
         const results = await res.json();
 
-        if (results.length > 0) {
-            const r      = results[0];
-            const latlng = L.latLng(parseFloat(r.lat), parseFloat(r.lon));
+        // Pengecekan: filter agar tidak nyasar ke Garut dsb
+        const validResult = results.find(r => r.display_name.toLowerCase().includes('bogor') || r.display_name.toLowerCase().includes('jawa barat')) || results[0];
+
+        if (validResult) {
+            const latlng = L.latLng(parseFloat(validResult.lat), parseFloat(validResult.lon));
             map.setView(latlng, 16);
             placeMarker(latlng);
-            reverseGeocode(r.lat, r.lon);
+            reverseGeocode(validResult.lat, validResult.lon);
         } else {
-            Swal.fire({ icon: 'warning', title: 'Tidak Ditemukan', text: 'Alamat tidak ditemukan.', confirmButtonColor: '#0d6efd' });
+            Swal.fire({ icon: 'warning', title: 'Tidak Ditemukan', text: 'Alamat tidak ditemukan di sekitar area tujuan.', confirmButtonColor: '#0d6efd' });
         }
     } catch(e) {
         Swal.fire({ icon: 'error', title: 'Gagal', text: 'Gagal mencari alamat. Periksa koneksi.', confirmButtonColor: '#0d6efd' });
@@ -439,7 +445,7 @@ async function searchMapAddress() {
     }
 }
 
-function getMyLocation() {
+window.getMyLocation = function() {
     if (!navigator.geolocation) {
         Swal.fire({ icon: 'warning', title: 'Tidak Didukung', text: 'Browser tidak support geolocation.', confirmButtonColor: '#0d6efd' });
         return;
@@ -452,7 +458,12 @@ function getMyLocation() {
             placeMarker(latlng);
             reverseGeocode(pos.coords.latitude, pos.coords.longitude);
         },
-        () => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Tidak dapat mengakses lokasi.', confirmButtonColor: '#0d6efd' })
+        () => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Tidak dapat mengakses lokasi.', confirmButtonColor: '#0d6efd' }),
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0 // Pastikan mengambil lokasi terbaru, bukan cache
+        }
     );
 }
 
@@ -463,38 +474,101 @@ document.getElementById('mapSearch')?.addEventListener('keypress', e => {
     }
 });
 
-async function confirmLocation() {
-    if (!selectedAddress || !selectedLatLng) return;
+window.confirmLocation = async function() {
+    if (!selectedAddress || !selectedLatLng) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Lokasi Belum Terpilih',
+            text: 'Silakan pilih lokasi pada peta terlebih dahulu.',
+            confirmButtonColor: '#0d6efd'
+        });
+        return;
+    }
 
-    const addr        = selectedAddress.address;
+    const addr        = selectedAddress.address || {};
     const cityName    = addr.city || addr.regency || addr.county || addr.town || '';
     const subdistrict = addr.suburb || addr.village || addr.quarter || '';
 
-    document.getElementById('input_latitude').value  = selectedLatLng.lat;
-    document.getElementById('input_longitude').value = selectedLatLng.lng;
+    // Defensive check untuk latitude & longitude
+    const inputLat = document.getElementById('input_latitude');
+    const inputLng = document.getElementById('input_longitude');
+    if (inputLat) inputLat.value = selectedLatLng.lat || '';
+    if (inputLng) inputLng.value = selectedLatLng.lng || '';
 
-    // Isi textarea alamat lengkap dari peta (ini konteks peta — boleh)
+    // Isi textarea alamat lengkap dari peta
     const fullAddress = [
         addr.road, subdistrict, addr.city_district, cityName, addr.state
     ].filter(Boolean).join(', ');
 
-    document.getElementById('input_alamat').value           = fullAddress;
-    document.getElementById('mapAddressText').textContent   = fullAddress;
-    document.getElementById('mapAddressPreview').style.display = 'block';
+    const inputAlamat = document.getElementById('input_alamat');
+    if (inputAlamat) {
+        inputAlamat.value = fullAddress;
+    }
+
+    const mapAddressText = document.getElementById('mapAddressText');
+    if (mapAddressText) {
+        mapAddressText.textContent = fullAddress;
+    }
+
+    const mapAddressPreview = document.getElementById('mapAddressPreview');
+    if (mapAddressPreview) {
+        mapAddressPreview.style.display = 'block';
+    }
 
     // Reset highlight saved address
     document.querySelectorAll('.saved-address-card').forEach(c => {
         c.classList.remove('border-primary', 'bg-light');
     });
 
-    bootstrap.Modal.getInstance(document.getElementById('mapModal'))?.hide();
+    // Pindahkan fokus KELUAR dari modal SEBELUM modal ditutup untuk mencegah bug aria-hidden
+    if (inputAlamat) {
+        inputAlamat.focus();
+    } else {
+        document.querySelector('[data-bs-target="#mapModal"]')?.focus();
+    }
+
+    // Menutup modal
+    const modalEl = document.getElementById('mapModal');
+    if (modalEl) {
+        let bs = window.bootstrap;
+        if (!bs && typeof bootstrap !== 'undefined') {
+            bs = bootstrap;
+        }
+
+        if (bs && bs.Modal) {
+            const bsModal = bs.Modal.getInstance(modalEl);
+            if (bsModal) bsModal.hide();
+        } else {
+            // Fallback manual
+            modalEl.classList.remove('show');
+            modalEl.style.display = 'none';
+            modalEl.setAttribute('aria-hidden', 'true');
+            modalEl.removeAttribute('aria-modal');
+            modalEl.removeAttribute('role');
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) backdrop.remove();
+        }
+    }
 
     if (subdistrict || cityName) {
-        const searchTerm  = subdistrict || cityName;
-        const destInput   = document.getElementById('destinationSearch');
+        // Tampilkan loading saat sinkronisasi
+        Swal.fire({
+            title: 'Mensinkronkan...',
+            text: 'Mencari kecamatan terdekat di sistem ongkir',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        // Gabungkan subdistrict dan cityName agar lebih spesifik (misal: "Sukahati Cibinong")
+        const searchTerm = subdistrict ? `${subdistrict} ${cityName}`.trim() : cityName;
+        
+        const destInput = document.getElementById('destinationSearch');
         if (destInput) {
             destInput.value = searchTerm;
-            await autoSearchDestination(searchTerm);
+            await autoSearchDestination(searchTerm, cityName);
         }
     }
 }
@@ -575,16 +649,50 @@ async function doSearchDestination(keyword) {
     }
 }
 
-async function autoSearchDestination(keyword) {
+async function autoSearchDestination(keyword, fallbackKeyword = null) {
     try {
         const res  = await fetch(`{{ route('ongkir.search') }}?search=${encodeURIComponent(keyword)}`);
         const data = await res.json();
 
         if (data && data.length > 0) {
-            const match = data.find(d => d.city_name?.toLowerCase().includes(keyword.toLowerCase())) || data[0];
-            selectDestination(match);
+            // 1. Coba cari kecocokan eksak
+            const exactMatch = data.find(d => d.label.toLowerCase().includes(keyword.toLowerCase()));
+            if (exactMatch) {
+                selectDestination(exactMatch);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sinkronisasi Berhasil',
+                    text: `Kecamatan ${exactMatch.label} otomatis dipilih dari peta.`,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } else {
+                // 2. Jika tidak persis, pilih opsi pertama tapi beri peringatan
+                selectDestination(data[0]);
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Periksa Kembali',
+                    text: `Sistem memilih "${data[0].label}" berdasarkan peta. Pastikan ini sesuai. Jika tidak, silakan cari manual di kolom pencarian.`,
+                    confirmButtonColor: '#0d6efd'
+                });
+            }
+        } else if (fallbackKeyword && fallbackKeyword.toLowerCase() !== keyword.toLowerCase()) {
+            // 3. Fallback: cari dengan nama kota jika kecamatan tidak ketemu
+            await autoSearchDestination(fallbackKeyword, null);
+        } else {
+            // 4. Gagal menemukan sama sekali
+            Swal.fire({
+                icon: 'warning',
+                title: 'Tidak Ditemukan',
+                text: `Kecamatan "${keyword}" dari peta tidak ditemukan di database pengiriman. Silakan ketik dan cari manual di form.`,
+                confirmButtonColor: '#0d6efd'
+            }).then(() => {
+                document.getElementById('destinationSearch').focus();
+                doSearchDestination(keyword);
+            });
         }
     } catch(e) {
+        Swal.close();
         console.warn('Auto search error:', e.message);
     }
 }
@@ -640,7 +748,7 @@ const debouncedCalculate = debounce(async function(destinationId, weight) {
 // State untuk Progressive Disclosure
 let moreExpanded = false;
 
-function toggleMoreCouriers() {
+window.toggleMoreCouriers = function() {
     const moreSection = document.getElementById('kurirMore');
     const icon        = document.getElementById('expandIcon');
     const btn         = document.getElementById('kurirExpandBtn');
@@ -688,7 +796,6 @@ async function calculateOngkir(destinationId, weight = DEFAULT_WEIGHT) {
     const moreContainer     = document.getElementById('kurirMore');
     const expandWrapper     = document.getElementById('kurirExpandWrapper');
     const loading           = document.getElementById('ongkirLoading');
-    const kurirError        = document.getElementById('kurirError');
 
     // Reset UI — tampilkan section & spinner, sembunyikan error
     if (kurirSection)      kurirSection.style.display = 'block';
@@ -696,7 +803,6 @@ async function calculateOngkir(destinationId, weight = DEFAULT_WEIGHT) {
     if (cheapestContainer) cheapestContainer.innerHTML = '';
     if (moreContainer)     { moreContainer.innerHTML = ''; moreContainer.style.display = 'none'; }
     if (expandWrapper)     expandWrapper.style.display = 'none';
-    if (kurirError)        kurirError.style.display    = 'none'; // Sembunyikan error dulu
     moreExpanded = false;
 
     selectedOngkir = 0;
@@ -721,10 +827,12 @@ async function calculateOngkir(destinationId, weight = DEFAULT_WEIGHT) {
         if (loading) loading.style.display = 'none';
 
         if (res.status === 429) {
-            if (kurirError) {
-                kurirError.innerHTML     = '⚠️ Terlalu banyak permintaan. Tunggu sebentar lalu coba lagi.';
-                kurirError.style.display = 'block';
-            }
+            Swal.fire({
+                icon: 'warning',
+                title: 'Terlalu Banyak Permintaan',
+                text: 'Sistem sedang memproses. Tunggu sebentar lalu coba lagi.',
+                confirmButtonColor: '#0d6efd'
+            });
             return;
         }
 
@@ -744,10 +852,12 @@ async function calculateOngkir(destinationId, weight = DEFAULT_WEIGHT) {
 
         // Cek error dari server (hanya jika respons memang error)
         if (!res.ok || data.error) {
-            if (kurirError) {
-                kurirError.innerHTML     = '⚠️ ' + (data.error || 'Ongkir tidak tersedia untuk tujuan ini.');
-                kurirError.style.display = 'block';
-            }
+            Swal.fire({
+                icon: 'error',
+                title: 'Ongkir Gagal',
+                text: data.error || 'Ongkir tidak tersedia untuk tujuan ini.',
+                confirmButtonColor: '#0d6efd'
+            });
             return;
         }
 
@@ -756,10 +866,12 @@ async function calculateOngkir(destinationId, weight = DEFAULT_WEIGHT) {
 
         // Hanya tampilkan error jika memang tidak ada kurir sama sekali
         if (courierNames.length === 0) {
-            if (kurirError) {
-                kurirError.innerHTML     = '⚠️ Tidak ada layanan kurir tersedia untuk tujuan ini.';
-                kurirError.style.display = 'block';
-            }
+            Swal.fire({
+                icon: 'error',
+                title: 'Tidak Ada Kurir',
+                text: 'Tidak ada layanan kurir tersedia untuk tujuan ini. Coba pilih kecamatan yang lain.',
+                confirmButtonColor: '#0d6efd'
+            });
             return;
         }
 
@@ -791,11 +903,13 @@ async function calculateOngkir(destinationId, weight = DEFAULT_WEIGHT) {
     } catch(e) {
         if (currentFetchId !== calculateFetchId) return;
         
-        if (loading)    loading.style.display    = 'none';
-        if (kurirError) {
-            kurirError.innerHTML     = '⚠️ Gagal menghitung ongkir. Periksa koneksi internet.';
-            kurirError.style.display = 'block';
-        }
+        if (loading) loading.style.display = 'none';
+        Swal.fire({
+            icon: 'error',
+            title: 'Kesalahan Jaringan',
+            text: 'Gagal menghitung ongkir. Periksa koneksi internet Anda.',
+            confirmButtonColor: '#0d6efd'
+        });
         console.warn('calculateOngkir error:', e.message);
     }
 }
@@ -835,27 +949,9 @@ function updateTotal() {
 }
 
 // ============================================
-// COD INFO TOGGLE — hanya muncul saat COD dipilih
+// COD INFO TOGGLE
 // ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    const radios   = document.querySelectorAll('input[name="metode_pembayaran"]');
-    const infoCod  = document.getElementById('infoCod');
-    const codRadio = document.getElementById('pay_cod');
-
-    function updateCodInfo() {
-        if (infoCod && codRadio) {
-            infoCod.style.display = codRadio.checked ? 'block' : 'none';
-        }
-    }
-
-    // Set initial state pada saat halaman dimuat
-    updateCodInfo();
-
-    // Set listener pada semua radio
-    radios.forEach(r => {
-        r.addEventListener('change', updateCodInfo);
-    });
-});
+// (Dihapus karena elemen infoCod telah dihapus dari view, alert COD diserahkan ke sistem lain bila perlu)
 
 // ============================================
 // VALIDASI SUBMIT FORM (SweetAlert2)
@@ -912,6 +1008,8 @@ document.getElementById('checkoutForm')?.addEventListener('submit', function(e) 
 
     // Semua validasi lolos — form submit normal ke halaman pembayaran
 });
+
+}); // End of DOMContentLoaded
 </script>
 @endpush
 
