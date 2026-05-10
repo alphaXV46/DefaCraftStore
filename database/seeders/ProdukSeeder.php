@@ -3,57 +3,61 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Produk;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ProdukSeeder extends Seeder
 {
-    public function run(): void
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
     {
-        $produk = [
-            [
-                'nama' => 'Boneka Beruang Lucu',
-                'deskripsi' => 'Boneka beruang super lembut dan menggemaskan',
-                'harga' => 150000,
-                'kategori' => 'Boneka',
-                'gambar' => 'boneka1.jpg',
-                'stok' => 25  // TAMBAH INI
-            ],
-            [
-                'nama' => 'Gantungan Kunci Kucing',
-                'deskripsi' => 'Gantungan kunci bentuk kucing imut',
-                'harga' => 35000,
-                'kategori' => 'Aksesoris',
-                'gambar' => 'aksesoris1.jpg',
-                'stok' => 50  // TAMBAH INI
-            ],
-            [
-                'nama' => 'Lampion Hias Warna-Warni',
-                'deskripsi' => 'Lampion cantik untuk dekorasi kamar',
-                'harga' => 75000,
-                'kategori' => 'Dekorasi',
-                'gambar' => 'dekorasi1.jpg',
-                'stok' => 15  // TAMBAH INI
-            ],
-            [
-                'nama' => 'Bantal Karakter Panda',
-                'deskripsi' => 'Bantal empuk dengan desain panda lucu',
-                'harga' => 125000,
-                'kategori' => 'Boneka',
-                'gambar' => 'boneka2.jpg',
-                'stok' => 30  // TAMBAH INI
-            ],
-            [
-                'nama' => 'Tas Rajut Mini',
-                'deskripsi' => 'Tas rajut kecil untuk penyimpanan aksesoris',
-                'harga' => 65000,
-                'kategori' => 'Aksesoris',
-                'gambar' => 'aksesoris2.jpg',
-                'stok' => 20  // TAMBAH INI
-            ],
-        ];
+        $now = Carbon::now();
 
-        foreach ($produk as $p) {
-            Produk::create($p);
-        }
+        DB::table('produk')->insert([
+            [
+                'nama' => 'Nanci Premium 1',
+                'deskripsi' => 'Boneka Nanci handmade dengan kualitas premium dan detail yang rapi.',
+                'harga' => 150000.00,
+                'kategori' => 'Boneka',
+                'gambar' => '1776375834_nanci 1.webp',
+                'stok' => 15,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'nama' => 'Nanci Edition 2',
+                'deskripsi' => 'Varian kedua dari koleksi Nanci, cocok untuk kado spesial.',
+                'harga' => 125000.00,
+                'kategori' => 'Boneka',
+                'gambar' => '1776375938_nanci 2.webp',
+                'stok' => 10,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],           
+            [
+                'nama' => 'Nanci Classic 3',
+                'deskripsi' => 'Edisi klasik Nanci dengan balutan warna yang lembut.',
+                'harga' => 135000.00,
+                'kategori' => 'Boneka',
+                'gambar' => '1776376094_nanci 3.webp',
+                'stok' => 8,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'nama' => 'Nanci Blue Edition',
+                'deskripsi' => 'Edisi terbatas Nanci dengan tema warna biru.',
+                'harga' => 145000.00,
+                'kategori' => 'Boneka',
+                'gambar' => '1776376253_nanci 4.webp',
+                'stok' => 12,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+        ]);
     }
 }
