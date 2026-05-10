@@ -93,4 +93,4 @@ Website: [@alphaXV46](https://defacraftstore.biz.id) (belum hosting)
 
 ---
 
-Copyright © 2026 DefaCraftStore. Built with  by Geraldy.
+Copyright © 2026 DefaCraftStore. Built by Geraldy,Dimas,Olif.
