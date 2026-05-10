@@ -298,6 +298,7 @@
     width: 100%; background: var(--gradient-primary); color: var(--white);
     border: none; padding: 0.875rem; border-radius: var(--radius-lg);
     font-weight: 700; transition: all var(--transition-base);
+    min-height: 48px; display: flex; align-items: center; justify-content: center;
 }
 .btn-add-cart:hover { transform: translateY(-2px); box-shadow: var(--shadow-colored); }
 

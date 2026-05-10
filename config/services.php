@@ -36,10 +36,12 @@ return [
     ],
 
     'google' => [
-    'client_id' => env('GOOGLE_CLIENT_ID'),
-    'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-    'redirect' => env('GOOGLE_REDIRECT_URI'),
-],
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        // Menggunakan path relatif agar Socialite otomatis menggunakan fungsi url()
+        // yang secara otomatis akan mengikuti config('app.url') dan forceScheme dari AppServiceProvider
+        'redirect' => '/auth/google/callback',
+    ],
 'midtrans' => [
     'server_key'    => env('MIDTRANS_SERVER_KEY'),
     'client_key'    => env('MIDTRANS_CLIENT_KEY'),

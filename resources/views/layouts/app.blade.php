@@ -14,6 +14,8 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'DefaCraftStore - Kerajinan Tangan Modern')</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Google Fonts Optimized (Non-blocking) -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">

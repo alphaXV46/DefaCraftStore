@@ -6,6 +6,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Deteksi host secara dinamis
+        $host = request()->header('host');
+        if ($host) {
+            if (str_contains($host, 'ngrok-free.dev') || app()->environment('production')) {
+                config(['app.url' => 'https://' . $host]);
+                URL::forceScheme('https');
+            } else {
+                config(['app.url' => 'http://' . $host]);
+            }
+        }
+
         // ══════════════════════════════════════════════════════
         // RATE LIMITER: LOGIN
         // ══════════════════════════════════════════════════════

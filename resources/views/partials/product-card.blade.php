@@ -9,15 +9,26 @@
     <!-- Image -->
     <div class="product-image-wrapper">
         @if($item->gambar && file_exists(public_path('images/produk/' . $item->gambar)))
-            <img src="{{ asset('images/produk/' . $item->gambar) }}"
+            @php
+                // Mencegah spasi pada nama file merusak sintaks srcset (URL encode spasi menjadi %20)
+                $safeGambar = rawurlencode($item->gambar);
+            @endphp
+            <img src="{{ asset('images/produk/' . $safeGambar) }}"
+                 srcset="{{ asset('images/produk/' . $safeGambar) }} 480w, 
+                         {{ asset('images/produk/' . $safeGambar) }} 800w"
+                 sizes="(max-width: 576px) 100vw, (max-width: 768px) 50vw, 300px"
+                 class="img-fluid"
+                 style="object-fit: cover; width: 100%; height: 100%; aspect-ratio: 1/1;"
                  alt="{{ $item->nama }}"
-                 width="300" height="280"
+                 width="300" height="300"
                  loading="lazy"
                  decoding="async">
         @else
-            <img src="data:image/svg+xml,%3Csvg width='300' height='280' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='300' height='280' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%2394a3b8' font-size='60' dy='.3em'%3E📦%3C/text%3E%3C/svg%3E"
+            <img src="data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='300' height='300' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%2394a3b8' font-size='60' dy='.3em'%3E📦%3C/text%3E%3C/svg%3E"
+                 class="img-fluid"
+                 style="object-fit: cover; width: 100%; height: 100%; aspect-ratio: 1/1;"
                  alt="{{ $item->nama }}"
-                 width="300" height="280"
+                 width="300" height="300"
                  loading="lazy"
                  decoding="async">
         @endif
