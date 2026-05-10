@@ -60,6 +60,10 @@ public function store(Request $request)
         'alamat'            => 'required|string',
         'nomor_wa'          => 'required|string|max:20',
         'metode_pembayaran' => 'required|in:QRIS,COD,VA,CC',
+        'destination_id'    => 'required|numeric',
+        'kurir'             => 'required|string|max:20',
+        'layanan_kurir'     => 'required|string|max:50',
+        'ongkir'            => 'required|numeric|min:0',
     ]);
 
     if ($validator->fails()) {

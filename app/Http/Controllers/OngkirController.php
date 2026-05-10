@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Services\RajaOngkirService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\RateLimiter;
 
 class OngkirController extends Controller
 {
@@ -22,8 +20,6 @@ class OngkirController extends Controller
 
         $keyword = trim($request->search);
 
-        // Rate limit sekarang ditangani oleh middleware `throttle:ongkir` di routes/web.php
-
         $results = $this->rajaOngkir->searchDestination($keyword);
         return response()->json($results);
     }
@@ -32,7 +28,7 @@ class OngkirController extends Controller
     {
         $request->validate([
             'destination_id' => 'required|string',
-            'weight'         => 'nullable|integer|min:100|max:30000',
+            'weight'         => 'nullable|integer|min:100|max:1000',
         ]);
 
         // Pre-flight check — destination_id harus valid (angka)
@@ -40,12 +36,19 @@ class OngkirController extends Controller
             return response()->json(['error' => 'Destination tidak valid.'], 422);
         }
 
-        // Rate limit sekarang ditangani oleh middleware `throttle:ongkir` di routes/web.php
-
-        $weight  = $request->weight ?? 1000;
+        $weight  = min($request->weight ?? 1000, 1000);
         $results = $this->rajaOngkir->calculateAllCouriers($request->destination_id, $weight);
 
-        if (empty($results)) {
+        // Deteksi API limit habis
+        if (!empty($results['limit'])) {
+            return response()->json([
+                'status'  => 'limit',
+                'message' => $results['message'] ?? 'Account limit reached',
+            ], 200); // kirim 200 agar fetch tidak throw, frontend cek 'status'
+        }
+
+        // Respons baru: { grouped: {...}, all: [...] }
+        if (empty($results) || empty($results['all'] ?? [])) {
             return response()->json(['error' => 'Tidak dapat menghitung ongkir untuk tujuan ini.'], 422);
         }
 

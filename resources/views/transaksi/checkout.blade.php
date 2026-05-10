@@ -4,6 +4,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     @vite(['resources/css/transaksi-checkout.css'])
 @endpush
 
@@ -111,21 +112,30 @@
                         </div>
                     </div>
 
-                    {{-- PILIH KURIR --}}
+                    {{-- PILIH KURIR (Progressive Disclosure) --}}
                     <div class="card mb-4 border-0 shadow-sm" id="kurirSection" style="display:none;">
                         <div class="card-body p-4">
                             <h5 class="fw-bold mb-4">🚚 Pilih Kurir & Ongkos Kirim</h5>
 
                             <div id="ongkirLoading" style="display:none;" class="text-center py-3">
                                 <div class="spinner-border text-primary" role="status"></div>
-                                <p class="mt-2 text-muted small">Menghitung ongkir...</p>
+                                <p class="mt-2 text-muted small">Menghitung ongkir dari 3 kurir...</p>
                             </div>
 
-                            <div id="kurirList" class="row g-3"></div>
+                            {{-- Opsi termurah per kurir (selalu terlihat) --}}
+                            <div id="kurirCheapest" class="row g-3"></div>
 
-                            <div id="kurirError" class="alert alert-warning mb-0" style="display:none;">
-                                ⚠️ Tidak dapat menghitung ongkir untuk tujuan ini.
+                            {{-- Tombol expand --}}
+                            <div id="kurirExpandWrapper" class="text-center mt-3" style="display:none;">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="kurirExpandBtn" onclick="toggleMoreCouriers()">
+                                    <span id="expandIcon">▼</span> Lihat lebih banyak opsi
+                                </button>
                             </div>
+
+                            {{-- Opsi tambahan (hidden by default) --}}
+                            <div id="kurirMore" class="row g-3 mt-2" style="display:none;"></div>
+
+                            
                         </div>
                     </div>
 
@@ -177,9 +187,7 @@
                                 </div>
                             </div>
 
-                            <div id="infoCod" class="alert alert-warning mt-3 mb-0 py-2 small" style="display:none;">
-                                📌 Siapkan uang tunai saat kurir tiba.
-                            </div>
+                            
                         </div>
                     </div>
 
@@ -278,6 +286,7 @@
 
 @push('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 // ============================================
 // KONSTANTA & CONFIG
@@ -302,6 +311,7 @@ let lastSearchKeyword        = '';
 let lastCalculatedId         = '';
 let lastCalculatedWeight     = 0;
 let lastDestinationId        = '';
+let calculateFetchId         = 0;
 
 // ============================================
 // UTILITY: DEBOUNCE
@@ -421,17 +431,17 @@ async function searchMapAddress() {
             placeMarker(latlng);
             reverseGeocode(r.lat, r.lon);
         } else {
-            alert('Alamat tidak ditemukan.');
+            Swal.fire({ icon: 'warning', title: 'Tidak Ditemukan', text: 'Alamat tidak ditemukan.', confirmButtonColor: '#0d6efd' });
         }
     } catch(e) {
-        alert('Gagal mencari alamat.');
+        Swal.fire({ icon: 'error', title: 'Gagal', text: 'Gagal mencari alamat. Periksa koneksi.', confirmButtonColor: '#0d6efd' });
         console.warn('Search map error:', e.message);
     }
 }
 
 function getMyLocation() {
     if (!navigator.geolocation) {
-        alert('Browser tidak support geolocation.');
+        Swal.fire({ icon: 'warning', title: 'Tidak Didukung', text: 'Browser tidak support geolocation.', confirmButtonColor: '#0d6efd' });
         return;
     }
 
@@ -442,7 +452,7 @@ function getMyLocation() {
             placeMarker(latlng);
             reverseGeocode(pos.coords.latitude, pos.coords.longitude);
         },
-        () => alert('Tidak dapat mengakses lokasi.')
+        () => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Tidak dapat mengakses lokasi.', confirmButtonColor: '#0d6efd' })
     );
 }
 
@@ -463,6 +473,7 @@ async function confirmLocation() {
     document.getElementById('input_latitude').value  = selectedLatLng.lat;
     document.getElementById('input_longitude').value = selectedLatLng.lng;
 
+    // Isi textarea alamat lengkap dari peta (ini konteks peta — boleh)
     const fullAddress = [
         addr.road, subdistrict, addr.city_district, cityName, addr.state
     ].filter(Boolean).join(', ');
@@ -579,20 +590,22 @@ async function autoSearchDestination(keyword) {
 }
 
 function selectDestination(item) {
+    // Isi hidden inputs untuk ongkir
     document.getElementById('input_destination_id').value  = item.id;
     document.getElementById('input_city_name').value       = item.city_name || '';
+
+    // Isi search box dengan label kecamatan
     document.getElementById('destinationSearch').value     = item.label;
     document.getElementById('destinationDropdown').style.display = 'none';
 
+    // Tampilkan badge kecamatan terpilih
     const elSelText = document.getElementById('destinationSelectedText');
     const elSelBox  = document.getElementById('destinationSelected');
     if (elSelText) elSelText.textContent  = item.label;
     if (elSelBox)  elSelBox.style.display = 'block';
 
-    const alamat = document.getElementById('input_alamat');
-    if (alamat && !alamat.value) {
-        alamat.value = [item.subdistrict_name, item.district_name].filter(Boolean).join(', ');
-    }
+    // ⚠️ Kecamatan TIDAK boleh mengisi textarea alamat_lengkap — user isi manual
+    // (Textarea #input_alamat TIDAK disentuh di sini)
 
     document.querySelectorAll('.saved-address-card').forEach(c => {
         c.classList.remove('border-primary', 'bg-light');
@@ -614,7 +627,8 @@ document.addEventListener('click', function(e) {
 // ============================================
 const debouncedCalculate = debounce(async function(destinationId, weight) {
     if (!destinationId || !/^\d+$/.test(destinationId)) return;
-    if (weight < 100 || weight > 30000) return;
+    weight = Math.min(weight, 1000);
+    if (weight < 100) return;
 
     if (destinationId === lastCalculatedId && weight === lastCalculatedWeight) return;
 
@@ -623,21 +637,67 @@ const debouncedCalculate = debounce(async function(destinationId, weight) {
     await calculateOngkir(destinationId, weight);
 }, DEBOUNCE_ONGKIR);
 
+// State untuk Progressive Disclosure
+let moreExpanded = false;
+
+function toggleMoreCouriers() {
+    const moreSection = document.getElementById('kurirMore');
+    const icon        = document.getElementById('expandIcon');
+    const btn         = document.getElementById('kurirExpandBtn');
+    if (!moreSection) return;
+
+    moreExpanded = !moreExpanded;
+    moreSection.style.display = moreExpanded ? 'flex' : 'none';
+    if (icon) icon.textContent = moreExpanded ? '▲' : '▼';
+    if (btn) btn.innerHTML = `<span id="expandIcon">${moreExpanded ? '▲' : '▼'}</span> ${moreExpanded ? 'Sembunyikan' : 'Lihat lebih banyak opsi'}`;
+}
+
+function buildKurirCard(item) {
+    const col     = document.createElement('div');
+    col.className = 'col-sm-6 col-lg-4';
+    col.innerHTML = `
+        <div class="kurir-card"
+             data-courier="${item.courier}"
+             data-service="${item.service}"
+             data-cost="${item.cost}"
+             data-etd="${item.etd}">
+            <div class="kurir-card__header">
+                <span class="kurir-card__badge">${item.courier}</span>
+                <span class="kurir-card__service">${item.service}</span>
+            </div>
+            <div class="kurir-card__price">Rp ${Number(item.cost).toLocaleString('id-ID')}</div>
+            <div class="kurir-card__etd">📦 Estimasi ${item.etd}</div>
+        </div>
+    `;
+    col.querySelector('.kurir-card').addEventListener('click', function() {
+        selectKurir(this, item.courier, item.service, item.cost, item.etd);
+    });
+    return col;
+}
+
 async function calculateOngkir(destinationId, weight = DEFAULT_WEIGHT) {
     if (!destinationId || !/^\d+$/.test(String(destinationId))) {
         console.warn('calculateOngkir: invalid destinationId');
         return;
     }
 
-    const kurirSection = document.getElementById('kurirSection');
-    const kurirList    = document.getElementById('kurirList');
-    const loading      = document.getElementById('ongkirLoading');
-    const kurirError   = document.getElementById('kurirError');
+    const currentFetchId = ++calculateFetchId;
 
-    if (kurirSection) kurirSection.style.display = 'block';
-    if (loading)      loading.style.display      = 'block';
-    if (kurirList)    kurirList.innerHTML         = '';
-    if (kurirError)   kurirError.style.display    = 'none';
+    const kurirSection      = document.getElementById('kurirSection');
+    const cheapestContainer = document.getElementById('kurirCheapest');
+    const moreContainer     = document.getElementById('kurirMore');
+    const expandWrapper     = document.getElementById('kurirExpandWrapper');
+    const loading           = document.getElementById('ongkirLoading');
+    const kurirError        = document.getElementById('kurirError');
+
+    // Reset UI — tampilkan section & spinner, sembunyikan error
+    if (kurirSection)      kurirSection.style.display = 'block';
+    if (loading)           loading.style.display      = 'block';
+    if (cheapestContainer) cheapestContainer.innerHTML = '';
+    if (moreContainer)     { moreContainer.innerHTML = ''; moreContainer.style.display = 'none'; }
+    if (expandWrapper)     expandWrapper.style.display = 'none';
+    if (kurirError)        kurirError.style.display    = 'none'; // Sembunyikan error dulu
+    moreExpanded = false;
 
     selectedOngkir = 0;
     if (document.getElementById('input_kurir'))  document.getElementById('input_kurir').value  = '';
@@ -651,9 +711,13 @@ async function calculateOngkir(destinationId, weight = DEFAULT_WEIGHT) {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
             },
-            body: JSON.stringify({ destination_id: destinationId, weight: weight }),
+            body: JSON.stringify({ destination_id: destinationId, weight: Math.min(weight, 1000) }),
         });
 
+        // Abort jika ada request baru yang berjalan
+        if (currentFetchId !== calculateFetchId) return;
+
+        // Selalu sembunyikan spinner setelah response diterima
         if (loading) loading.style.display = 'none';
 
         if (res.status === 429) {
@@ -664,37 +728,69 @@ async function calculateOngkir(destinationId, weight = DEFAULT_WEIGHT) {
             return;
         }
 
-        const results = await res.json();
+        const data = await res.json();
 
-        if (results.error || !Array.isArray(results) || results.length === 0) {
+        // Deteksi kuota API habis
+        if (data.status === 'limit') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Kuota Habis',
+                text: 'Maaf, kuota harian perhitungan ongkir telah habis. Silakan hubungi admin atau isi alamat manual.',
+                confirmButtonColor: '#0d6efd',
+                confirmButtonText: 'Mengerti'
+            });
+            return;
+        }
+
+        // Cek error dari server (hanya jika respons memang error)
+        if (!res.ok || data.error) {
             if (kurirError) {
-                kurirError.innerHTML     = '⚠️ ' + (results.error || 'Ongkir tidak tersedia untuk tujuan ini.');
+                kurirError.innerHTML     = '⚠️ ' + (data.error || 'Ongkir tidak tersedia untuk tujuan ini.');
                 kurirError.style.display = 'block';
             }
             return;
         }
 
-        results.forEach(item => {
-            const col       = document.createElement('div');
-            col.className   = 'col-sm-6';
-            col.innerHTML   = `
-                <div class="kurir-card"
-                     data-courier="${item.courier}"
-                     data-service="${item.service}"
-                     data-cost="${item.cost}"
-                     data-etd="${item.etd}">
-                    <div class="fw-bold">${item.courier} ${item.service}</div>
-                    <div class="text-primary fw-bold">Rp ${Number(item.cost).toLocaleString('id-ID')}</div>
-                    <small class="text-muted">Estimasi ${item.etd}</small>
-                </div>
-            `;
-            col.querySelector('.kurir-card').addEventListener('click', function() {
-                selectKurir(this, item.courier, item.service, item.cost, item.etd);
-            });
-            if (kurirList) kurirList.appendChild(col);
+        const grouped      = data.grouped || {};
+        const courierNames = Object.keys(grouped);
+
+        // Hanya tampilkan error jika memang tidak ada kurir sama sekali
+        if (courierNames.length === 0) {
+            if (kurirError) {
+                kurirError.innerHTML     = '⚠️ Tidak ada layanan kurir tersedia untuk tujuan ini.';
+                kurirError.style.display = 'block';
+            }
+            return;
+        }
+
+        // === PROGRESSIVE DISCLOSURE ===
+        // 1) Tampilkan 1 opsi termurah per kurir (primary view)
+        let hasMoreOptions = false;
+
+        courierNames.forEach(courierKey => {
+            const options = grouped[courierKey];
+            if (!options || options.length === 0) return;
+
+            // Opsi termurah → tampil di area utama
+            cheapestContainer.appendChild(buildKurirCard(options[0]));
+
+            // Opsi ke-2 & ke-3 → masuk ke area "lebih banyak"
+            if (options.length > 1) {
+                hasMoreOptions = true;
+                for (let i = 1; i < options.length; i++) {
+                    moreContainer.appendChild(buildKurirCard(options[i]));
+                }
+            }
         });
 
+        // 2) Tampilkan tombol expand jika ada opsi tambahan
+        if (hasMoreOptions && expandWrapper) {
+            expandWrapper.style.display = 'block';
+        }
+
     } catch(e) {
+        if (currentFetchId !== calculateFetchId) return;
+        
         if (loading)    loading.style.display    = 'none';
         if (kurirError) {
             kurirError.innerHTML     = '⚠️ Gagal menghitung ongkir. Periksa koneksi internet.';
@@ -739,21 +835,30 @@ function updateTotal() {
 }
 
 // ============================================
-// COD INFO TOGGLE
+// COD INFO TOGGLE — hanya muncul saat COD dipilih
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
-    const radios  = document.querySelectorAll('input[name="metode_pembayaran"]');
-    const infoCod = document.getElementById('infoCod');
+    const radios   = document.querySelectorAll('input[name="metode_pembayaran"]');
+    const infoCod  = document.getElementById('infoCod');
+    const codRadio = document.getElementById('pay_cod');
 
+    function updateCodInfo() {
+        if (infoCod && codRadio) {
+            infoCod.style.display = codRadio.checked ? 'block' : 'none';
+        }
+    }
+
+    // Set initial state pada saat halaman dimuat
+    updateCodInfo();
+
+    // Set listener pada semua radio
     radios.forEach(r => {
-        r.addEventListener('change', function() {
-            if (infoCod) infoCod.style.display = this.value === 'COD' ? 'block' : 'none';
-        });
+        r.addEventListener('change', updateCodInfo);
     });
 });
 
 // ============================================
-// VALIDASI SUBMIT FORM
+// VALIDASI SUBMIT FORM (SweetAlert2)
 // ============================================
 document.getElementById('checkoutForm')?.addEventListener('submit', function(e) {
     const destId = document.getElementById('input_destination_id')?.value;
@@ -762,19 +867,32 @@ document.getElementById('checkoutForm')?.addEventListener('submit', function(e) 
 
     if (!destId) {
         e.preventDefault();
-        alert('⚠️ Pilih kecamatan/kelurahan tujuan pengiriman terlebih dahulu.');
-        document.getElementById('destinationSearch')?.focus();
+        Swal.fire({
+            icon: 'warning',
+            title: 'Tujuan Belum Dipilih',
+            text: 'Pilih kecamatan/kelurahan tujuan pengiriman terlebih dahulu.',
+            confirmButtonColor: '#0d6efd'
+        }).then(() => document.getElementById('destinationSearch')?.focus());
         return;
     }
     if (!kurir) {
         e.preventDefault();
-        alert('⚠️ Pilih kurir pengiriman terlebih dahulu.');
-        document.getElementById('kurirSection')?.scrollIntoView({ behavior: 'smooth' });
+        Swal.fire({
+            icon: 'warning',
+            title: 'Kurir Belum Dipilih',
+            text: 'Pilih kurir pengiriman terlebih dahulu.',
+            confirmButtonColor: '#0d6efd'
+        }).then(() => document.getElementById('kurirSection')?.scrollIntoView({ behavior: 'smooth' }));
         return;
     }
     if (!metode) {
         e.preventDefault();
-        alert('⚠️ Pilih metode pembayaran terlebih dahulu.');
+        Swal.fire({
+            icon: 'warning',
+            title: 'Metode Pembayaran',
+            text: 'Pilih metode pembayaran terlebih dahulu.',
+            confirmButtonColor: '#0d6efd'
+        });
         return;
     }
 
@@ -783,8 +901,12 @@ document.getElementById('checkoutForm')?.addEventListener('submit', function(e) 
     const labelAlamat  = document.querySelector('[name="label_alamat"]');
     if (simpanAlamat?.checked && labelAlamat && !labelAlamat.value.trim()) {
         e.preventDefault();
-        alert('⚠️ Isi label alamat (contoh: Rumah, Kantor) untuk menyimpan alamat.');
-        labelAlamat.focus();
+        Swal.fire({
+            icon: 'warning',
+            title: 'Label Alamat Kosong',
+            text: 'Isi label alamat (contoh: Rumah, Kantor) untuk menyimpan alamat.',
+            confirmButtonColor: '#0d6efd'
+        }).then(() => labelAlamat.focus());
         return;
     }
 
@@ -792,3 +914,4 @@ document.getElementById('checkoutForm')?.addEventListener('submit', function(e) 
 });
 </script>
 @endpush
+

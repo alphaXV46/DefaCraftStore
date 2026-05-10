@@ -37,6 +37,7 @@ class RajaOngkirService
             try {
                 $response = $this->http()->get("{$this->baseUrl}/destination/domestic-destination", [
                     'search' => $keyword,
+                    'limit'  => 100, // Tambahkan limit agar semua opsi kode pos muncul
                 ]);
 
                 if (!$response->successful()) {
@@ -94,64 +95,100 @@ class RajaOngkirService
     }
 
     /**
-     * Calculate ongkir semua kurir — cached per destination+weight
+     * Calculate ongkir semua kurir (JNE, J&T, TIKI) — grouped by courier
+     * Mengembalikan struktur: [ 'grouped' => [...], 'all' => [...] ]
      */
-   public function calculateAllCouriers(string $destinationId, int $weight = 1000): array
-{
-    $cacheKey = "ro_all_{$this->originId}_{$destinationId}_{$weight}";
+    public function calculateAllCouriers(string $destinationId, int $weight = 1000): array
+    {
+        // Clamp berat: semua produk di bawah 1kg
+        $weight = min($weight, 1000);
 
-    return Cache::remember($cacheKey, 10800, function () use ($destinationId, $weight) {
-        try {
-            // 1 request untuk JNE + JNT sekaligus
-            $response = $this->http()
-                ->asForm()
-                ->post("{$this->baseUrl}/calculate/domestic-cost", [
-                    'origin'      => $this->originId,
-                    'destination' => $destinationId,
-                    'weight'      => $weight,
-                    'courier'     => 'jne:jnt', // 1 call, 2 kurir
-                ]);
+        $cacheKey = "ro_all_{$this->originId}_{$destinationId}_{$weight}";
 
-            if (!$response->successful()) return [];
+        return Cache::remember($cacheKey, 10800, function () use ($destinationId, $weight) {
+            try {
+                $response = $this->http()
+                    ->asForm()
+                    ->post("{$this->baseUrl}/calculate/domestic-cost", [
+                        'origin'      => $this->originId,
+                        'destination' => $destinationId,
+                        'weight'      => $weight,
+                        'courier'     => 'jne:jnt:tiki',
+                    ]);
 
-            $services = $response->json('data', []);
-            $results  = [];
+                $statusCode = $response->status();
+                $bodyString = strtolower($response->body());
+                if ($statusCode == 400 || str_contains($bodyString, 'limit reached') || str_contains($bodyString, 'limit exceeded')) {
+                    return ['limit' => true, 'message' => 'Account limit reached'];
+                }
 
-            // Layanan yang diblacklist (terlalu cepat / tidak realistis)
-            $blacklist = ['sameday', 'same day', 'YES', 'OKE'];
+                if (!$response->successful()) return [];
 
-            foreach ($services as $service) {
-                $cost    = (int) ($service['cost'] ?? 0);
-                $service_name = strtoupper($service['service'] ?? '');
+                $services = $response->json('data', []);
+                $results  = [];
 
-                // Skip sameday dan layanan yang tidak relevan
-                $isSameday = false;
-                foreach ($blacklist as $bl) {
-                    if (stripos($service_name, $bl) !== false) {
-                        $isSameday = true;
-                        break;
+                // Blacklist: hanya layanan sameday dan cargo/berat
+                $blacklist = ['sameday', 'same day', 'cargo', 'trucking', 'pelikan'];
+
+                foreach ($services as $service) {
+                    $cost         = (int) ($service['cost'] ?? 0);
+                    $serviceName  = $service['service'] ?? '';
+
+                    // Skip blacklisted services
+                    $isBlacklisted = false;
+                    foreach ($blacklist as $bl) {
+                        if (stripos($serviceName, $bl) !== false) {
+                            $isBlacklisted = true;
+                            break;
+                        }
+                    }
+                    if ($isBlacklisted || $cost <= 0) continue;
+
+                    $results[] = [
+                        'courier'     => strtoupper($service['code'] ?? ''),
+                        'service'     => $serviceName,
+                        'description' => $service['description'] ?? '',
+                        'cost'        => $cost,
+                        'etd'         => $service['etd'] ?? '-',
+                    ];
+                }
+
+                // Group by courier, sort each group by cost, take max 3 per courier
+                $grouped = [];
+                foreach ($results as $item) {
+                    $key = $item['courier'];
+                    if (!isset($grouped[$key])) {
+                        $grouped[$key] = [];
+                    }
+                    $grouped[$key][] = $item;
+                }
+
+                foreach ($grouped as $key => &$items) {
+                    usort($items, fn($a, $b) => $a['cost'] - $b['cost']);
+                    $items = array_slice($items, 0, 3);
+                }
+                unset($items);
+
+                // Build flat list (all items sorted by cost)
+                $all = [];
+                foreach ($grouped as $items) {
+                    foreach ($items as $item) {
+                        $all[] = $item;
                     }
                 }
-                if ($isSameday || $cost <= 0) continue;
+                usort($all, fn($a, $b) => $a['cost'] - $b['cost']);
 
-                $results[] = [
-                    'courier'     => strtoupper($service['code'] ?? ''),
-                    'service'     => $service['service']     ?? '-',
-                    'description' => $service['description'] ?? '',
-                    'cost'        => $cost,
-                    'etd'         => $service['etd']         ?? '-',
+                return [
+                    'grouped' => $grouped,
+                    'all'     => $all,
                 ];
+
+            } catch (\Exception $e) {
+                Log::error('calculateAllCouriers: ' . $e->getMessage());
+                return [];
             }
-
-            usort($results, fn($a, $b) => $a['cost'] - $b['cost']);
-            return $results;
-
-        } catch (\Exception $e) {
-            Log::error('calculateAllCouriers: ' . $e->getMessage());
-            return [];
-        }
-    });
-}
+        });
+    }
     /**
      * Clear cache untuk destination tertentu
      * Dipanggil kalau perlu refresh data
