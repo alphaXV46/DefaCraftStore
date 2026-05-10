@@ -36,7 +36,7 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek di lingkungan lokal Anda:
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/gerady-f/DefaCraftStore.git
+git clone https://github.com/alphaXV46/DefaCraftStore.git
 cd DefaCraftStore
 ```
 
@@ -83,18 +83,14 @@ Anda perlu mengisi variabel berikut di file `.env` agar fitur berjalan maksimal:
 
 ---
 
-## 📸 Showcase
 
-*(Bagian ini akan segera diisi dengan tangkapan layar aplikasi)*
-
----
 
 ## 👨‍💻 Contact
 
 **Geraldy Febriansyah**  
-GitHub: [@geraldy-f](https://github.com/gerady-f)  
-Website: [geraldyf.com](https://geraldyf.com) (Jika ada)
+GitHub: [@alphaXV46](https://github.com/alphaXV46)  
+Website: [@alphaXV46](https://defacraftstore.biz.id) (belum hosting)
 
 ---
 
-Copyright © 2024 DefaCraftStore. Built with ❤️ by Geraldy.
+Copyright © 2026 DefaCraftStore. Built with  by Geraldy.
