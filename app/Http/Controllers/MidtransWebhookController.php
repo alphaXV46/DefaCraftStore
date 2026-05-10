@@ -34,7 +34,7 @@ class MidtransWebhookController extends Controller
             $paymentType       = $notification->payment_type ?? null;
 
             // ✅ VALIDASI SIGNATURE SHA512 (CRITICAL)
-            $serverKey = env('MIDTRANS_SERVER_KEY');
+            $serverKey = config('services.midtrans.server_key');
             $calculatedSignature = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
 
             if ($calculatedSignature !== $signatureKey) {

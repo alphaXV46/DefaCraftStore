@@ -160,7 +160,7 @@
 @endsection
 
 @push('scripts')
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+<script src="{{ config('services.midtrans.snap_url') }}" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 <script>
 function opFilter(status, btn) {
     document.querySelectorAll('.op-chip').forEach(c => c.classList.remove('active'));

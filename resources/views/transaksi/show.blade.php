@@ -359,8 +359,7 @@
 @push('scripts')
 {{-- Midtrans Snap (hanya load jika dibutuhkan) --}}
 @if($transaksi->status === 'pending' && $transaksi->metode_pembayaran !== 'COD' && $transaksi->snap_token)
-<script src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+<script src="{{ config('services.midtrans.snap_url') }}" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 <script>
 function bayarSekarang(snapToken) {
     snap.pay(snapToken, {
