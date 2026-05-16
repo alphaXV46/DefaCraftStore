@@ -1,0 +1,242 @@
+/* ============================================
+   CHECKOUT PAGE STYLES
+   ============================================ */
+
+/* --- Layout --- */
+.checkout-wrapper {
+    min-height: 60vh;
+    padding: 2rem 0 4rem 0;
+}
+
+.checkout-wrapper > .container > h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 1.4rem !important;
+    font-weight: 800 !important;
+    color: #333 !important;
+    position: relative !important;
+    display: inline-block !important;
+    padding-bottom: .5rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.checkout-wrapper > .container > h1::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 60px !important;
+    height: 4px !important;
+    background: linear-gradient(135deg, #fef9c3, #eab308, #facc15) !important;
+    border-radius: 4px !important;
+}
+
+.checkout-wrapper .card {
+    border: 1.5px solid rgba(0, 0, 0, .06) !important;
+    border-radius: 18px !important;
+}
+
+.checkout-wrapper .card-body {
+    padding: 1.75rem !important;
+}
+
+.checkout-wrapper .card-body h5 {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 1.15rem !important;
+    font-weight: 800 !important;
+    color: #333 !important;
+    margin-bottom: 1.25rem !important;
+}
+
+/* --- Sticky Summary --- */
+.summary-card {
+    position: sticky;
+    top: 80px;
+}
+
+.summary-card .card-body h5 {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    color: #333 !important;
+}
+
+@media (max-width: 768px) {
+    .summary-card {
+        position: static;
+    }
+}
+
+/* --- Map --- */
+#map {
+    height: 400px;
+    width: 100%;
+    border-radius: 8px;
+    z-index: 1;
+}
+
+/* --- Destination Search Dropdown --- */
+.destination-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: .875rem;
+    transition: background .15s;
+}
+
+.destination-item:hover {
+    background: #f0f0ff;
+}
+
+.destination-item:last-child {
+    border-bottom: none;
+}
+
+/* --- Payment Cards --- */
+.payment-card {
+    transition: all .2s ease;
+    border: 2px solid #dee2e6 !important;
+    cursor: pointer;
+}
+
+.payment-card:hover {
+    border-color: #eab308 !important;
+    background-color: #fffbeb !important;
+}
+
+.btn-check:checked + .payment-card {
+    background: linear-gradient(135deg, #eab308, #ca8a04) !important;
+    color: #fff !important;
+    border-color: #eab308 !important;
+}
+
+.btn-check:checked + .payment-card small {
+    color: rgba(255, 255, 255, .85) !important;
+}
+
+/* --- Buttons --- */
+.checkout-wrapper .btn-outline-primary {
+    border-color: #eab308 !important;
+    color: #eab308 !important;
+}
+
+.checkout-wrapper .btn-outline-primary:hover {
+    background: linear-gradient(135deg, #eab308, #ca8a04) !important;
+    color: #fff !important;
+    border-color: transparent !important;
+}
+
+/* ============================================
+   KURIR CARDS — Progressive Disclosure
+   ============================================ */
+.kurir-card {
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all .2s ease;
+    background: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.kurir-card:hover {
+    border-color: #eab308;
+    background: #fffbeb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(234, 179, 8, .15);
+}
+
+.kurir-card.selected {
+    border-color: #eab308;
+    background: linear-gradient(135deg, #eab308, #ca8a04);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(234, 179, 8, .3);
+}
+
+.kurir-card.selected .kurir-card__price {
+    color: #fff !important;
+}
+
+.kurir-card.selected .kurir-card__etd {
+    color: rgba(255, 255, 255, .85) !important;
+}
+
+.kurir-card.selected .kurir-card__badge {
+    background: rgba(255, 255, 255, .25) !important;
+    color: #fff !important;
+}
+
+/* Header: Badge + Service Name */
+.kurir-card__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.kurir-card__badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.kurir-card__service {
+    font-weight: 600;
+    font-size: .85rem;
+    color: #374151;
+}
+
+.kurir-card.selected .kurir-card__service {
+    color: #fff;
+}
+
+/* Price */
+.kurir-card__price {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #eab308;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ETD */
+.kurir-card__etd {
+    font-size: .75rem;
+    color: #6b7280;
+}
+
+/* Expand Button */
+#kurirExpandBtn {
+    border-radius: 20px;
+    padding: 6px 20px;
+    font-size: .8rem;
+    font-weight: 600;
+    transition: all .2s ease;
+}
+
+#kurirExpandBtn:hover {
+    background: #f3f4f6;
+}
+
+/* More section animation */
+#kurirMore {
+    animation: kurirSlideIn .3s ease;
+}
+
+@keyframes kurirSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
