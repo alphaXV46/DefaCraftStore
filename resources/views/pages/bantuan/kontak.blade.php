@@ -105,6 +105,11 @@
             .addTo(map)
             .bindPopup('<strong>DefaCraftStore Hub</strong><br>Bogor, Jawa Barat')
             .openPopup();
+
+        // Fix Leaflet container recalculation bug
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 500);
     });
 </script>
 @endpush

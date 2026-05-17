@@ -438,8 +438,13 @@ document.getElementById('mapModal')?.addEventListener('shown.bs.modal', function
             placeMarker(e.latlng);
             reverseGeocode(e.latlng.lat, e.latlng.lng);
         });
+
+        // Fix Leaflet container recalculation bug inside Bootstrap Modal
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 500);
     } else {
-        setTimeout(() => map.invalidateSize(), 100);
+        setTimeout(() => map.invalidateSize(), 300);
     }
 });
 
