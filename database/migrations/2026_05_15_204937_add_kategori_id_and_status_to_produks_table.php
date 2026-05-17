@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
 {
-    Schema::table('produks', function (Blueprint $table) {
-        // Tambahkan kolom kategori_id setelah kolom nama
-        $table->unsignedBigInteger('kategori_id')->nullable()->after('nama');
-
-        // Tambahkan kolom status untuk fitur Draf/Toggle [Tugas Poin 2]
-        $table->enum('status', ['draft', 'published'])->default('draft')->after('stok');
-
-        // Opsional: Buat relasi ke tabel kategoris
-        $table->foreign('kategori_id')->references('id')->on('kategoris')->onDelete('set null');
+    Schema::table('produk', function (Blueprint $table) {
+        if (!Schema::hasColumn('produk', 'kategori_id')) {
+            $table->unsignedBigInteger('kategori_id')->nullable()->after('nama');
+            $table->foreign('kategori_id')->references('id')->on('kategoris')->onDelete('set null');
+        }
+        if (!Schema::hasColumn('produk', 'status')) {
+            $table->enum('status', ['draft', 'published'])->default('draft')->after('stok');
+        }
     });
 }
 

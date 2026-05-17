@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
 {
-    Schema::table('produks', function (Blueprint $table) {
-        // Menambah kolom status dengan default 'draft'
-        $table->enum('status', ['draft', 'published'])->default('draft')->after('stok');
+    Schema::table('produk', function (Blueprint $table) {
+        if (!Schema::hasColumn('produk', 'status')) {
+            $table->enum('status', ['draft', 'published'])->default('draft')->after('stok');
+        }
     });
 }
 
