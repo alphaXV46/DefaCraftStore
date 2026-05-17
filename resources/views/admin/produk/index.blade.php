@@ -15,8 +15,27 @@
             </a>
         </div>
     </div>
-    
-    <!-- Card Daftar Produk -->
+
+    <!-- Form Pencarian dan Filter -->
+    <form action="{{ route('admin.produk.index') }}" method="GET" class="row g-2 mb-4">
+        <div class="col-md-4">
+            <input type="text" name="search" class="form-control" placeholder="Cari nama produk..." value="{{ request('search') }}">
+        </div>
+        <div class="col-md-3">
+            <select name="kategori" class="form-select">
+                <option value="">Semua Kategori</option>
+                @foreach($kategori as $kat)
+                    <option value="{{ $kat->id }}" {{ request('kategori') == $kat->id ? 'selected' : '' }}>
+                        {{ $kat->nama }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Cari</button>
+        </div>
+    </form>
+
     <div class="card shadow">
         <div class="card-body">
             @if($produk->isEmpty())
@@ -37,18 +56,22 @@
                                 <th>Nama Produk</th>
                                 <th>Kategori</th>
                                 <th>Harga</th>
-                                <th>Stok</th>  <!-- TAMBAH INI -->
-                                <th>Deskripsi</th>
-                                <th width="200" class="text-center">Aksi</th>
+                                <th>Stok</th>
+                                <th>Status</th>
+                                <th width="150" class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($produk as $item)
                                 <tr>
-                                    <!-- Gambar -->
+                                    <!-- Gambar (Jurus Bunglon Pathing) -->
                                     <td>
                                         @if($item->gambar && file_exists(public_path('images/produk/' . $item->gambar)))
                                             <img src="{{ asset('images/produk/' . $item->gambar) }}" 
+                                                class="rounded" width="60" height="60" 
+                                                style="object-fit: cover;" alt="{{ $item->nama }}">
+                                        @elseif($item->gambar && file_exists(public_path('uploads/produk/' . $item->gambar)))
+                                            <img src="{{ asset('uploads/produk/' . $item->gambar) }}" 
                                                 class="rounded" width="60" height="60" 
                                                 style="object-fit: cover;" alt="{{ $item->nama }}">
                                         @else
@@ -66,32 +89,49 @@
                                     
                                     <!-- Kategori -->
                                     <td>
-                                        <span class="badge badge-custom">{{ $item->kategori }}</span>
+                                        <span class="badge badge-custom">{{ $item->kategori->nama ?? 'Tanpa Kategori' }}</span>
                                     </td>
                                     
                                     <!-- Harga -->
                                     <td>
-                                        <span class="fw-bold text-primary">
+                                        <div class="fw-bold text-primary">
                                             Rp {{ number_format($item->harga, 0, ',', '.') }}
-                                        </span>
+                                        </div>
+                                        @if($item->harga_diskon)
+                                            <small class="text-danger text-decoration-line-through">
+                                                Rp {{ number_format($item->harga_diskon, 0, ',', '.') }}
+                                            </small>
+                                        @endif
                                     </td>
                                     
-                                    <!-- STOK 👇 TAMBAH INI -->
+                                    <!-- STOK -->
                                     <td>
                                         @if($item->stok > 10)
                                             <span class="badge bg-success">{{ $item->stok }}</span>
                                         @elseif($item->stok > 0)
-                                            <span class="badge bg-warning">{{ $item->stok }}</span>
+                                            <span class="badge bg-warning text-dark">{{ $item->stok }}</span>
                                         @else
                                             <span class="badge bg-danger">Habis</span>
                                         @endif
                                     </td>
-                                    
-                                    <!-- Deskripsi -->
+
+                                    <!-- Status -->
                                     <td>
-                                        <small class="text-muted">
-                                            {{ Str::limit($item->deskripsi, 50) }}
-                                        </small>
+                                        <div class="d-flex align-items-center gap-2">
+                                            @if($item->status == 'published')
+                                                <span class="badge bg-success">Tayang</span>
+                                            @else
+                                                <span class="badge bg-secondary">Draf</span>
+                                            @endif
+                                            
+                                            <form action="{{ route('admin.produk.toggle-status', $item->id) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-sm btn-outline-primary" style="padding: 0px 5px; font-size: 10px;" title="Ubah Status">
+                                                    🔄
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                     
                                     <!-- Aksi -->
@@ -102,7 +142,7 @@
                                                 👁️
                                             </a>
                                             <a href="{{ route('admin.produk.edit', $item->id) }}" 
-                                            class="btn btn-sm btn-warning" title="Ed    it">
+                                            class="btn btn-sm btn-warning" title="Edit">
                                                 ✏️
                                             </a>
                                             <form action="{{ route('admin.produk.destroy', $item->id) }}" 
@@ -122,7 +162,7 @@
                     </table>
                 </div>
                 
-                <div class="mt-3">
+                <div class="mt-3 d-flex justify-content-between">
                     <p class="text-muted mb-0">Total: <strong>{{ $produk->count() }}</strong> produk</p>
                 </div>
             @endif

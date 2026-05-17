@@ -191,7 +191,6 @@
                         <strong>Alamat Pengiriman:</strong><br>
                         {{ $transaksi->alamat }}
                     </div>
-
                     @if($transaksi->latitude && $transaksi->longitude)
                         <div id="adminMap"></div>
                         <div class="mt-2 text-center">

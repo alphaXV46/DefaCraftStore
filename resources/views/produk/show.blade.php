@@ -14,27 +14,48 @@
             <div class="product-content">
                 <!-- Image Section -->
                 <div class="image-section">
-    @if($produk->gambar && file_exists(public_path('images/produk/' . $produk->gambar)))
-        <img src="{{ asset('images/produk/' . $produk->gambar) }}"
-             class="product-image" alt="{{ $produk->nama }}"
-             width="600" height="600"
-             loading="eager"
-             fetchpriority="high"
-             decoding="sync">
-    @else
-        <div class="placeholder-image">
-            <span class="placeholder-icon">📦</span>
-        </div>
-    @endif
+                    @php 
+                        $pathBunglon = 'images/produk/' . $produk->gambar;
+                        $pathOlif = 'uploads/produk/' . $produk->gambar; 
+                    @endphp
+                    @if($produk->gambar && file_exists(public_path($pathBunglon)))
+                        <img src="{{ asset($pathBunglon) }}"
+                             class="product-image" alt="{{ $produk->nama }}"
+                             width="600" height="600"
+                             loading="eager" fetchpriority="high" decoding="sync">
+                    @elseif($produk->gambar && file_exists(public_path($pathOlif)))
+                        <img src="{{ asset($pathOlif) }}"
+                             class="product-image" alt="{{ $produk->nama }}"
+                             width="600" height="600"
+                             loading="eager" fetchpriority="high" decoding="sync">
+                    @else
+                        <div class="placeholder-image">
+                            <span class="placeholder-icon">📦</span>
+                        </div>
+                    @endif
+                </div>
 
-</div>
                 <!-- Info Section -->
                 <div class="info-section">
-                    <div class="product-category">{{ $produk->kategori }}</div>
+                    <div class="product-category">{{ $produk->kategori->nama ?? $produk->kategori ?? 'Tanpa Kategori' }}</div>
                     <h1 class="product-title">{{ $produk->nama }}</h1>
                     
-                    <div class="product-price">
-                        Rp {{ number_format($produk->harga, 0, ',', '.') }}
+                    <div class="product-price" style="margin-bottom: 2rem;">
+                        @if($produk->harga_diskon && $produk->harga_diskon > 0)
+                            <div style="display: flex; flex-direction: column; gap: 5px;">
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <span style="color: #ef4444;">Rp {{ number_format($produk->harga_diskon, 0, ',', '.') }}</span>
+                                    <span class="badge" style="background: #ef4444; color: white; font-size: 0.9rem; padding: 5px 10px; border-radius: 20px; font-weight: 600;">
+                                        Hemat Rp {{ number_format($produk->harga - $produk->harga_diskon, 0, ',', '.') }}
+                                    </span>
+                                </div>
+                                <del style="color: #9ca3af; font-size: 1.2rem;">
+                                    Rp {{ number_format($produk->harga, 0, ',', '.') }}
+                                </del>
+                            </div>
+                        @else
+                            Rp {{ number_format($produk->harga, 0, ',', '.') }}
+                        @endif
                     </div>
                     
                     <!-- Stock Info -->
@@ -108,14 +129,21 @@
         <div class="related-products-section">
             <h3 class="section-title">Produk Terkait 🎨</h3>
             <div class="row g-4">
-
-                
                 @forelse($produkTerkait as $item)
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         <div class="related-product-card h-100">
                             <div class="related-product-image-wrapper">
-                                @if($item->gambar && file_exists(public_path('images/produk/' . $item->gambar)))
-                                    <img src="{{ asset('images/produk/' . $item->gambar) }}"
+                                @php 
+                                    $pathBunglon = 'images/produk/' . $item->gambar;
+                                    $pathOlif = 'uploads/produk/' . $item->gambar; 
+                                @endphp
+                                @if($item->gambar && file_exists(public_path($pathBunglon)))
+                                    <img src="{{ asset($pathBunglon) }}"
+                                         class="related-product-image" alt="{{ $item->nama }}"
+                                         width="300" height="280"
+                                         loading="lazy" decoding="async">
+                                @elseif($item->gambar && file_exists(public_path($pathOlif)))
+                                    <img src="{{ asset($pathOlif) }}"
                                          class="related-product-image" alt="{{ $item->nama }}"
                                          width="300" height="280"
                                          loading="lazy" decoding="async">
@@ -124,11 +152,22 @@
                                         <span class="fs-1">📦</span>
                                     </div>
                                 @endif
+                                
+                                @if($item->harga_diskon && $item->harga_diskon < $item->harga)
+                                    <span class="badge position-absolute" style="background: #ef4444; color: white; top: 10px; left: 10px; z-index: 5; padding: 5px 10px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                        Promo
+                                    </span>
+                                @endif
                             </div>
                             <div class="related-product-info">
                                 <h5 class="related-product-name">{{ $item->nama }}</h5>
                                 <div class="related-product-price">
-                                    Rp {{ number_format($item->harga, 0, ',', '.') }}
+                                    @if($item->harga_diskon && $item->harga_diskon > 0)
+                                        <span style="color: #ef4444;">Rp {{ number_format($item->harga_diskon, 0, ',', '.') }}</span><br>
+                                        <small style="text-decoration: line-through; color: #9ca3af;">Rp {{ number_format($item->harga, 0, ',', '.') }}</small>
+                                    @else
+                                        <span>Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                    @endif
                                 </div>
                                 <a href="{{ route('produk.show', $item->id) }}" 
                                    class="related-product-button">

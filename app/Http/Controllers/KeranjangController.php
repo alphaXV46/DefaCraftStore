@@ -18,7 +18,9 @@ class KeranjangController extends Controller
         
         // Hitung total hanya yang checked
         $total = $keranjang->where('checked', true)->sum(function($item) {
-            return $item->produk->harga * $item->jumlah;
+            // Gunakan harga diskon jika ada, jika tidak harga asli (mengakomodasi fitur olif)
+            $harga = $item->produk->harga_diskon > 0 ? $item->produk->harga_diskon : $item->produk->harga;
+            return $harga * $item->jumlah;
         });
         
         $checkedCount = $keranjang->where('checked', true)->count();
@@ -39,6 +41,10 @@ class KeranjangController extends Controller
         if (!$produk->hasStock($request->jumlah)) {
             return redirect()->back()->with('error', 'Stok tidak mencukupi! Stok tersedia: ' . $produk->stok);
         }
+
+        // LOGIKA KRUSIAL: Pilih harga yang benar
+        // Jika harga_diskon ada dan tidak nol, gunakan itu. Jika tidak, gunakan harga asli.
+        $hargaYangDigunakan = $produk->harga_diskon > 0 ? $produk->harga_diskon : $produk->harga;
         
         // Cek apakah produk sudah ada di keranjang
         $existing = Keranjang::where('user_id', Auth::id())
@@ -52,13 +58,16 @@ class KeranjangController extends Controller
                 return redirect()->back()->with('error', 'Stok tidak mencukupi! Stok tersedia: ' . $produk->stok);
             }
             
-            $existing->jumlah = $jumlahBaru;
-            $existing->save();
+            $existing->update([
+                'jumlah' => $jumlahBaru,
+                'harga' => $hargaYangDigunakan // Update ke harga terbaru (mungkin diskon)
+            ]);
         } else {
             Keranjang::create([
                 'user_id' => Auth::id(),
                 'produk_id' => $request->produk_id,
-                'jumlah' => $request->jumlah
+                'jumlah' => $request->jumlah,
+                'harga' => $hargaYangDigunakan
             ]);
         }
         
@@ -96,6 +105,7 @@ class KeranjangController extends Controller
         
         return redirect()->back()->with('success', 'Produk berhasil dihapus dari keranjang!');
     }
+    
     // Toggle checked status
     public function toggleCheck(Request $request, $id)
     {
@@ -128,6 +138,8 @@ class KeranjangController extends Controller
             return redirect()->back()->with('error', 'Stok tidak mencukupi! Stok tersedia: ' . $produk->stok);
         }
 
+        $hargaYangDigunakan = $produk->harga_diskon > 0 ? $produk->harga_diskon : $produk->harga;
+
         // 1. Uncheck semua item di keranjang user
         Keranjang::where('user_id', $user_id)->update(['checked' => false]);
 
@@ -139,14 +151,16 @@ class KeranjangController extends Controller
         if ($keranjang) {
             $keranjang->update([
                 'jumlah' => $request->jumlah,
-                'checked' => true
+                'checked' => true,
+                'harga' => $hargaYangDigunakan
             ]);
         } else {
             Keranjang::create([
                 'user_id' => $user_id,
                 'produk_id' => $request->produk_id,
                 'jumlah' => $request->jumlah,
-                'checked' => true
+                'checked' => true,
+                'harga' => $hargaYangDigunakan
             ]);
         }
 

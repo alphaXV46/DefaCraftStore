@@ -324,7 +324,6 @@ const DEFAULT_WEIGHT     = 1000;
 // LOKASI TOKO (Bogor)
 const STORE_LATLNG       = [-6.5971, 106.8060];
 const STORE_NAME         = "DefaCraftStore Main Hub";
-
 // ============================================
 // STATE GLOBAL
 // ============================================
@@ -446,7 +445,6 @@ document.getElementById('mapModal')?.addEventListener('shown.bs.modal', function
 
 function placeMarker(latlng) {
     if (marker) map.removeLayer(marker);
-    
     const HomeIcon = L.divIcon({
         html: '📍',
         className: 'custom-div-icon',
@@ -640,11 +638,16 @@ window.confirmLocation = async function() {
         document.getElementById('map_rtrw').value
     );
 
+    const addr        = selectedAddress.address || {};
+    const cityName    = addr.city || addr.regency || addr.county || addr.town || '';
+    const subdistrict = addr.suburb || addr.village || addr.quarter || '';
+
     // Defensive check untuk latitude & longitude
     const inputLat = document.getElementById('input_latitude');
     const inputLng = document.getElementById('input_longitude');
     if (inputLat) inputLat.value = selectedLatLng.lat || '';
     if (inputLng) inputLng.value = selectedLatLng.lng || '';
+
 
     const inputAlamat = document.getElementById('input_alamat');
     if (inputAlamat) {

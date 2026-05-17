@@ -8,7 +8,6 @@
     #contactMap { height: 300px; width: 100%; border-radius: 12px; margin-top: 20px; border: 1px solid #ddd; }
 </style>
 @endpush
-
 @section('content')
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -51,7 +50,6 @@
                     <div class="mt-2 mb-4 text-center">
                         <small class="text-muted">📍 Bogor, Jawa Barat, Indonesia</small>
                     </div>
-
                     <a href="https://wa.me/6285658080575" target="_blank"
                        class="btn btn-success d-inline-flex align-items-center gap-2 px-4 py-2 fw-bold rounded-pill">
                         <i class="fab fa-whatsapp"></i> Chat via WhatsApp

@@ -10,12 +10,26 @@ class Produk extends Model
     
     protected $fillable = [
         'nama',
-        'deskripsi',
+        'kategori_id',
+        'kategori', // Keeping this if needed as fallback, but kategori_id is the new standard
         'harga',
-        'kategori',
+        'harga_diskon',
+        'stok',
+        'deskripsi',
         'gambar',
-        'stok' // Tambah ini
+        'status'
     ];
+
+    // Helper untuk mengecek apakah sedang diskon
+    public function getHargaFinalAttribute()
+    {
+        return ($this->harga_diskon > 0) ? $this->harga_diskon : $this->harga;
+    }
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
 
     public function keranjang()
     {

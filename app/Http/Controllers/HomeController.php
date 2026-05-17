@@ -11,8 +11,9 @@ class HomeController extends Controller
     {
         // Ambil 10 produk untuk ditampilkan di home, pilih kolom yang diperlukan saja
         // Gunakan caching selama 1 jam untuk mempercepat respon server
-        $produk = \Illuminate\Support\Facades\Cache::remember('home_products_v2', 3600, function() {
-            return Produk::select('id', 'nama', 'harga', 'gambar', 'kategori')
+        $produk = \Illuminate\Support\Facades\Cache::remember('home_products_v3', 3600, function() {
+            return Produk::select('id', 'nama', 'harga', 'gambar', 'kategori_id', 'harga_diskon')
+                ->where('status', 'published')
                 ->limit(10)
                 ->get();
         });

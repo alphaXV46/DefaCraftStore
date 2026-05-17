@@ -15,12 +15,12 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\ChatbotController;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;    // ← TAMBAH INI
-use Illuminate\Support\Str;             // ← TAMBAH INI
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 
-require __DIR__.'/auth.php';  // ← Hanya sekali, di atas saja
+require __DIR__.'/auth.php';
 
 // =====================
 // HALAMAN PUBLIC
@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
     Route::post('/wishlist/{id}/move-to-cart', [WishlistController::class, 'moveToCart'])->name('wishlist.move.cart');
 
-    // Checkout & Transaksi (HAPUS YANG DUPLIKAT)
+    // Checkout & Transaksi
     Route::get('/checkout', [TransaksiController::class, 'checkout'])->name('transaksi.checkout');
     Route::post('/checkout', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::get('/transaksi/success/{id?}', [TransaksiController::class, 'success'])->name('transaksi.success');
@@ -91,13 +91,18 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+    
+    // Route Kategori
+    Route::resource('kategori', \App\Http\Controllers\Admin\KategoriController::class)->except(['create', 'show', 'edit', 'update']);
 
+    // Route Produk
     Route::get('/produk', [AdminProdukController::class, 'index'])->name('produk.index');
     Route::get('/produk/create', [AdminProdukController::class, 'create'])->name('produk.create');
     Route::post('/produk', [AdminProdukController::class, 'store'])->name('produk.store');
     Route::get('/produk/{id}/edit', [AdminProdukController::class, 'edit'])->name('produk.edit');
     Route::patch('/produk/{id}', [AdminProdukController::class, 'update'])->name('produk.update');
     Route::delete('/produk/{id}', [AdminProdukController::class, 'destroy'])->name('produk.destroy');
+    Route::patch('/produk/{id}/toggle-status', [AdminProdukController::class, 'toggleStatus'])->name('produk.toggle-status');
 
     Route::get('/transaksi', [AdminTransaksiController::class, 'index'])->name('transaksi.index');
     Route::get('/transaksi/{id}', [AdminTransaksiController::class, 'show'])->name('transaksi.show');
@@ -121,7 +126,7 @@ Route::get('/auth/google/callback', function () {
             'name' => $googleUser->getName(),
             'google_id' => $googleUser->getId(),
             'avatar' => $googleUser->getAvatar(),
-            'password' => Hash::make(Str::random(16)),  // ← Sekarang aman, sudah di-import
+            'password' => Hash::make(Str::random(16)),
         ]
     );
 
@@ -144,5 +149,3 @@ Route::post('/webhook/midtrans', [MidtransWebhookController::class, 'handle'])
 Route::get('/laporan-data', function () {
     return response()->json(['ok' => true, 'total' => \App\Models\Transaksi::count()]);
 });
-
-// ← HAPUS require __DIR__.'/auth.php'; yang kedua di sini!

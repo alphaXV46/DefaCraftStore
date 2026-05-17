@@ -1,36 +1,48 @@
 <div class="product-card-enhanced">
     <!-- Badge -->
-    @if($index % 3 == 0)
+    @if($item->harga_diskon && $item->harga_diskon < $item->harga)
+        @php
+            $persenDiskon = round((($item->harga - $item->harga_diskon) / $item->harga) * 100);
+        @endphp
+        <span class="product-badge new bg-danger" style="background-color: #ef4444 !important;">Hemat {{ $persenDiskon }}%</span>
+    @elseif($index % 3 == 0)
         <span class="product-badge new">NEW</span>
-    @elseif($index % 2 == 0)
-        <span class="product-badge">-25%</span>
     @endif
     
     <!-- Image -->
     <div class="product-image-wrapper">
+        @php 
+            $pathBunglon = 'images/produk/' . rawurlencode($item->gambar);
+            $pathOlif = 'uploads/produk/' . rawurlencode($item->gambar);
+        @endphp
+        
         @if($item->gambar && file_exists(public_path('images/produk/' . $item->gambar)))
-            @php
-                // Mencegah spasi pada nama file merusak sintaks srcset (URL encode spasi menjadi %20)
-                $safeGambar = rawurlencode($item->gambar);
-            @endphp
-            <img src="{{ asset('images/produk/' . $safeGambar) }}"
-                 srcset="{{ asset('images/produk/' . $safeGambar) }} 480w, 
-                         {{ asset('images/produk/' . $safeGambar) }} 800w"
+            <img src="{{ asset($pathBunglon) }}"
+                 srcset="{{ asset($pathBunglon) }} 480w, 
+                         {{ asset($pathBunglon) }} 800w"
                  sizes="(max-width: 576px) 100vw, (max-width: 768px) 50vw, 300px"
                  class="img-fluid"
                  style="object-fit: cover; width: 100%; height: 100%; aspect-ratio: 1/1;"
                  alt="{{ $item->nama }}"
                  width="300" height="300"
-                 loading="lazy"
-                 decoding="async">
+                 loading="lazy" decoding="async">
+        @elseif($item->gambar && file_exists(public_path('uploads/produk/' . $item->gambar)))
+            <img src="{{ asset($pathOlif) }}"
+                 srcset="{{ asset($pathOlif) }} 480w, 
+                         {{ asset($pathOlif) }} 800w"
+                 sizes="(max-width: 576px) 100vw, (max-width: 768px) 50vw, 300px"
+                 class="img-fluid"
+                 style="object-fit: cover; width: 100%; height: 100%; aspect-ratio: 1/1;"
+                 alt="{{ $item->nama }}"
+                 width="300" height="300"
+                 loading="lazy" decoding="async">
         @else
             <img src="data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='300' height='300' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%2394a3b8' font-size='60' dy='.3em'%3E📦%3C/text%3E%3C/svg%3E"
                  class="img-fluid"
                  style="object-fit: cover; width: 100%; height: 100%; aspect-ratio: 1/1;"
                  alt="{{ $item->nama }}"
                  width="300" height="300"
-                 loading="lazy"
-                 decoding="async">
+                 loading="lazy" decoding="async">
         @endif
         
         <!-- Overlay Buttons -->
@@ -57,7 +69,7 @@
     
     <!-- Info -->
     <div class="product-info">
-        <div class="product-category">{{ $item->kategori }}</div>
+        <div class="product-category">{{ $item->kategori->nama ?? $item->kategori ?? 'Tanpa Kategori' }}</div>
         <h3 class="product-name">{{ $item->nama }}</h3>
         
         <!-- Rating -->
@@ -69,9 +81,11 @@
         <!-- Price -->
         <div class="product-price-row">
             <div>
-                <span class="product-price">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
-                @if($index % 2 == 0)
-                    <span class="product-price-old">Rp {{ number_format($item->harga *1.33, 0, ',', '.') }}</span>
+                @if($item->harga_diskon && $item->harga_diskon > 0)
+                    <span class="product-price text-danger">Rp {{ number_format($item->harga_diskon, 0, ',', '.') }}</span>
+                    <span class="product-price-old">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                @else
+                    <span class="product-price">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
                 @endif
             </div>
         </div>
