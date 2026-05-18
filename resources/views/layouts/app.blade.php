@@ -214,8 +214,11 @@
             });
         }
     </script>
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+=======
+>>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
 
     @stack('scripts')
 </body>

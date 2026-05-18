@@ -1,5 +1,9 @@
 <?php
+<<<<<<< HEAD
 
+=======
+use App\Http\Controllers\Admin\AdminManagementController;
+>>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\KeranjangController;
@@ -86,8 +90,12 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+<<<<<<< HEAD
     
     // Route Produk
+=======
+
+>>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
     Route::get('/produk', [AdminProdukController::class, 'index'])->name('produk.index');
     Route::get('/produk/create', [AdminProdukController::class, 'create'])->name('produk.create');
     Route::post('/produk', [AdminProdukController::class, 'store'])->name('produk.store');
@@ -95,6 +103,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/produk/{id}', [AdminProdukController::class, 'update'])->name('produk.update');
     Route::delete('/produk/{id}', [AdminProdukController::class, 'destroy'])->name('produk.destroy');
 
+<<<<<<< HEAD
     // TAMBAHKAN INI: Route Kategori
     // Kita gunakan resource agar otomatis membuat index, store, destroy, dll.
    // Gunakan ini untuk kategori
@@ -102,6 +111,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/produk/{id}/toggle-status', [AdminProdukController::class, 'toggleStatus'])->name('produk.toggle-status');
 
 
+=======
+>>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
     Route::get('/transaksi', [AdminTransaksiController::class, 'index'])->name('transaksi.index');
     Route::get('/transaksi/{id}', [AdminTransaksiController::class, 'show'])->name('transaksi.show');
     Route::post('/transaksi/{id}/update-status', [AdminTransaksiController::class, 'updateStatus'])->name('transaksi.update.status');
@@ -144,8 +155,35 @@ Route::post('/webhook/midtrans', [MidtransWebhookController::class, 'handle'])
 // DEBUG ROUTE (Hapus di production!)
 // =====================
 
+<<<<<<< HEAD
 Route::get('/laporan-data', function () {
     return response()->json(['ok' => true, 'total' => \App\Models\Transaksi::count()]);
+=======
+
+// =====================
+// ROUTE KHUSUS SUPERADMIN
+// =====================
+Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+    
+    // Cek Pangkat (Buat Tes)
+    Route::get('/cek-pangkat', function () {
+        return "Selamat! Kamu login sebagai: " . auth()->user()->role;
+    })->name('cek');
+
+    // --- BAGIAN INI YANG KITA UBAH ---
+    // Halaman CRUD Admin (Nomor 2)
+    Route::get('/manage-admin', [AdminManagementController::class, 'index'])->name('manage');
+    Route::post('/manage-admin', [AdminManagementController::class, 'store'])->name('store');
+    Route::delete('/manage-admin/{id}', [AdminManagementController::class, 'destroy'])->name('delete');
+    // ---------------------------------
+    
+    // Halaman Log Aktivitas (Nomor 1)
+    Route::get('/logs', function() {
+        $logs = \DB::table('logs')->orderBy('created_at', 'desc')->get();
+        return view('admin.logs', compact('logs'));
+    })->name('logs');
+
+>>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
 });
 
 // ← HAPUS require __DIR__.'/auth.php'; yang kedua di sini!

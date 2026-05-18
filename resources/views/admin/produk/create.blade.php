@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Tambah Produk - Admin')
+<<<<<<< HEAD
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
 <style>
@@ -14,6 +15,9 @@
     }
 </style>
 @endpush
+=======
+
+>>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
 @section('content')
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -42,6 +46,7 @@
                         
                         <!-- Kategori -->
                         <div class="mb-3">
+<<<<<<< HEAD
     <label class="form-label fw-bold">Kategori Produk <span class="text-danger">*</span></label>
     <select name="kategori_id" class="form-select rounded-3 @error('kategori_id') is-invalid @enderror" required>
         <option value="" selected disabled>-- Pilih Kategori --</option>
@@ -59,6 +64,27 @@
     <a href="{{ route('admin.kategori.index') }}" target="_blank">Tambah di sini</a>
 </small>
 </div>
+=======
+                            <label class="form-label fw-bold">
+                                Kategori <span class="text-danger">*</span>
+                            </label>
+                            <select name="kategori" class="form-select @error('kategori') is-invalid @enderror" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                <option value="Boneka" {{ old('kategori') == 'Boneka' ? 'selected' : '' }}>
+                                    Boneka
+                                </option>
+                                <option value="Aksesoris" {{ old('kategori') == 'Aksesoris' ? 'selected' : '' }}>
+                                    Aksesoris
+                                </option>
+                                <option value="Dekorasi" {{ old('kategori') == 'Dekorasi' ? 'selected' : '' }}>
+                                    Dekorasi
+                                </option>
+                            </select>
+                            @error('kategori')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+>>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
                         
                         <!-- Harga -->
                         <div class="mb-3">
@@ -74,6 +100,7 @@
                             @enderror
                             <small class="text-muted">Masukkan harga tanpa titik atau koma</small>
                         </div>
+<<<<<<< HEAD
                         <div class="mb-3">
     <label class="form-label fw-bold">Harga Diskon (Rp) <small class="text-muted">(Opsional)</small></label>
     <input type="number" name="harga_diskon" class="form-control" value="{{ old('harga_diskon') }}" placeholder="Contoh: 125000">
@@ -88,6 +115,8 @@
     </div>
     <small class="text-muted">Jika dimatikan, barang akan masuk ke Draf.</small>
 </div>
+=======
+>>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
 
                         <!-- TAMBAH INPUT STOK DI SINI 👇 -->
                         <div class="mb-3">
@@ -120,6 +149,7 @@
                         <!-- Gambar -->
                         <div class="mb-4">
                             <label class="form-label fw-bold">Gambar Produk</label>
+<<<<<<< HEAD
                            <input type="file" name="gambar" class="form-control @error('gambar') is-invalid @enderror" accept="image/*">
                             <small class="text-muted">Format: JPG, PNG. Maksimal 2MB</small>
                             <div class="modal fade" id="cropperModal" tabindex="-1" aria-hidden="true">
@@ -139,6 +169,15 @@
 </div>
 
 <input type="hidden" name="cropped_image" id="cropped_image">
+=======
+                            <input type="file" name="gambar" 
+                                   class="form-control @error('gambar') is-invalid @enderror" 
+                                   accept="image/*" onchange="previewImage(event)">
+                            @error('gambar')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="text-muted">Format: JPG, PNG. Maksimal 2MB</small>
+>>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
                             
                             <!-- Preview Gambar -->
                             <div id="imagePreview" class="mt-3" style="display: none;">
@@ -163,6 +202,7 @@
 </div>
 
 @push('scripts')
+<<<<<<< HEAD
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
@@ -240,6 +280,19 @@
             cropperModal.hide();
         });
     });
+=======
+<script>
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const preview = document.getElementById('preview');
+        const previewDiv = document.getElementById('imagePreview');
+        preview.src = reader.result;
+        previewDiv.style.display = 'block';
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+>>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
 </script>
 @endpush
 @endsection
