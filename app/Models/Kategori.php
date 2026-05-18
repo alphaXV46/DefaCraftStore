@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Kategori extends Model
 {
+    protected $table = 'kategori';
     protected $fillable = ['nama', 'slug'];
 
     // Relasi ke Produk: Satu kategori punya banyak produk

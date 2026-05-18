@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::table('produk', function (Blueprint $table) {
         if (!Schema::hasColumn('produk', 'kategori_id')) {
             $table->unsignedBigInteger('kategori_id')->nullable()->after('nama');
-            $table->foreign('kategori_id')->references('id')->on('kategoris')->onDelete('set null');
+            $table->foreign('kategori_id')->references('id')->on('kategori')->onDelete('set null');
         }
         if (!Schema::hasColumn('produk', 'status')) {
             $table->enum('status', ['draft', 'published'])->default('draft')->after('stok');
@@ -26,7 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('produks', function (Blueprint $table) {
+        Schema::table('produk', function (Blueprint $table) {
             //
         });
     }
