@@ -29,6 +29,12 @@
             <button class="pf-alert-close" onclick="this.parentElement.remove()">✕</button>
         </div>
     @endif
+    @if(session('error'))
+        <div class="pf-alert" style="background:#FEE2E2;color:#991B1B;border-color:#FCA5A5;">
+            ❌ {{ session('error') }}
+            <button class="pf-alert-close" onclick="this.parentElement.remove()">✕</button>
+        </div>
+    @endif
 
     {{-- Profile Hero Card --}}
     <div class="pf-hero">
@@ -52,8 +58,14 @@
                 <div class="pf-name">{{ $user->name }}</div>
                 <div class="pf-email">{{ $user->email }}</div>
                 <div class="pf-meta-row">
-                    <span class="pf-role-badge {{ $user->role === 'admin' ? 'pf-role-admin' : 'pf-role-user' }}">
-                        {{ $user->role === 'admin' ? '👑 Admin' : '🛍️ Member' }}
+                    <span class="pf-role-badge {{ ($user->role === 'admin' || $user->role === 'superadmin') ? 'pf-role-admin' : 'pf-role-user' }}">
+                        @if($user->role === 'superadmin')
+                            👑 Super Admin
+                        @elseif($user->role === 'admin')
+                            👑 Admin
+                        @else
+                            🛍️ Member
+                        @endif
                     </span>
                     <span class="pf-since">📅 Bergabung {{ $user->created_at->format('M Y') }}</span>
                 </div>
@@ -121,9 +133,11 @@
                 <button class="pf-tab" onclick="pfGo('password', this)">
                     <span class="pf-tab-icon">🔐</span> Password
                 </button>
+                @if(auth()->user()->role !== 'admin' && auth()->user()->role !== 'superadmin')
                 <button class="pf-tab" onclick="pfGo('danger', this)">
                     <span class="pf-tab-icon">⚠️</span> Akun
                 </button>
+                @endif
             </div>
         </div>
 
@@ -185,6 +199,7 @@
                 </form>
             </div>
 
+            @if(auth()->user()->role !== 'admin' && auth()->user()->role !== 'superadmin')
             {{-- DANGER --}}
             <div class="pf-form-card" id="pf-danger">
                 <div class="pf-form-title" style="color:#E53935;">⚠️ Zona Berbahaya</div>
@@ -194,6 +209,7 @@
                     <button type="button" class="pf-btn pf-btn-red pf-btn-full" onclick="document.getElementById('pfDelModal').classList.add('show')">Hapus Akun Saya</button>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 

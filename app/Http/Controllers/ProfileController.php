@@ -50,11 +50,14 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = $request->user();
+        if ($user->role === 'admin' || $user->role === 'superadmin') {
+            return Redirect::route('profile.edit')->with('error', 'Akun dengan role Admin atau Super Admin tidak dapat dihapus.');
+        }
+
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
-
-        $user = $request->user();
 
         Auth::logout();
 
