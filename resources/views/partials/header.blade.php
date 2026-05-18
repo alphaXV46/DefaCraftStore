@@ -20,7 +20,6 @@
             </div>
         </form>
 
-        
         <div class="navbar-menu">
             <ul class="nav-list">
                 <li class="nav-item">
@@ -85,9 +84,10 @@
                                     Pesanan Saya
                                 </a>
                                 
-                                @if(auth()->user()->role === 'admin')
-                                    <a href="{{ route('admin.dashboard') }}" class="dropdown-link">
-                                        <i class="fas fa-cog"></i>
+                                {{-- 🟢 DI SINI PERUBAHANNYA: Superadmin & Admin Sekarang Bisa Lihat Menu Ini 🟢 --}}
+                                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                                    <a href="{{ route('admin.dashboard') }}" class="dropdown-link" style="color: #4A2E80; font-weight: 600;">
+                                        <i class="fas fa-tachometer-alt"></i>
                                         Dashboard Admin
                                     </a>
                                     <div class="dropdown-divider"></div>
@@ -151,8 +151,9 @@
                 <li><a href="{{ route('transaksi.riwayat') }}">📋 Pesanan Saya</a></li>
                 <li><a href="{{ route('profile.edit') }}">👤 Profil</a></li>
                 
-                @if(auth()->user()->role === 'admin')
-                    <li><a href="{{ route('admin.dashboard') }}">🔧 Admin Dashboard</a></li>
+                {{-- 🟢 Menu untuk versi Mobile juga udah gue benerin di bawah ini 🟢 --}}
+                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                    <li class="bg-light"><a href="{{ route('admin.dashboard') }}">🔧 Dashboard Admin</a></li>
                 @endif
                 
                 <li>

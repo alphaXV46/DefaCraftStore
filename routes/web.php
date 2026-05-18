@@ -14,19 +14,17 @@ use App\Http\Controllers\OngkirController;
 use App\Http\Controllers\Auth\PasswordController;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;    // ← TAMBAH INI
-use Illuminate\Support\Str;             // ← TAMBAH INI
+use Illuminate\Support\Facades\Hash;    
+use Illuminate\Support\Str;             
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 
-require __DIR__.'/auth.php';  // ← Hanya sekali, di atas saja
+require __DIR__.'/auth.php';  
 
 // =====================
 // HALAMAN PUBLIC
 // =====================
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
 Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
 
@@ -47,9 +45,7 @@ Route::prefix('ongkir')->middleware('throttle:ongkir')->group(function () {
 // =====================
 // ROUTE YANG BUTUH LOGIN
 // =====================
-
 Route::middleware('auth')->group(function () {
-
     // Keranjang
     Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
     Route::post('/keranjang', [KeranjangController::class, 'store'])->name('keranjang.store');
@@ -63,7 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
     Route::post('/wishlist/{id}/move-to-cart', [WishlistController::class, 'moveToCart'])->name('wishlist.move.cart');
 
-    // Checkout & Transaksi (HAPUS YANG DUPLIKAT)
+    // Checkout & Transaksi
     Route::get('/checkout', [TransaksiController::class, 'checkout'])->name('transaksi.checkout');
     Route::post('/checkout', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::get('/transaksi/success/{id?}', [TransaksiController::class, 'success'])->name('transaksi.success');
@@ -83,10 +79,8 @@ Route::middleware('auth')->group(function () {
 // =====================
 // ROUTE ADMIN
 // =====================
-
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
-
     Route::get('/produk', [AdminProdukController::class, 'index'])->name('produk.index');
     Route::get('/produk/create', [AdminProdukController::class, 'create'])->name('produk.create');
     Route::post('/produk', [AdminProdukController::class, 'store'])->name('produk.store');
@@ -102,64 +96,45 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // =====================
 // GOOGLE LOGIN
 // =====================
-
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
 });
-
 Route::get('/auth/google/callback', function () {
     $googleUser = Socialite::driver('google')->stateless()->user();
-
     $user = User::updateOrCreate(
         ['email' => $googleUser->getEmail()],
         [
             'name' => $googleUser->getName(),
             'google_id' => $googleUser->getId(),
             'avatar' => $googleUser->getAvatar(),
-            'password' => Hash::make(Str::random(16)),  // ← Sekarang aman, sudah di-import
+            'password' => Hash::make(Str::random(16)),  
         ]
     );
-
     Auth::login($user);
-
     return redirect()->route('home');
 });
 
 // =====================
-// WEBHOOK MIDTRANS (Tanpa auth & CSRF)
+// WEBHOOK MIDTRANS
 // =====================
-
-Route::post('/webhook/midtrans', [MidtransWebhookController::class, 'handle'])
-    ->name('webhook.midtrans');
-
-// =====================
-// DEBUG ROUTE (Hapus di production!)
-// =====================
-
+Route::post('/webhook/midtrans', [MidtransWebhookController::class, 'handle'])->name('webhook.midtrans');
 
 // =====================
 // ROUTE KHUSUS SUPERADMIN
 // =====================
 Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
-    
-    // Cek Pangkat (Buat Tes)
     Route::get('/cek-pangkat', function () {
         return "Selamat! Kamu login sebagai: " . auth()->user()->role;
     })->name('cek');
 
-    // --- BAGIAN INI YANG KITA UBAH ---
-    // Halaman CRUD Admin (Nomor 2)
+    // CRUD MANAJEMEN ADMIN
     Route::get('/manage-admin', [AdminManagementController::class, 'index'])->name('manage');
-    Route::post('/manage-admin', [AdminManagementController::class, 'store'])->name('store');
+    Route::post('/manage-admin', [AdminManagementController::class, 'store'])->name('store'); 
     Route::delete('/manage-admin/{id}', [AdminManagementController::class, 'destroy'])->name('delete');
-    // ---------------------------------
     
-    // Halaman Log Aktivitas (Nomor 1)
+    // Log Aktivitas
     Route::get('/logs', function() {
         $logs = \DB::table('logs')->orderBy('created_at', 'desc')->get();
         return view('admin.logs', compact('logs'));
     })->name('logs');
-
 });
-
-// ← HAPUS require __DIR__.'/auth.php'; yang kedua di sini!
