@@ -15,6 +15,17 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
+        // Superadmin
+        User::updateOrCreate(
+            ['email' => 'superadmin@defacraft.com'],
+            [
+                'name' => 'Super Admin DefaCraft',
+                'password' => Hash::make('superadmin123'),
+                'role' => 'superadmin',
+                'nomor_wa' => '081122334455',
+            ]
+        );
+
         // Admin
         User::updateOrCreate(
             ['email' => 'admin@defacraft.com'],
