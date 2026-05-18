@@ -1,4 +1,3 @@
-<!-- resources/views/layouts/app.blade.php -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -6,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="DefaCraftStore - Pusat kerajinan tangan handmade, boneka rajut, aksesoris unik, dan dekorasi rumah berkualitas terbaik.">
     
-    <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -14,6 +12,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'DefaCraftStore - Kerajinan Tangan Modern')</title>
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
@@ -78,7 +77,6 @@
 
     <!-- AI Customer Service Chatbot -->
     @include('partials.chatbot')
-
 
     <!-- Global Scripts -->
     <script>
@@ -215,6 +213,36 @@
                 toastElement.remove();
             });
         }
+
+        // 🔴 SKRIP OTOMATIS: NYELIPIN MENU DASHBOARD ADMIN DI DROPDOWN PROFILE 🔴
+        document.addEventListener("DOMContentLoaded", function() {
+            @auth
+                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'superadmin')
+                    // Cari semua elemen link/menu di halaman yang punya teks "Kelola Admin"
+                    const links = document.querySelectorAll('a.dropdown-item');
+                    let targetLink = null;
+                    
+                    links.forEach(link => {
+                        if (link.textContent.includes('Kelola Admin') || link.textContent.includes('Kelola Akun')) {
+                            targetLink = link;
+                        }
+                    });
+                    
+                    // Kalau ketemu menu Kelola Admin, kita selipin menu Dashboard Admin tepat di atasnya
+                    if (targetLink) {
+                        const newMenu = document.createElement('a');
+                        newMenu.className = 'dropdown-item d-flex align-items-center py-2';
+                        newMenu.href = "{{ route('admin.dashboard') }}";
+                        newMenu.style.color = '#4A2E80';
+                        newMenu.style.fontWeight = '600';
+                        newMenu.innerHTML = '<i class="fas fa-fw fa-tachometer-alt me-2 text-secondary"></i> Dashboard Admin';
+                        
+                        // Eksekusi taruh di atasnya
+                        targetLink.parentNode.insertBefore(newMenu, targetLink);
+                    }
+                @endif
+            @endauth
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

@@ -23,7 +23,6 @@
             </div>
         </form>
 
-        
         <!-- Navigation Menu -->
         <div class="navbar-menu">
             <ul class="nav-list">
@@ -61,7 +60,18 @@
                                 <i class="fas fa-user-circle user-icon"></i>
                             </div>
                             <div class="dropdown-content">
-                                <!-- Menu Produk -->
+                                @if(auth()->user()->role === 'superadmin')
+                                    <a href="{{ route('superadmin.manage') }}" class="dropdown-link text-primary font-weight-bold" style="color: #4A2E80 !important; font-weight: 700;">
+                                        <i class="fas fa-users-cog"></i>
+                                        Kelola Admin
+                                    </a>
+                                    <a href="{{ route('superadmin.logs') }}" class="dropdown-link text-primary font-weight-bold" style="color: #4A2E80 !important; font-weight: 700;">
+                                        <i class="fas fa-history"></i>
+                                        Log Aktivitas
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                @endif
+
                                 <a href="{{ route('produk.index') }}" class="dropdown-link">
                                     <i class="fas fa-box"></i>
                                     Produk
@@ -81,13 +91,14 @@
                                     Pesanan Saya
                                 </a>
                                 
-                                @if(auth()->user()->role === 'admin')
-                                    <a href="{{ route('admin.dashboard') }}" class="dropdown-link">
-                                        <i class="fas fa-cog"></i>
+                                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                                    <a href="{{ route('admin.dashboard') }}" class="dropdown-link" style="color: #4A2E80; font-weight: 600;">
+                                        <i class="fas fa-tachometer-alt"></i>
                                         Dashboard Admin
                                     </a>
                                     <div class="dropdown-divider"></div>
                                 @endif
+
                                 <a href="{{ route('profile.edit') }}" class="dropdown-link">
                                     <i class="fas fa-user"></i>
                                     Profil
@@ -126,26 +137,33 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu">
         <!-- Search di mobile -->
-<form action="{{ route('produk.index') }}" method="GET" class="mobile-search">
-    <div class="mobile-search-wrapper">
-        <input type="search" name="search" class="mobile-search-input"
-               placeholder="Cari produk..." value="{{ request('search') }}">
-        <button type="submit" class="mobile-search-btn" aria-label="Cari">
-            <i class="fas fa-search"></i>
-        </button>
-    </div>
-</form>
+        <form action="{{ route('produk.index') }}" method="GET" class="mobile-search">
+            <div class="mobile-search-wrapper">
+                <input type="search" name="search" class="mobile-search-input"
+                       placeholder="Cari produk..." value="{{ request('search') }}">
+                <button type="submit" class="mobile-search-btn" aria-label="Cari">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
         <ul class="mobile-nav-list">
             <li><a href="{{ route('home') }}">🏠 Home</a></li>
             <li><a href="{{ route('produk.index') }}">📦 Produk</a></li>
             @auth
+                @if(auth()->user()->role === 'superadmin')
+                    <li class="bg-light"><a href="{{ route('superadmin.manage') }}">👥 Kelola Admin</a></li>
+                    <li class="bg-light"><a href="{{ route('superadmin.logs') }}">📜 Log Aktivitas</a></li>
+                @endif
+
                 <li><a href="{{ route('keranjang.index') }}">🛒 Keranjang</a></li>
                 <li><a href="{{ route('wishlist.index') }}">❤️ Wishlist</a></li>
                 <li><a href="{{ route('transaksi.riwayat') }}">📋 Pesanan Saya</a></li>
                 <li><a href="{{ route('profile.edit') }}">👤 Profil</a></li>
-                @if(auth()->user()->role === 'admin')
-                    <li><a href="{{ route('admin.dashboard') }}">🔧 Admin</a></li>
+                
+                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                    <li class="bg-light"><a href="{{ route('admin.dashboard') }}">🔧 Dashboard Admin</a></li>
                 @endif
+                
                 <li>
                     <form method="POST" action="{{ route('logout') }}" class="mobile-logout">
                         @csrf
@@ -159,15 +177,14 @@
     </div>
 </nav>
 
-
-
 <script>
     // Fungsi untuk membersihkan input pencarian
     function clearSearch() {
         const searchInput = document.querySelector('.search-input');
-        searchInput.value = '';
-        // Submit otomatis form jika diperlukan
-        searchInput.closest('form').submit();
+        if (searchInput) {
+            searchInput.value = '';
+            searchInput.closest('form').submit();
+        }
     }
 
     // Tampilkan/hide tombol clear berdasarkan input
@@ -183,40 +200,42 @@
 
     function toggleClearButton() {
         const clearBtn = document.querySelector('.search-clear-btn');
-        if (searchInput.value.trim() !== '') {
-            clearBtn.style.display = 'flex';
-        } else {
-            clearBtn.style.display = 'none';
+        if (clearBtn && searchInput) {
+            if (searchInput.value.trim() !== '') {
+                clearBtn.style.display = 'flex';
+            } else {
+                clearBtn.style.display = 'none';
+            }
         }
     }
 
     // Hamburger toggle
-document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.querySelector('.hamburger');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const navbar     = document.querySelector('.navbar-modern');
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburger = document.querySelector('.hamburger');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navbar = document.querySelector('.navbar-modern');
 
-    if (hamburger && mobileMenu) {
-        hamburger.addEventListener('click', function() {
-            mobileMenu.classList.toggle('active');
-            hamburger.classList.toggle('open');
-        });
-
-        // Tutup menu kalau klik di luar
-        document.addEventListener('click', function(e) {
-            if (navbar && !navbar.contains(e.target)) {
-                mobileMenu.classList.remove('active');
-                hamburger.classList.remove('open');
-            }
-        });
-
-        // Tutup menu kalau klik link di dalam mobile menu
-        mobileMenu.querySelectorAll('a, button').forEach(el => {
-            el.addEventListener('click', function() {
-                mobileMenu.classList.remove('active');
-                hamburger.classList.remove('open');
+        if (hamburger && mobileMenu) {
+            hamburger.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+                hamburger.classList.toggle('open');
             });
-        });
-    }
-});
+
+            // Tutup menu kalau klik di luar
+            document.addEventListener('click', function(e) {
+                if (navbar && !navbar.contains(e.target)) {
+                    mobileMenu.classList.remove('active');
+                    hamburger.classList.remove('open');
+                }
+            });
+
+            // Tutup menu kalau klik link di dalam mobile menu
+            mobileMenu.querySelectorAll('a, button').forEach(el => {
+                el.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    hamburger.classList.remove('open');
+                });
+            });
+        }
+    });
 </script>

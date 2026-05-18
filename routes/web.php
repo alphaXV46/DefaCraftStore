@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminManagementController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\KeranjangController;
@@ -25,9 +26,7 @@ require __DIR__.'/auth.php';
 // =====================
 // HALAMAN PUBLIC
 // =====================
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
 Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
 
@@ -51,9 +50,7 @@ Route::prefix('ongkir')->middleware('throttle:ongkir')->group(function () {
 // =====================
 // ROUTE YANG BUTUH LOGIN
 // =====================
-
 Route::middleware('auth')->group(function () {
-
     // Keranjang
     Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
     Route::post('/keranjang', [KeranjangController::class, 'store'])->name('keranjang.store');
@@ -88,7 +85,6 @@ Route::middleware('auth')->group(function () {
 // =====================
 // ROUTE ADMIN
 // =====================
-
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
     
@@ -112,7 +108,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // =====================
 // GOOGLE LOGIN
 // =====================
-
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
 });
@@ -138,14 +133,31 @@ Route::get('/auth/google/callback', function () {
 // =====================
 // WEBHOOK MIDTRANS (Tanpa auth & CSRF)
 // =====================
-
-Route::post('/webhook/midtrans', [MidtransWebhookController::class, 'handle'])
-    ->name('webhook.midtrans');
+Route::post('/webhook/midtrans', [MidtransWebhookController::class, 'handle'])->name('webhook.midtrans');
 
 // =====================
 // DEBUG ROUTE (Hapus di production!)
 // =====================
-
 Route::get('/laporan-data', function () {
     return response()->json(['ok' => true, 'total' => \App\Models\Transaksi::count()]);
+});
+
+// =====================
+// ROUTE KHUSUS SUPERADMIN
+// =====================
+Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+    Route::get('/cek-pangkat', function () {
+        return "Selamat! Kamu login sebagai: " . auth()->user()->role;
+    })->name('cek');
+
+    // CRUD MANAJEMEN ADMIN
+    Route::get('/manage-admin', [AdminManagementController::class, 'index'])->name('manage');
+    Route::post('/manage-admin', [AdminManagementController::class, 'store'])->name('store'); 
+    Route::delete('/manage-admin/{id}', [AdminManagementController::class, 'destroy'])->name('delete');
+    
+    // Log Aktivitas
+    Route::get('/logs', function() {
+        $logs = \DB::table('logs')->orderBy('created_at', 'desc')->get();
+        return view('admin.logs', compact('logs'));
+    })->name('logs');
 });

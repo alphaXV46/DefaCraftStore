@@ -10,10 +10,10 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->role === 'admin') {
+        if (auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')) {
             return $next($request);
         }
         
-        abort(403, 'Unauthorized access');
+        return redirect('/')->with('error', 'Kamu tidak memiliki hak akses.');
     }
 }
