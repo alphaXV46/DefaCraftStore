@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <style>
         #adminMap { height: 250px; width: 100%; border-radius: 8px; margin-top: 15px; }
+        .custom-div-icon { font-size: 30px; display: flex; align-items: center; justify-content: center; background: none; border: none; }
     </style>
 @endpush
 
@@ -312,7 +313,14 @@
             
             const map = L.map('adminMap').setView([lat, lng], 19);
             
-            const esriSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            // Define separate instances of Esri satellite tile layers to avoid shared layer instance conflicts
+            const esriSatelliteBase = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 22,
+                maxNativeZoom: 19,
+                attribution: 'Tiles &copy; Esri'
+            });
+
+            const esriSatellitePure = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 22,
                 maxNativeZoom: 19,
                 attribution: 'Tiles &copy; Esri'
@@ -331,16 +339,25 @@
                 attribution: '© OpenStreetMap contributors'
             });
 
-            esriSatellite.addTo(map);
+            // Add Hybrid (Esri Satellite + Labels) by default
+            esriSatelliteBase.addTo(map);
             cartoLabels.addTo(map);
 
             L.control.layers({
-                "Satelit + Label (Hybrid)": L.layerGroup([esriSatellite, cartoLabels]),
+                "Satelit + Label (Hybrid)": L.layerGroup([esriSatelliteBase, cartoLabels]),
                 "OpenStreetMap (Jalan)": osmLayer,
-                "Satelit Murni": esriSatellite
+                "Satelit Murni": esriSatellitePure
             }).addTo(map);
 
-            const marker = L.marker([lat, lng]).addTo(map);
+            // Use custom L.divIcon to prevent 404 broken image marker issues from standard Leaflet CDN assets
+            const DeliveryIcon = L.divIcon({
+                html: '📍',
+                className: 'custom-div-icon',
+                iconSize: [30, 30],
+                iconAnchor: [15, 30]
+            });
+
+            const marker = L.marker([lat, lng], { icon: DeliveryIcon }).addTo(map);
             marker.bindPopup("<strong>Lokasi Pengiriman</strong><br>{{ $transaksi->nama_pembeli }}").openPopup();
             
             // Fix Leaflet tile loading issue in hidden container/tab

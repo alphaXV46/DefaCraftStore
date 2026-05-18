@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <style>
     #contactMap { height: 300px; width: 100%; border-radius: 12px; margin-top: 20px; border: 1px solid #ddd; }
+    .custom-div-icon { font-size: 30px; display: flex; align-items: center; justify-content: center; background: none; border: none; }
 </style>
 @endpush
 @section('content')
@@ -66,7 +67,14 @@
         const STORE_LATLNG = [-6.5971, 106.8060];
         const map = L.map('contactMap').setView(STORE_LATLNG, 19);
         
-        const esriSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        // Define separate instances of Esri satellite tile layers to avoid shared layer instance conflicts
+        const esriSatelliteBase = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 22,
+            maxNativeZoom: 19,
+            attribution: 'Tiles &copy; Esri'
+        });
+
+        const esriSatellitePure = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 22,
             maxNativeZoom: 19,
             attribution: 'Tiles &copy; Esri'
@@ -85,13 +93,14 @@
             attribution: '© OpenStreetMap contributors'
         });
 
-        esriSatellite.addTo(map);
+        // Add Hybrid (Esri Satellite + Labels) by default
+        esriSatelliteBase.addTo(map);
         cartoLabels.addTo(map);
 
         L.control.layers({
-            "Satelit + Label (Hybrid)": L.layerGroup([esriSatellite, cartoLabels]),
+            "Satelit + Label (Hybrid)": L.layerGroup([esriSatelliteBase, cartoLabels]),
             "OpenStreetMap (Jalan)": osmLayer,
-            "Satelit Murni": esriSatellite
+            "Satelit Murni": esriSatellitePure
         }).addTo(map);
 
         const StoreIcon = L.divIcon({

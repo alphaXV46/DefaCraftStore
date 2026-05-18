@@ -6,6 +6,9 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     @vite(['resources/css/transaksi-checkout.css'])
+    <style>
+        .custom-div-icon { font-size: 30px; display: flex; align-items: center; justify-content: center; background: none; border: none; }
+    </style>
 @endpush
 
 @section('content')
@@ -384,24 +387,31 @@ window.useSavedAddress = function(id, nama, wa, alamat, destinationId, cityName)
 // PETA (LEAFLET)
 // ============================================
 document.getElementById('mapModal')?.addEventListener('shown.bs.modal', function () {
+    const centerLatLng = selectedLatLng || STORE_LATLNG;
+    const zoomLevel = selectedLatLng ? 18 : 19;
+
     if (!map) {
-        map = L.map('map').setView(STORE_LATLNG, 19);
+        map = L.map('map').setView(centerLatLng, zoomLevel);
         
-        // 1. Tampilkan Gambar Satelit dari Esri (Gratis & Legal)
-        const esriSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        // Define separate instances of Esri satellite tile layers to avoid shared layer instance conflicts
+        const esriSatelliteBase = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 22,
             maxNativeZoom: 19,
             attribution: 'Tiles &copy; Esri'
         });
 
-        // 2. Tumpuk dengan Label Nama Jalan/Blok dari CartoDB (OpenStreetMap based)
+        const esriSatellitePure = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 22,
+            maxNativeZoom: 19,
+            attribution: 'Tiles &copy; Esri'
+        });
+
         const cartoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
             maxZoom: 22,
             maxNativeZoom: 19,
             attribution: '&copy; OpenStreetMap'
         });
 
-        // 3. Peta Standar OpenStreetMap
         const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 22,
             maxNativeZoom: 19,
@@ -409,15 +419,15 @@ document.getElementById('mapModal')?.addEventListener('shown.bs.modal', function
             attribution: '© OpenStreetMap contributors'
         });
 
-        // Default: Gabungkan Satelit Esri + Label Carto (Hybrid Free)
-        esriSatellite.addTo(map);
+        // Add Hybrid (Esri Satellite + Labels) by default
+        esriSatelliteBase.addTo(map);
         cartoLabels.addTo(map);
 
         // Control Layer
         const baseMaps = {
-            "Satelit + Label (Hybrid)": L.layerGroup([esriSatellite, cartoLabels]),
+            "Satelit + Label (Hybrid)": L.layerGroup([esriSatelliteBase, cartoLabels]),
             "OpenStreetMap (Jalan)": osmLayer,
-            "Satelit Murni": esriSatellite
+            "Satelit Murni": esriSatellitePure
         };
         L.control.layers(baseMaps).addTo(map);
 
@@ -434,6 +444,10 @@ document.getElementById('mapModal')?.addEventListener('shown.bs.modal', function
             .addTo(map)
             .bindPopup(`<strong>${STORE_NAME}</strong><br>Lokasi Pengiriman Kami`);
 
+        if (selectedLatLng) {
+            placeMarker(selectedLatLng);
+        }
+
         map.on('click', function(e) {
             placeMarker(e.latlng);
             reverseGeocode(e.latlng.lat, e.latlng.lng);
@@ -444,6 +458,10 @@ document.getElementById('mapModal')?.addEventListener('shown.bs.modal', function
             map.invalidateSize();
         }, 500);
     } else {
+        map.setView(centerLatLng, zoomLevel);
+        if (selectedLatLng && !map.hasLayer(marker)) {
+            placeMarker(selectedLatLng);
+        }
         setTimeout(() => map.invalidateSize(), 300);
     }
 });
@@ -551,23 +569,69 @@ window.searchMapAddress = async function() {
 }
 
 window.getMyLocation = function() {
-    if (!navigator.geolocation) {
-        Swal.fire({ icon: 'warning', title: 'Tidak Didukung', text: 'Browser tidak support geolocation.', confirmButtonColor: '#0d6efd' });
+    // Jalankan pengecekan HTTPS / secure origin untuk memberikan feedback yang akurat ke user
+    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Koneksi Tidak Aman (HTTP)',
+            text: 'Fitur "Lokasi Saya" diblokir oleh browser karena situs tidak menggunakan koneksi aman HTTPS. Silakan gunakan kolom pencarian alamat atau akses situs via HTTPS/localhost.',
+            confirmButtonColor: '#0d6efd'
+        });
         return;
     }
 
+    if (!navigator.geolocation) {
+        Swal.fire({ 
+            icon: 'warning', 
+            title: 'Tidak Didukung', 
+            text: 'Browser Anda tidak mendukung fitur pendeteksi lokasi (Geolocation).', 
+            confirmButtonColor: '#0d6efd' 
+        });
+        return;
+    }
+
+    // Tampilkan loading spinner premium agar user tahu sistem sedang mencari lokasi mereka
+    Swal.fire({
+        title: 'Mencari Lokasi Anda...',
+        text: 'Mohon tunggu sebentar, sistem sedang melacak koordinat Anda.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     navigator.geolocation.getCurrentPosition(
         pos => {
+            Swal.close();
             const latlng = L.latLng(pos.coords.latitude, pos.coords.longitude);
-            map.setView(latlng, 19);
-            placeMarker(latlng);
-            reverseGeocode(pos.coords.latitude, pos.coords.longitude);
+            if (map) {
+                map.setView(latlng, 19);
+                placeMarker(latlng);
+                reverseGeocode(pos.coords.latitude, pos.coords.longitude);
+            }
         },
-        () => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Tidak dapat mengakses lokasi.', confirmButtonColor: '#0d6efd' }),
+        err => {
+            Swal.close();
+            let errMsg = 'Tidak dapat mengakses lokasi Anda. Pastikan izin lokasi telah diberikan.';
+            if (err.code === 1) { // PERMISSION_DENIED
+                errMsg = 'Izin akses lokasi ditolak. Silakan aktifkan izin lokasi untuk situs ini pada pengaturan browser Anda.';
+            } else if (err.code === 3) { // TIMEOUT
+                errMsg = 'Waktu pencarian lokasi habis (Timeout). Silakan coba lagi atau gunakan fitur pencarian alamat.';
+            } else if (err.code === 2) { // POSITION_UNAVAILABLE
+                errMsg = 'Informasi lokasi tidak tersedia di perangkat Anda saat ini.';
+            }
+            
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Pelacakan Gagal', 
+                text: errMsg, 
+                confirmButtonColor: '#0d6efd' 
+            });
+        },
         {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0 // Pastikan mengambil lokasi terbaru, bukan cache
+            enableHighAccuracy: false, // Set false agar respon instan via Wi-Fi/IP dan tidak memicu timeout GPS di desktop/laptop
+            timeout: 12000,           // Sedikit diperpanjang untuk toleransi koneksi lambat
+            maximumAge: 10000         // Izinkan menggunakan cache lokasi 10 detik terakhir untuk respons cepat
         }
     );
 }
@@ -579,7 +643,6 @@ document.getElementById('mapSearch')?.addEventListener('keypress', e => {
     }
 });
 
-window.confirmLocation = async function() {
 // Helper: Membangun alamat standar Indonesia (Spesifik -> Umum)
 function buildStandardAddress(addr, hNo, road, village, rtrw) {
     const cleanStr = (str) => {
@@ -689,40 +752,56 @@ window.confirmLocation = async function() {
             bs = bootstrap;
         }
 
-        if (bs && bs.Modal) {
-            const bsModal = bs.Modal.getInstance(modalEl);
-            if (bsModal) bsModal.hide();
-        } else {
-            // Fallback manual
-            modalEl.classList.remove('show');
-            modalEl.style.display = 'none';
-            modalEl.setAttribute('aria-hidden', 'true');
-            modalEl.removeAttribute('aria-modal');
-            modalEl.removeAttribute('role');
+        // Daftarkan event listener yang dipicu setelah modal benar-benar selesai menutup (bersih dari animasi)
+        const onModalHidden = async () => {
+            modalEl.removeEventListener('hidden.bs.modal', onModalHidden);
+            
+            // Hapus sisa-sisa kelas dan backdrop secara fisik untuk keamanan ganda
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
             document.body.classList.remove('modal-open');
             document.body.style.overflow = '';
             document.body.style.paddingRight = '';
-            const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) backdrop.remove();
+
+            if (subdistrict || cityName) {
+                Swal.fire({
+                    title: 'Mensinkronkan...',
+                    text: 'Mencari kecamatan terdekat di sistem ongkir',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                const searchTerm = subdistrict ? `${subdistrict} ${cityName}`.trim() : cityName;
+                const destInput = document.getElementById('destinationSearch');
+                if (destInput) {
+                    destInput.value = searchTerm;
+                    await autoSearchDestination(searchTerm, cityName);
+                }
+            }
+        };
+
+        modalEl.addEventListener('hidden.bs.modal', onModalHidden);
+
+        if (bs && bs.Modal) {
+            const bsModal = bs.Modal.getInstance(modalEl);
+            if (bsModal) {
+                bsModal.hide();
+            } else {
+                // Fallback manual jika instance tidak ditemukan
+                modalEl.classList.remove('show');
+                modalEl.style.display = 'none';
+                onModalHidden();
+            }
+        } else {
+            // Fallback manual jika bootstrap tidak terdeteksi
+            modalEl.classList.remove('show');
+            modalEl.style.display = 'none';
+            onModalHidden();
         }
-    }
-
-    if (subdistrict || cityName) {
-        // Tampilkan loading saat sinkronisasi
-        Swal.fire({
-            title: 'Mensinkronkan...',
-            text: 'Mencari kecamatan terdekat di sistem ongkir',
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading()
-        });
-
-        // Gabungkan subdistrict dan cityName agar lebih spesifik (misal: "Sukahati Cibinong")
-        const searchTerm = subdistrict ? `${subdistrict} ${cityName}`.trim() : cityName;
-        
-        const destInput = document.getElementById('destinationSearch');
-        if (destInput) {
-            destInput.value = searchTerm;
-            await autoSearchDestination(searchTerm, cityName);
+    } else {
+        // Fallback jika elemen modal tidak ada sama sekali
+        if (subdistrict || cityName) {
+            const searchTerm = subdistrict ? `${subdistrict} ${cityName}`.trim() : cityName;
+            autoSearchDestination(searchTerm, cityName);
         }
     }
 }
@@ -808,6 +887,13 @@ async function autoSearchDestination(keyword, fallbackKeyword = null) {
         const res  = await fetch(`{{ route('ongkir.search') }}?search=${encodeURIComponent(keyword)}`);
         const data = await res.json();
 
+        // Helper untuk melepaskan scroll body secara paksa demi menghindari bug stuck scroll
+        const forceUnlockScroll = () => {
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        };
+
         if (data && data.length > 0) {
             // 1. Coba cari kecocokan eksak
             const exactMatch = data.find(d => d.label.toLowerCase().includes(keyword.toLowerCase()));
@@ -819,6 +905,8 @@ async function autoSearchDestination(keyword, fallbackKeyword = null) {
                     text: `Kecamatan ${exactMatch.label} otomatis dipilih dari peta.`,
                     timer: 2000,
                     showConfirmButton: false
+                }).then(() => {
+                    forceUnlockScroll();
                 });
             } else {
                 // 2. Jika tidak persis, pilih opsi pertama tapi beri peringatan
@@ -828,6 +916,8 @@ async function autoSearchDestination(keyword, fallbackKeyword = null) {
                     title: 'Periksa Kembali',
                     text: `Sistem memilih "${data[0].label}" berdasarkan peta. Pastikan ini sesuai. Jika tidak, silakan cari manual di kolom pencarian.`,
                     confirmButtonColor: '#0d6efd'
+                }).then(() => {
+                    forceUnlockScroll();
                 });
             }
         } else if (fallbackKeyword && fallbackKeyword.toLowerCase() !== keyword.toLowerCase()) {
@@ -843,6 +933,7 @@ async function autoSearchDestination(keyword, fallbackKeyword = null) {
             }).then(() => {
                 document.getElementById('destinationSearch').focus();
                 doSearchDestination(keyword);
+                forceUnlockScroll();
             });
         }
     } catch(e) {
