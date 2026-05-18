@@ -9,7 +9,6 @@
 @section('content')
 <div class="product-detail-page">
     <div class="product-container">
-<<<<<<< HEAD
         <div class="product-card shadow-sm border-0">
             <div class="product-content">
                 <div class="image-section">
@@ -66,69 +65,16 @@
                             </span>
                         @else
                             <span class="badge bg-danger-subtle text-danger p-2">
-=======
-        <!-- Main Product Card -->
-        <div class="product-card">
-            <div class="product-content">
-                <!-- Image Section -->
-                <div class="image-section">
-    @if($produk->gambar && file_exists(public_path('images/produk/' . $produk->gambar)))
-        <img src="{{ asset('images/produk/' . $produk->gambar) }}"
-             class="product-image" alt="{{ $produk->nama }}"
-             width="600" height="600"
-             loading="eager"
-             fetchpriority="high"
-             decoding="sync">
-    @else
-        <div class="placeholder-image">
-            <span class="placeholder-icon">📦</span>
-        </div>
-    @endif
-
-</div>
-                <!-- Info Section -->
-                <div class="info-section">
-                    <div class="product-category">{{ $produk->kategori }}</div>
-                    <h1 class="product-title">{{ $produk->nama }}</h1>
-                    
-                    <div class="product-price">
-                        Rp {{ number_format($produk->harga, 0, ',', '.') }}
-                    </div>
-                    
-                    <!-- Stock Info -->
-                    <div class="stock-info">
-                        <div class="stock-label">Ketersediaan:</div>
-                        @if($produk->stok > 10)
-                            <span class="stock-badge stock-available">
-                                ✅ Stok Tersedia ({{ $produk->stok }})
-                            </span>
-                        @elseif($produk->stok > 0)
-                            <span class="stock-badge stock-limited">
-                                ⚠️ Stok Terbatas ({{ $produk->stok }})
-                            </span>
-                        @else
-                            <span class="stock-badge stock-out">
->>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
                                 ❌ Stok Habis
                             </span>
                         @endif
                     </div>
                     
-<<<<<<< HEAD
                     <div class="description-section mb-4 pb-4 border-bottom">
                         <h5 class="fw-bold">Deskripsi Produk</h5>
                         <p class="text-muted" style="line-height: 1.6;">{{ $produk->deskripsi }}</p>
                     </div>
                     
-=======
-                    <!-- Description -->
-                    <div class="description-section">
-                        <h5 class="description-title">Deskripsi Produk</h5>
-                        <p class="description-text">{{ $produk->deskripsi }}</p>
-                    </div>
-                    
-                    <!-- Form Section -->
->>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
                     <div class="form-section">
                         @auth
                             @if($produk->stok > 0)
@@ -136,7 +82,6 @@
                                     @csrf
                                     <input type="hidden" name="produk_id" value="{{ $produk->id }}">
                                     
-<<<<<<< HEAD
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Jumlah</label>
                                         <input type="number" name="jumlah" class="form-control" 
@@ -145,57 +90,33 @@
                                     </div>
                                     
                                     <button type="submit" class="btn btn-warning btn-lg w-100 fw-bold shadow-sm rounded-pill py-3">
-=======
-                                    <label class="form-label">Jumlah</label>
-                                    <input type="number" name="jumlah" class="quantity-input" 
-                                        value="1" min="1" max="{{ $produk->stok }}" required>
-                                    
-                                    <button type="submit" class="cart-button mt-3">
->>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
                                         🛒 Tambah ke Keranjang
                                     </button>
                                 </form>
                             @else
-<<<<<<< HEAD
                                 <div class="alert alert-danger border-0 shadow-sm">
-=======
-                                <div class="alert-custom alert-danger-custom">
->>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
                                     <strong>Maaf, produk ini sedang habis.</strong>
                                 </div>
                             @endif
                         @else
-<<<<<<< HEAD
                             <div class="alert alert-info border-0 shadow-sm text-center">
                                 <p class="mb-2">Silakan login untuk membeli produk ini</p>
                                 <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-4">
-=======
-                            <div class="alert-custom alert-info-custom">
-                                <p class="mb-2">Silakan login untuk membeli produk ini</p>
-                                <a href="{{ route('login') }}" class="cart-button">
->>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
                                     Login Sekarang
                                 </a>
                             </div>
                         @endauth
                     </div>
                     
-<<<<<<< HEAD
                     <div class="mt-4">
                         <a href="{{ route('produk.index') }}" class="text-decoration-none text-muted small">
                             ← Kembali ke Produk
                         </a>
                     </div>
-=======
-                    <a href="{{ route('produk.index') }}" class="back-button">
-                        ← Kembali ke Produk
-                    </a>
->>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
                 </div>
             </div>
         </div>
         
-<<<<<<< HEAD
         <div class="related-products-section mt-5">
             <h3 class="section-title fw-bold mb-4">Produk Terkait 🎨</h3>
             <div class="row g-4">
@@ -231,36 +152,6 @@
                                 </div>
                                 <a href="{{ route('produk.show', $item->id) }}" 
                                    class="btn btn-outline-warning btn-sm w-100 rounded-pill fw-bold">
-=======
-        <!-- Related Products Section -->
-        <div class="related-products-section">
-            <h3 class="section-title">Produk Terkait 🎨</h3>
-            <div class="row g-4">
-
-                
-                @forelse($produkTerkait as $item)
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="related-product-card h-100">
-                            <div class="related-product-image-wrapper">
-                                @if($item->gambar && file_exists(public_path('images/produk/' . $item->gambar)))
-                                    <img src="{{ asset('images/produk/' . $item->gambar) }}"
-                                         class="related-product-image" alt="{{ $item->nama }}"
-                                         width="300" height="280"
-                                         loading="lazy" decoding="async">
-                                @else
-                                    <div class="related-product-placeholder">
-                                        <span class="fs-1">📦</span>
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="related-product-info">
-                                <h5 class="related-product-name">{{ $item->nama }}</h5>
-                                <div class="related-product-price">
-                                    Rp {{ number_format($item->harga, 0, ',', '.') }}
-                                </div>
-                                <a href="{{ route('produk.show', $item->id) }}" 
-                                   class="related-product-button">
->>>>>>> 55be931ee8bbfb5a5db858b94ac065ca9e173cd3
                                     Lihat Detail
                                 </a>
                             </div>
