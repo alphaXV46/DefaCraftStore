@@ -93,7 +93,7 @@
         <!-- Bottom Bar -->
         <div class="footer-bottom">
             <div class="copyright">
-                <p>&copy; 2026 DefaCraftStore.</p>
+                <p>Copyright&copy; 2025-2026 DefaCraft. All rights reserved.</p>
             </div>
         </div>
     </div>
