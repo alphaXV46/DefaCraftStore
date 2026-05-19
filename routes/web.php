@@ -192,3 +192,15 @@ Route::get('/run-fresh-seed-securely', function () {
         return "<h3>✗ Gagal Fresh Seed:</h3><pre>" . $e->getMessage() . "</pre>";
     }
 });
+
+Route::get('/clear-cache-securely', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        return "<h3 style='color:green;'>✓ Cache Berhasil Dibersihkan!</h3><p>Route, View, Config, dan Application Cache telah di-reset. <br><br><a href='/' style='padding: 10px 20px; background: #7c3aed; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold;'>Kembali ke Beranda</a></p>";
+    } catch (\Exception $e) {
+        return "<h3 style='color:red;'>✗ Gagal Clear Cache:</h3><pre>" . $e->getMessage() . "</pre>";
+    }
+});
