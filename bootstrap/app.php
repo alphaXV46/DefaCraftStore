@@ -12,32 +12,34 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-    // trust ngrok proxy
-    $middleware->trustProxies(at: '*');
-    
-    $middleware->alias([
-        'admin' => \App\Http\Middleware\AdminMiddleware::class,
-    ]);
+        // trust ngrok proxy
+        $middleware->trustProxies(at: '*');
+        
+        // Daftarkan Alias Middleware
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'role'  => \App\Http\Middleware\RoleCheck::class,
+        ]);
 
-    // ✅ Daftarkan Middleware Keamanan Global & Optimasi
-    $middleware->append(\App\Http\Middleware\SecurityHeadersMiddleware::class);
-    $middleware->append(\App\Http\Middleware\SanitizeInputMiddleware::class);
-    $middleware->append(\App\Http\Middleware\GzipResponse::class);
-    $middleware->append(\App\Http\Middleware\CacheStaticAssets::class);
+        // ✅ Daftarkan Middleware Keamanan Global & Optimasi
+        $middleware->append(\App\Http\Middleware\SecurityHeadersMiddleware::class);
+        $middleware->append(\App\Http\Middleware\SanitizeInputMiddleware::class);
+        $middleware->append(\App\Http\Middleware\GzipResponse::class);
+        $middleware->append(\App\Http\Middleware\CacheStaticAssets::class);
 
-    // Exclude webhook dari CSRF
-    $middleware->validateCsrfTokens(except: [
-        'webhook/midtrans',
-    ]);
+        // Exclude webhook dari CSRF
+        $middleware->validateCsrfTokens(except: [
+            'webhook/midtrans',
+        ]);
 
-    // kita paksa url di sini saja supaya aman
-    if (env('APP_URL') && str_contains(env('APP_URL'), 'ngrok-free')) {
-        URL::forceRootUrl(env('APP_URL'));
-        if (str_contains(env('APP_URL'), 'https://')) {
-            URL::forceScheme('https');
+        // kita paksa url di sini saja supaya aman
+        if (env('APP_URL') && str_contains(env('APP_URL'), 'ngrok-free')) {
+            URL::forceRootUrl(env('APP_URL'));
+            if (str_contains(env('APP_URL'), 'https://')) {
+                URL::forceScheme('https');
+            }
         }
-    }
-})
+    })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (\Illuminate\Http\Exceptions\ThrottleRequestsException $e, \Illuminate\Http\Request $request) {
             \Illuminate\Support\Facades\Log::warning('Rate Limit Exceeded', [

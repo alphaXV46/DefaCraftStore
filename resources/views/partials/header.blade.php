@@ -54,6 +54,18 @@
                                 <i class="fas fa-user-circle user-icon"></i>
                             </div>
                             <div class="dropdown-content">
+                                @if(auth()->user()->role === 'superadmin')
+                                    <a href="{{ route('superadmin.manage') }}" class="dropdown-link text-primary font-weight-bold">
+                                        <i class="fas fa-users-cog"></i>
+                                        Kelola Admin
+                                    </a>
+                                    <a href="{{ route('superadmin.logs') }}" class="dropdown-link text-primary font-weight-bold">
+                                        <i class="fas fa-history"></i>
+                                        Log Aktivitas
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                @endif
+
                                 <a href="{{ route('produk.index') }}" class="dropdown-link">
                                     <i class="fas fa-box"></i>
                                     Produk
@@ -72,6 +84,7 @@
                                     Pesanan Saya
                                 </a>
                                 
+                                {{-- 🟢 DI SINI PERUBAHANNYA: Superadmin & Admin Sekarang Bisa Lihat Menu Ini 🟢 --}}
                                 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
                                     <a href="{{ route('admin.dashboard') }}" class="dropdown-link" style="color: #4A2E80; font-weight: 600;">
                                         <i class="fas fa-tachometer-alt"></i>
@@ -128,15 +141,21 @@
             <li><a href="{{ route('home') }}">🏠 Home</a></li>
             <li><a href="{{ route('produk.index') }}">📦 Produk</a></li>
             @auth
+                @if(auth()->user()->role === 'superadmin')
+                    <li class="bg-light"><a href="{{ route('superadmin.manage') }}">👥 Kelola Admin</a></li>
+                    <li class="bg-light"><a href="{{ route('superadmin.logs') }}">📜 Log Aktivitas</a></li>
+                @endif
+
                 <li><a href="{{ route('keranjang.index') }}">🛒 Keranjang</a></li>
                 <li><a href="{{ route('wishlist.index') }}">❤️ Wishlist</a></li>
                 <li><a href="{{ route('transaksi.riwayat') }}">📋 Pesanan Saya</a></li>
                 <li><a href="{{ route('profile.edit') }}">👤 Profil</a></li>
                 
+                {{-- 🟢 Menu untuk versi Mobile juga udah gue benerin di bawah ini 🟢 --}}
                 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
                     <li class="bg-light"><a href="{{ route('admin.dashboard') }}">🔧 Dashboard Admin</a></li>
                 @endif
-
+                
                 <li>
                     <form method="POST" action="{{ route('logout') }}" class="mobile-logout">
                         @csrf
@@ -151,36 +170,28 @@
 </nav>
 
 <script>
-    // Fungsi untuk membersihkan input pencarian
     function clearSearch() {
         const searchInput = document.querySelector('.search-input');
-        if (searchInput) {
-            searchInput.value = '';
-            searchInput.closest('form').submit();
-        }
+        searchInput.value = '';
+        searchInput.closest('form').submit();
     }
 
-    // Tampilkan/hide tombol clear berdasarkan input
     const searchInput = document.querySelector('.search-input');
-    const clearBtn = document.querySelector('.search-clear-btn');
-
-    function toggleClearButton() {
-        if (searchInput && clearBtn) {
-            if (searchInput.value.trim() !== '') {
-                clearBtn.style.display = 'flex';
-            } else {
-                clearBtn.style.display = 'none';
-            }
-        }
-    }
-
     if (searchInput) {
         toggleClearButton();
         searchInput.addEventListener('input', toggleClearButton);
         searchInput.addEventListener('change', toggleClearButton);
     }
 
-    // Hamburger toggle
+    function toggleClearButton() {
+        const clearBtn = document.querySelector('.search-clear-btn');
+        if (searchInput.value.trim() !== '') {
+            clearBtn.style.display = 'flex';
+        } else {
+            clearBtn.style.display = 'none';
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const hamburger = document.querySelector('.hamburger');
         const mobileMenu = document.querySelector('.mobile-menu');
@@ -192,20 +203,11 @@
                 hamburger.classList.toggle('open');
             });
 
-            // Tutup menu kalau klik di luar
             document.addEventListener('click', function(e) {
                 if (navbar && !navbar.contains(e.target)) {
                     mobileMenu.classList.remove('active');
                     hamburger.classList.remove('open');
                 }
-            });
-
-            // Tutup menu kalau klik link di dalam mobile menu
-            mobileMenu.querySelectorAll('a, button').forEach(el => {
-                el.addEventListener('click', function() {
-                    mobileMenu.classList.remove('active');
-                    hamburger.classList.remove('open');
-                });
             });
         }
     });

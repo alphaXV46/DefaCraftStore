@@ -45,18 +45,30 @@
                         @enderror
                     </div>
 
-                    <div class="form-group">
-                        <label for="password" class="form-label">Password</label>
-                        <div class="input-group-icon">
-                            <span class="input-icon">🔒</span>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="••••••••">
-                        </div>
-                         @error('password')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
+                    <div class="mb-3 position-relative">
+    <label for="password">Password</label>
+    <div style="position: relative;">
+        <input type="password" id="passwordField" name="password" class="form-control" required>
+        
+        <span id="togglePassword" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 10;">
+            👁️
+        </span>
+    </div>
+</div>
+
+<script>
+    const passwordField = document.getElementById('passwordField');
+    const togglePassword = document.getElementById('togglePassword');
+
+    togglePassword.addEventListener('click', function () {
+        // Cek tipe input sekarang, kalau password ganti ke text, dan sebaliknya
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        
+        // Ganti emoji biar makin interaktif
+        this.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+</script>
 
                     <div class="form-extras">
                         <div class="form-check">

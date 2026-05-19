@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\Admin\AdminManagementController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\KeranjangController;
@@ -80,21 +81,12 @@ Route::middleware('auth')->group(function () {
 // =====================
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
-    
-    // Route Produk
     Route::get('/produk', [AdminProdukController::class, 'index'])->name('produk.index');
     Route::get('/produk/create', [AdminProdukController::class, 'create'])->name('produk.create');
     Route::post('/produk', [AdminProdukController::class, 'store'])->name('produk.store');
     Route::get('/produk/{id}/edit', [AdminProdukController::class, 'edit'])->name('produk.edit');
     Route::patch('/produk/{id}', [AdminProdukController::class, 'update'])->name('produk.update');
     Route::delete('/produk/{id}', [AdminProdukController::class, 'destroy'])->name('produk.destroy');
-
-    // TAMBAHKAN INI: Route Kategori
-    // Kita gunakan resource agar otomatis membuat index, store, destroy, dll.
-   // Gunakan ini untuk kategori
-    Route::resource('kategori', \App\Http\Controllers\Admin\KategoriController::class)->except(['create', 'show', 'edit', 'update']);
-    Route::patch('/produk/{id}/toggle-status', [AdminProdukController::class, 'toggleStatus'])->name('produk.toggle-status');
-
 
     Route::get('/transaksi', [AdminTransaksiController::class, 'index'])->name('transaksi.index');
     Route::get('/transaksi/{id}', [AdminTransaksiController::class, 'show'])->name('transaksi.show');
@@ -125,19 +117,6 @@ Route::get('/auth/google/callback', function () {
 // =====================
 // WEBHOOK MIDTRANS
 // =====================
-
-Route::post('/webhook/midtrans', [MidtransWebhookController::class, 'handle'])
-    ->name('webhook.midtrans');
-
-// =====================
-// DEBUG ROUTE (Hapus di production!)
-// =====================
-
-Route::get('/laporan-data', function () {
-    return response()->json(['ok' => true, 'total' => \App\Models\Transaksi::count()]);
-});
-
-// ← HAPUS require __DIR__.'/auth.php'; yang kedua di sini!
 Route::post('/webhook/midtrans', [MidtransWebhookController::class, 'handle'])->name('webhook.midtrans');
 
 // =====================
