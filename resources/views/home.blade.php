@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Home - DefaCraftStore | Kerajinan Tangan Modern')
+@section('title', 'Home - DefaCraftStore | Dunia Blind Box & Figure Impianmu')
 
 @push('styles')
     @vite(['resources/css/home.css'])
@@ -16,12 +16,12 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 hero-content">
-                <h1 class="hero-title">
-                    Kerajinan Tangan<br>
-                    <span class="hero-title__highlight">Lucu & Unik</span> 
+                <h1 class="hero-title" style="font-size: 2.8rem; line-height: 1.2;">
+                    Dunia Blind Box<br>
+                    <span class="hero-title__highlight">& Figure Impianmu</span> 
                 </h1>
                 <p class="hero-subtitle">
-                    Temukan koleksi handmade terbaik untuk mempercantik hari-harimu
+                    Temukan kejutan seru dari seri Bunny, Nanci, Hirono dan Action Figure karakter favoritmu untuk lengkapi ruang estetikmu.
                 </p>
                 <div class="hero-cta d-flex gap-3">
                     <a href="{{ route('produk.index') }}" class="btn btn-light btn-lg">
@@ -80,28 +80,28 @@
     </div>
     <div class="row g-4">
         <div class="col-md-4">
-            <a href="{{ route('produk.index', ['kategori' => 'Boneka']) }}" class="text-decoration-none">
+            <a href="{{ route('produk.index', ['kategori' => 'Blind Box']) }}" class="text-decoration-none">
                 <div class="category-card">
-                    <div class="category-icon">🧸</div>
-                    <h3 class="category-name">Boneka</h3>
+                    <div class="category-icon">🎁</div>
+                    <h3 class="category-name">Blind Box</h3>
                     <p class="category-count">120+ Produk</p>
                 </div>
             </a>
         </div>
         <div class="col-md-4">
-            <a href="{{ route('produk.index', ['kategori' => 'Aksesoris']) }}" class="text-decoration-none">
+            <a href="{{ route('produk.index', ['kategori' => 'Action Figure']) }}" class="text-decoration-none">
                 <div class="category-card">
-                    <div class="category-icon">👜</div>
-                    <h3 class="category-name">Aksesoris</h3>
+                    <div class="category-icon">⚡</div>
+                    <h3 class="category-name">Action Figure</h3>
                     <p class="category-count">80+ Produk</p>
                 </div>
             </a>
         </div>
         <div class="col-md-4">
-            <a href="{{ route('produk.index', ['kategori' => 'Dekorasi']) }}" class="text-decoration-none">
+            <a href="{{ route('produk.index', ['kategori' => 'Boneka']) }}" class="text-decoration-none">
                 <div class="category-card">
-                    <div class="category-icon">🏮</div>
-                    <h3 class="category-name">Dekorasi</h3>
+                    <div class="category-icon">🧸</div>
+                    <h3 class="category-name">Boneka</h3>
                     <p class="category-count">95+ Produk</p>
                 </div>
             </a>
@@ -174,7 +174,7 @@
 <section class="container mb-5 scroll-animate" data-animation="slide-up">
     <div class="features-grid">
         <x-feature-item icon="🚚" title="Gratis Ongkir" desc="Gratis ongkir untuk pembelian di atas Rp 200.000" />
-        <x-feature-item icon="💎" title="Kualitas Terbaik" desc="100% handmade dengan bahan pilihan berkualitas" />
+        <x-feature-item icon="💎" title="Kualitas Terbaik" desc="100% original dari seri desainer art toys pilihan" />
         <x-feature-item icon="🔒" title="Pembayaran Aman" desc="Sistem pembayaran terpercaya dan terenkripsi" />
         <x-feature-item icon="⭐" title="Kepuasan Terjamin" desc="Garansi 100% uang kembali jika tidak puas" />
     </div>
@@ -190,7 +190,7 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <x-testimonial-card 
-                    text="Bonekanya super lucu dan kualitasnya bagus banget! Pengiriman cepat dan packingnya rapi. Pasti bakal order lagi!" 
+                    text="Blind box Hirono-nya super lucu dan kualitasnya original banget! Pengiriman cepat dan packingnya rapi dengan bubble wrap tebal. Pasti bakal order lagi!" 
                     initials="SA" 
                     name="Siti Aminah" 
                     location="Jakarta" 
@@ -198,7 +198,7 @@
             </div>
             <div class="col-md-4">
                 <x-testimonial-card 
-                    text="Aksesorisnya unik-unik dan harganya terjangkau. Cocok banget buat kado! Adminnya juga responsif dan ramah." 
+                    text="Action figure Luffy Gear 5 sangat detail dan harganya terjangkau. Cocok banget buat pajangan di meja belajar! Adminnya juga responsif dan ramah." 
                     initials="BP" 
                     name="Budi Prasetyo" 
                     location="Bandung" 
@@ -206,7 +206,7 @@
             </div>
             <div class="col-md-4">
                 <x-testimonial-card 
-                    text="Dekorasi kamarku jadi makin aesthetic sejak belanja di sini. Produknya handmade dan detail banget!" 
+                    text="Meja kamarku jadi makin aesthetic sejak dipajang seri Bunny rajutan & blind box dari sini. Produknya sangat detail dan dikirim dengan aman!" 
                     initials="DL" 
                     name="Dewi Lestari" 
                     location="Surabaya" 

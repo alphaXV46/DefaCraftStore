@@ -425,7 +425,7 @@
         <div class="message-bubble bot">
             Halo! Selamat datang di <strong>DefaCraftStore</strong>! 🧸✨
             <br><br>
-            Saya adalah <strong>Defa Craft Assistant</strong>, asisten AI yang siap membantu menjawab pertanyaan Anda seputar kerajinan tangan rajutan (amigurumi), aksesoris, metode pengiriman, hingga cara memesan.
+            Saya adalah <strong>Defa Craft Assistant</strong>, asisten AI yang siap membantu menjawab pertanyaan Anda seputar Dunia Blind Box & Figure Impianmu, seri Bunny, Nanci, Hirono, Action Figure favorit, metode pengiriman, hingga cara memesan.
             <br><br>
             Ada yang bisa saya bantu hari ini?
             <span class="message-time" id="welcomeTime">12:00</span>
@@ -437,11 +437,11 @@
         <button class="suggestion-pill" data-question="Bagaimana cara memesan produk di DefaCraftStore?">
             🛍️ Cara Pesan
         </button>
-        <button class="suggestion-pill" data-question="Apakah bisa request custom rajutan atau warna?">
-            🎨 Custom Rajutan
+        <button class="suggestion-pill" data-question="Apa saja seri Blind Box yang tersedia di sini?">
+            🎁 Seri Blind Box
         </button>
-        <button class="suggestion-pill" data-question="Berapa lama proses pembuatan produk rajutan?">
-            ⏳ Waktu Pengerjaan
+        <button class="suggestion-pill" data-question="Apakah semua Action Figure yang dijual di sini 100% original?">
+            ⚡ Action Figure
         </button>
         <button class="suggestion-pill" data-question="Bagaimana cara menghitung ongkos kirim dan pengirimannya?">
             📦 Info Ongkir

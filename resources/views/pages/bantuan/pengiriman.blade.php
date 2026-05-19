@@ -10,7 +10,7 @@
                 <div class="card-body p-4 p-md-5">
                     <h2 class="fw-bold mb-4" style="color: #4A3F5C;">Informasi Pengiriman</h2>
                     
-                    <p>Kami memastikan kerajinan tangan pesanan Anda sampai di rumah dengan aman. DefaCraftStore terintegrasi langsung dengan API RajaOngkir untuk memberikan biaya ongkos kirim yang akurat dan *real-time*.</p>
+                    <p>Kami memastikan Blind Box dan Action Figure pesanan Anda sampai di rumah dengan aman. DefaCraftStore terintegrasi langsung dengan API RajaOngkir untuk memberikan biaya ongkos kirim yang akurat dan *real-time*.</p>
                     
                     <h5 class="fw-bold mt-4">Jasa Ekspedisi Tersedia</h5>
                     <div class="row mt-3 mb-4">
@@ -37,7 +37,7 @@
                     <h5 class="fw-bold mt-4">Estimasi Waktu Pengemasan</h5>
                     <ul>
                         <li><strong>Produk Ready Stock:</strong> Membutuhkan waktu 1-2 hari kerja untuk pengemasan sebelum diserahkan ke kurir.</li>
-                        <li><strong>Produk Custom / Pre-Order:</strong> Estimasi pengemasan adalah 3-7 hari kerja tergantung tingkat kesulitan pesanan.</li>
+                        <li><strong>Produk Pre-Order / Edisi Terbatas:</strong> Estimasi pengemasan adalah 3-7 hari kerja tergantung ketersediaan stok import atau perilisan resmi.</li>
                     </ul>
 
                     <h5 class="fw-bold mt-4">Lacak Pesanan</h5>

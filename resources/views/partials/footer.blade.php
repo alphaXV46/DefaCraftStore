@@ -19,7 +19,7 @@
                         <h2 class="logo-text">DefaCraft</h2>
                     </div>
                     <p class="footer-description">
-                        Membuat dunia lebih berwarna dengan kerajinan tangan yang penuh cinta dan kreativitas
+                        Dunia Blind Box & Figure Impianmu. Temukan kejutan seru dari seri Bunny, Nanci, Hirono dan Action Figure karakter favoritmu untuk lengkapi ruang estetikmu.
                     </p>
                     <div class="social-icons">
                         <a href="#" class="social-icon" aria-label="Instagram">
@@ -43,9 +43,9 @@
                 <h3 class="footer-title">Koleksi</h3>
                 <ul class="footer-links">
                     <li><a href="{{ route('produk.index') }}">Semua Produk</a></li>
-                    <li><a href="{{ route('produk.index', ['kategori' => 'Boneka']) }}">Boneka Lucu</a></li>
-                    <li><a href="{{ route('produk.index', ['kategori' => 'Aksesoris']) }}">Aksesoris Unik</a></li>
-                    <li><a href="{{ route('produk.index', ['kategori' => 'Dekorasi']) }}">Dekorasi</a></li>
+                    <li><a href="{{ route('produk.index', ['kategori' => 'Blind Box']) }}">Blind Box</a></li>
+                    <li><a href="{{ route('produk.index', ['kategori' => 'Action Figure']) }}">Action Figure</a></li>
+                    <li><a href="{{ route('produk.index', ['kategori' => 'Boneka']) }}">Boneka</a></li>
                 </ul>
             </div>
 
