@@ -34,11 +34,13 @@ Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show
 // =====================
 // HALAMAN STATIS (BANTUAN)
 // =====================
-Route::get('/bantuan/pengembalian', fn() => view('pages.bantuan.pengembalian'))->name('bantuan.pengembalian');
-Route::get('/bantuan/cara-pesan',   fn() => view('pages.bantuan.cara-pesan'))->name('bantuan.cara-pesan');
-Route::get('/bantuan/pengiriman',   fn() => view('pages.bantuan.pengiriman'))->name('bantuan.pengiriman');
-Route::get('/bantuan/faq',          fn() => view('pages.bantuan.faq'))->name('bantuan.faq');
-Route::get('/bantuan/kontak',       fn() => view('pages.bantuan.kontak'))->name('bantuan.kontak');
+Route::get('/bantuan/pengembalian',     fn() => view('pages.bantuan.pengembalian'))->name('bantuan.pengembalian');
+Route::get('/bantuan/cara-pesan',       fn() => view('pages.bantuan.cara-pesan'))->name('bantuan.cara-pesan');
+Route::get('/bantuan/pengiriman',       fn() => view('pages.bantuan.pengiriman'))->name('bantuan.pengiriman');
+Route::get('/bantuan/faq',              fn() => view('pages.bantuan.faq'))->name('bantuan.faq');
+Route::get('/bantuan/kontak',           fn() => view('pages.bantuan.kontak'))->name('bantuan.kontak');
+Route::get('/bantuan/syarat-ketentuan', fn() => view('pages.bantuan.syarat-ketentuan'))->name('bantuan.syarat-ketentuan');
+Route::get('/kebijakan-privasi',        fn() => view('pages.bantuan.kebijakan-privasi'))->name('kebijakan-privasi');
 
 // Chatbot Route
 Route::post('/chatbot/tanya', [ChatbotController::class, 'tanyaChatbot'])->name('chatbot.tanya');

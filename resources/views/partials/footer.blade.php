@@ -61,6 +61,16 @@
                 </ul>
             </div>
 
+            <!-- Legal Section -->
+            <div class="footer-column">
+                <h3 class="footer-title">Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="{{ route('bantuan.syarat-ketentuan') }}">Syarat & Ketentuan</a></li>
+                    <li><a href="{{ route('kebijakan-privasi') }}">Kebijakan Privasi</a></li>
+                    <li><a href="{{ route('bantuan.pengembalian') }}">Kebijakan Refund</a></li>
+                </ul>
+            </div>
+
             <!-- Contact Section -->
             <div class="footer-column">
                 <h3 class="footer-title">Hubungi Kami</h3>
@@ -94,6 +104,13 @@
         <div class="footer-bottom">
             <div class="copyright">
                 <p>Copyright&copy; 2025-2026 DefaCraft. All rights reserved.</p>
+            </div>
+            <div class="footer-legal-links" style="display:flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem;">
+                <a href="{{ route('bantuan.syarat-ketentuan') }}" style="color: rgba(255,255,255,0.5); font-size: 0.78rem; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.9)'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Syarat &amp; Ketentuan</a>
+                <span style="color: rgba(255,255,255,0.3); font-size: 0.78rem;">·</span>
+                <a href="{{ route('kebijakan-privasi') }}" style="color: rgba(255,255,255,0.5); font-size: 0.78rem; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.9)'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Kebijakan Privasi</a>
+                <span style="color: rgba(255,255,255,0.3); font-size: 0.78rem;">·</span>
+                <a href="{{ route('bantuan.pengembalian') }}" style="color: rgba(255,255,255,0.5); font-size: 0.78rem; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.9)'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Kebijakan Refund</a>
             </div>
         </div>
     </div>
