@@ -1,6 +1,5 @@
 <nav class="navbar-modern">
     <div class="navbar-container">
-        <!-- Logo -->
         <div class="navbar-brand">
             <a href="{{ route('home') }}" class="logo-link">
                 <div class="logo-icon"></div>
@@ -8,7 +7,6 @@
             </a>
         </div>
         
-        <!-- Search Bar -->
         <form action="{{ route('produk.index') }}" method="GET" class="search-container">
             <div class="search-input-wrapper">
                 <input class="search-input" type="search" name="search" 
@@ -16,15 +14,12 @@
                 <button class="search-button" type="submit" aria-label="Cari Produk">
                     <i class="fas fa-search"></i>
                 </button>
-                <!-- Tombol Clear -->
                 <button type="button" class="search-clear-btn" onclick="clearSearch()" aria-label="Bersihkan pencarian">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
         </form>
 
-        
-        <!-- Navigation Menu -->
         <div class="navbar-menu">
             <ul class="nav-list">
                 <li class="nav-item">
@@ -41,7 +36,6 @@
                 </li>
                 
                 @auth
-                    <!-- Cart with Badge -->
                     <li class="nav-item cart-item">
                         <a href="{{ route('keranjang.index') }}" class="nav-link cart-link" aria-label="Keranjang Belanja">
                             <div class="cart-icon-wrapper">
@@ -53,7 +47,6 @@
                         </a>
                     </li>
                     
-                    <!-- User Dropdown -->
                     <li class="nav-item dropdown-item">
                         <div class="user-menu">
                             <div class="user-trigger">
@@ -61,13 +54,11 @@
                                 <i class="fas fa-user-circle user-icon"></i>
                             </div>
                             <div class="dropdown-content">
-                                <!-- Menu Produk -->
                                 <a href="{{ route('produk.index') }}" class="dropdown-link">
                                     <i class="fas fa-box"></i>
                                     Produk
                                 </a>
                                 
-                                <!-- TAMBAH MENU WISHLIST & PESANAN 👇 -->
                                 <a href="{{ route('wishlist.index') }}" class="dropdown-link">
                                     <i class="fas fa-heart"></i>
                                     Wishlist
@@ -81,7 +72,6 @@
                                     Pesanan Saya
                                 </a>
                                 
-                                {{-- 🟢 DI SINI PERUBAHANNYA: Superadmin & Admin Sekarang Bisa Lihat Menu Ini 🟢 --}}
                                 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
                                     <a href="{{ route('admin.dashboard') }}" class="dropdown-link" style="color: #4A2E80; font-weight: 600;">
                                         <i class="fas fa-tachometer-alt"></i>
@@ -89,6 +79,7 @@
                                     </a>
                                     <div class="dropdown-divider"></div>
                                 @endif
+
                                 <a href="{{ route('profile.edit') }}" class="dropdown-link">
                                     <i class="fas fa-user"></i>
                                     Profil
@@ -114,7 +105,6 @@
             </ul>
         </div>
         
-        <!-- Mobile Toggle -->
         <button class="mobile-toggle" aria-label="Buka Menu" aria-expanded="false">
             <div class="hamburger">
                 <span></span>
@@ -124,18 +114,16 @@
         </button>
     </div>
     
-    <!-- Mobile Menu -->
     <div class="mobile-menu">
-        <!-- Search di mobile -->
-<form action="{{ route('produk.index') }}" method="GET" class="mobile-search">
-    <div class="mobile-search-wrapper">
-        <input type="search" name="search" class="mobile-search-input"
-               placeholder="Cari produk..." value="{{ request('search') }}">
-        <button type="submit" class="mobile-search-btn" aria-label="Cari">
-            <i class="fas fa-search"></i>
-        </button>
-    </div>
-</form>
+        <form action="{{ route('produk.index') }}" method="GET" class="mobile-search">
+            <div class="mobile-search-wrapper">
+                <input type="search" name="search" class="mobile-search-input"
+                       placeholder="Cari produk..." value="{{ request('search') }}">
+                <button type="submit" class="mobile-search-btn" aria-label="Cari">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
         <ul class="mobile-nav-list">
             <li><a href="{{ route('home') }}">🏠 Home</a></li>
             <li><a href="{{ route('produk.index') }}">📦 Produk</a></li>
@@ -144,13 +132,11 @@
                 <li><a href="{{ route('wishlist.index') }}">❤️ Wishlist</a></li>
                 <li><a href="{{ route('transaksi.riwayat') }}">📋 Pesanan Saya</a></li>
                 <li><a href="{{ route('profile.edit') }}">👤 Profil</a></li>
-                @if(auth()->user()->role === 'admin')
-                    <li><a href="{{ route('admin.dashboard') }}">🔧 Admin</a></li>
                 
-                {{-- 🟢 Menu untuk versi Mobile juga udah gue benerin di bawah ini 🟢 --}}
                 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
                     <li class="bg-light"><a href="{{ route('admin.dashboard') }}">🔧 Dashboard Admin</a></li>
                 @endif
+
                 <li>
                     <form method="POST" action="{{ route('logout') }}" class="mobile-logout">
                         @csrf
@@ -164,64 +150,63 @@
     </div>
 </nav>
 
-
-
 <script>
     // Fungsi untuk membersihkan input pencarian
     function clearSearch() {
         const searchInput = document.querySelector('.search-input');
-        searchInput.value = '';
-        // Submit otomatis form jika diperlukan
-        searchInput.closest('form').submit();
+        if (searchInput) {
+            searchInput.value = '';
+            searchInput.closest('form').submit();
+        }
     }
 
     // Tampilkan/hide tombol clear berdasarkan input
     const searchInput = document.querySelector('.search-input');
+    const clearBtn = document.querySelector('.search-clear-btn');
+
+    function toggleClearButton() {
+        if (searchInput && clearBtn) {
+            if (searchInput.value.trim() !== '') {
+                clearBtn.style.display = 'flex';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+        }
+    }
+
     if (searchInput) {
-        // Cek nilai awal
         toggleClearButton();
-        
-        // Tambahkan event listener
         searchInput.addEventListener('input', toggleClearButton);
         searchInput.addEventListener('change', toggleClearButton);
     }
 
-    function toggleClearButton() {
-        const clearBtn = document.querySelector('.search-clear-btn');
-        if (searchInput.value.trim() !== '') {
-            clearBtn.style.display = 'flex';
-        } else {
-            clearBtn.style.display = 'none';
-        }
-    }
-
     // Hamburger toggle
-document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.querySelector('.hamburger');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const navbar     = document.querySelector('.navbar-modern');
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburger = document.querySelector('.hamburger');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navbar = document.querySelector('.navbar-modern');
 
-    if (hamburger && mobileMenu) {
-        hamburger.addEventListener('click', function() {
-            mobileMenu.classList.toggle('active');
-            hamburger.classList.toggle('open');
-        });
-
-        // Tutup menu kalau klik di luar
-        document.addEventListener('click', function(e) {
-            if (navbar && !navbar.contains(e.target)) {
-                mobileMenu.classList.remove('active');
-                hamburger.classList.remove('open');
-            }
-        });
-
-        // Tutup menu kalau klik link di dalam mobile menu
-        mobileMenu.querySelectorAll('a, button').forEach(el => {
-            el.addEventListener('click', function() {
-                mobileMenu.classList.remove('active');
-                hamburger.classList.remove('open');
+        if (hamburger && mobileMenu) {
+            hamburger.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+                hamburger.classList.toggle('open');
             });
-        });
-    }
-});
+
+            // Tutup menu kalau klik di luar
+            document.addEventListener('click', function(e) {
+                if (navbar && !navbar.contains(e.target)) {
+                    mobileMenu.classList.remove('active');
+                    hamburger.classList.remove('open');
+                }
+            });
+
+            // Tutup menu kalau klik link di dalam mobile menu
+            mobileMenu.querySelectorAll('a, button').forEach(el => {
+                el.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    hamburger.classList.remove('open');
+                });
+            });
+        }
+    });
 </script>
