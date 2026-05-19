@@ -433,7 +433,7 @@
     <div id="chatbotMessages" class="chatbot-messages">
         <!-- Bot Welcome Message -->
         <div class="message-bubble bot">
-            Halo! Selamat datang di <strong>DefaCraftStore</strong>! 🧸✨
+            Halo! Selamat datang di <strong>DefaCraftStore</strong>! <i class="fas fa-shapes"></i> <i class="fas fa-star"></i>
             <br><br>
             Saya adalah <strong>Defa Craft Assistant</strong>, asisten AI yang siap membantu menjawab pertanyaan Anda seputar Dunia Blind Box & Figure Impianmu, seri Bunny, Nanci, Hirono, Action Figure favorit, metode pengiriman, hingga cara memesan.
             <br><br>
@@ -445,16 +445,16 @@
     <!-- Quick Suggestions -->
     <div class="chatbot-suggestions">
         <button class="suggestion-pill" data-question="Bagaimana cara memesan produk di DefaCraftStore?">
-            🛍️ Cara Pesan
+            <i class="fas fa-shopping-bag" style="margin-right: 5px;"></i> Cara Pesan
         </button>
         <button class="suggestion-pill" data-question="Apa saja seri Blind Box yang tersedia di sini?">
-            🎁 Seri Blind Box
+            <i class="fas fa-gift" style="margin-right: 5px;"></i> Seri Blind Box
         </button>
         <button class="suggestion-pill" data-question="Apakah semua Action Figure yang dijual di sini 100% original?">
-            ⚡ Action Figure
+            <i class="fas fa-bolt" style="margin-right: 5px;"></i> Action Figure
         </button>
         <button class="suggestion-pill" data-question="Bagaimana cara menghitung ongkos kirim dan pengirimannya?">
-            📦 Info Ongkir
+            <i class="fas fa-box" style="margin-right: 5px;"></i> Info Ongkir
         </button>
     </div>
 
