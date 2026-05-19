@@ -54,6 +54,7 @@ class AdminUserManagementController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
+        $this->checkTargetRole($user);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -86,6 +87,7 @@ class AdminUserManagementController extends Controller
     public function toggleStatus($id)
     {
         $user = User::findOrFail($id);
+        $this->checkTargetRole($user);
         $user->is_active = !$user->is_active;
         $user->save();
 
@@ -110,6 +112,7 @@ class AdminUserManagementController extends Controller
     public function resetPassword($id)
     {
         $user = User::findOrFail($id);
+        $this->checkTargetRole($user);
         
         // Generate secure random password
         $tempPassword = Str::random(8);
@@ -136,6 +139,7 @@ class AdminUserManagementController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+        $this->checkTargetRole($user);
         $name = $user->name;
         $user->delete();
 
@@ -149,5 +153,15 @@ class AdminUserManagementController extends Controller
         ]);
 
         return back()->with('success', "Akun pelanggan {$name} berhasil dihapus secara permanen!");
+    }
+
+    /**
+     * Prevent illegal operations on Admin/Superadmin accounts.
+     */
+    private function checkTargetRole(User $user)
+    {
+        if ($user->role === 'admin' || $user->role === 'superadmin') {
+            abort(403, 'Aksi ilegal! Anda tidak diperbolehkan memodifikasi akun dengan role Admin atau Super Admin.');
+        }
     }
 }
