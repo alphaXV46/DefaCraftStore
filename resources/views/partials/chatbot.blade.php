@@ -303,20 +303,30 @@
     }
 
     .chatbot-input-wrapper:focus-within {
-        border-color: #764ba2;
+        border-color: #764ba2 !important;
         background-color: #ffffff;
-        box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.15);
+        box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.15) !important;
+        outline: none !important;
     }
 
     .chatbot-input {
         flex: 1;
         border: none;
-        outline: none;
+        outline: none !important;
+        box-shadow: none !important;
         background: transparent;
         padding: 8px 0;
         font-size: 13px;
         font-family: 'Inter', sans-serif;
         color: #2d3748;
+    }
+
+    .chatbot-input:focus,
+    .chatbot-input:focus-visible {
+        outline: none !important;
+        outline-offset: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
     }
 
     .chatbot-input::placeholder {
