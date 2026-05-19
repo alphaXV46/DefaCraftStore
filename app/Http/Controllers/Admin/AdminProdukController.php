@@ -62,6 +62,14 @@ class AdminProdukController extends Controller
         
         $data = $request->all();
         
+        // Populasikan legacy kategori string demi kompatibilitas dan keamanan skema database
+        if (isset($data['kategori_id'])) {
+            $kat = Kategori::find($data['kategori_id']);
+            if ($kat) {
+                $data['kategori'] = $kat->nama;
+            }
+        }
+        
         // Handle Status (Draf/Published)
         $data['status'] = $request->has('status') ? 'published' : 'draft';
         
@@ -146,6 +154,14 @@ class AdminProdukController extends Controller
         
         $produk = Produk::findOrFail($id);
         $data = $request->all();
+        
+        // Populasikan legacy kategori string demi kompatibilitas dan keamanan skema database
+        if (isset($data['kategori_id'])) {
+            $kat = Kategori::find($data['kategori_id']);
+            if ($kat) {
+                $data['kategori'] = $kat->nama;
+            }
+        }
         
         // Handle Status (Draf/Published) - Opsional jika edit form punya toggle, jika tidak ambil dari existing
         if ($request->has('status')) {
