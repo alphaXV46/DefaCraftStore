@@ -19,6 +19,15 @@ class AdminManagementController extends Controller
     // Hapus Admin
     public function destroy($id) {
         $user = User::findOrFail($id);
+        
+        if ($user->role === 'superadmin') {
+            abort(403, 'Aksi ilegal! Anda tidak diperbolehkan menghapus akun Super Admin.');
+        }
+
+        if ($user->id === auth()->id()) {
+            abort(403, 'Aksi ilegal! Anda tidak diperbolehkan menghapus akun diri sendiri.');
+        }
+
         $nama = $user->name;
         $user->delete();
 
