@@ -45,7 +45,7 @@ class AdminProdukController extends Controller
     {
         $request->validate([
             'nama'         => 'required|string|max:100',
-            'kategori_id'  => 'required|exists:kategoris,id',
+            'kategori_id'  => 'required|exists:kategori,id',
             'harga'        => 'required|numeric|min:0',
             'harga_diskon' => 'nullable|numeric|min:0|lt:harga',
             'stok'         => 'required|integer|min:0',
@@ -129,7 +129,7 @@ class AdminProdukController extends Controller
     {
         $request->validate([
             'nama'         => 'required|string|max:100',
-            'kategori_id'  => 'required|exists:kategoris,id',
+            'kategori_id'  => 'required|exists:kategori,id',
             'harga'        => 'required|numeric|min:0',
             'harga_diskon' => 'nullable|numeric|min:0|lt:harga',
             'stok'         => 'required|integer|min:0',
