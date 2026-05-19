@@ -128,8 +128,8 @@
 
                 // Tampilkan loading sementara
                 const span = buttonElement.querySelector('span');
-                const originalIcon = span.textContent; // Simpan ikon asli
-                span.textContent = '⏳'; // Ikon loading
+                const originalHtml = span.innerHTML; // Simpan HTML asli
+                span.innerHTML = '⏳'; // Ikon loading
 
                 // Kirim permintaan POST ke rute yang benar
                 fetch('{{ route('wishlist.toggle') }}', { // Gunakan route helper
@@ -153,21 +153,21 @@
                 .then(data => {
                     // Kembalikan ikon loading ke status baru setelah respons
                     if (data.status === 'added') {
-                        span.textContent = '<i class="fas fa-heart"></i>'; // Ikon sudah ada di wishlist
+                        span.innerHTML = '❤️'; // Ikon sudah ada di wishlist
                         showToast(data.message || 'Ditambahkan ke Wishlist!', 'success');
                     } else if (data.status === 'removed') {
-                        span.textContent = '<i class="far fa-heart"></i>'; // Ikon belum ada di wishlist
+                        span.innerHTML = '🤍'; // Ikon belum ada di wishlist
                         showToast(data.message || 'Dihapus dari Wishlist!', 'info');
                     } else {
                         // Jika status tidak dikenal
-                        span.textContent = originalIcon; // Kembalikan ke sebelumnya
+                        span.innerHTML = originalHtml; // Kembalikan ke sebelumnya
                         showToast(data.message || 'Status tak terduga.', 'warning');
                     }
                 })
                 .catch(error => {
                     console.error('Error toggling wishlist:', error);
                     // Kembalikan ikon ke sebelumnya jika error
-                    span.textContent = originalIcon;
+                    span.innerHTML = originalHtml;
                     showToast('Gagal memperbarui wishlist. Silakan coba lagi.', 'danger');
                 });
             @else

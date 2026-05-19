@@ -47,19 +47,16 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="card h-100">
                         <!-- BUTTON LOVE 👇 -->
-                        @auth
-                            <button type="button" 
-                                    class="btn btn-love position-absolute"
-                                    style="top: 1rem; right: 1rem; z-index: 3; width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.9); border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
-                                    onclick="toggleWishlist({{ $item->id }}, this)"
-                                    data-produk-id="{{ $item->id }}">
-                                @if(auth()->user()->hasWishlist($item->id))
-                                    <span style="font-size: 1.5rem;"><i class="fas fa-heart"></i></span>
-                                @else
-                                    <span style="font-size: 1.5rem;"><i class="far fa-heart"></i></span>
-                                @endif
-                            </button>
-                        @endauth
+                        <button type="button" 
+                                class="btn-love-sticker"
+                                onclick="toggleWishlist({{ $item->id }}, this)"
+                                data-produk-id="{{ $item->id }}">
+                            @if(auth()->check() && auth()->user()->hasWishlist($item->id))
+                                <span class="love-emoji" title="Hapus dari Wishlist">❤️</span>
+                            @else
+                                <span class="love-emoji" title="Tambah ke Wishlist">🤍</span>
+                            @endif
+                        </button>
 
                         <!-- DISKON BADGE -->
                         @if($item->harga_diskon && $item->harga_diskon < $item->harga)

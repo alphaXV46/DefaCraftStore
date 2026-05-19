@@ -173,10 +173,10 @@
 <!-- Features Grid -->
 <section class="container mb-5 scroll-animate" data-animation="slide-up">
     <div class="features-grid">
-        <x-feature-item icon="<i class="fas fa-truck"></i>" title="Gratis Ongkir" desc="Gratis ongkir untuk pembelian di atas Rp 200.000" />
+        <x-feature-item icon="fas fa-truck" title="Gratis Ongkir" desc="Gratis ongkir untuk pembelian di atas Rp 200.000" />
         <x-feature-item icon="💎" title="Kualitas Terbaik" desc="100% original dari seri desainer art toys pilihan" />
-        <x-feature-item icon="<i class="fas fa-lock"></i>" title="Pembayaran Aman" desc="Sistem pembayaran terpercaya dan terenkripsi" />
-        <x-feature-item icon="<i class="fas fa-star"></i>" title="Kepuasan Terjamin" desc="Garansi 100% uang kembali jika tidak puas" />
+        <x-feature-item icon="fas fa-lock" title="Pembayaran Aman" desc="Sistem pembayaran terpercaya dan terenkripsi" />
+        <x-feature-item icon="fas fa-star" title="Kepuasan Terjamin" desc="Garansi 100% uang kembali jika tidak puas" />
     </div>
 </section>
 
@@ -277,16 +277,35 @@
         observer.observe(statsSection);
     }
     // Countdown Timer (24 hours from now)
+    let flashEndTime = localStorage.getItem('flashSaleEnd');
+    if (!flashEndTime) {
+        flashEndTime = new Date().getTime() + 24 * 60 * 60 * 1000;
+        localStorage.setItem('flashSaleEnd', flashEndTime);
+    }
+    
     function updateCountdown() {
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        
+        if (!hoursEl || !minutesEl || !secondsEl) return;
+        
         const now = new Date().getTime();
-        const end = new Date(now + 24 * 60 * 60 * 1000).getTime();
-        const distance = end - now;
+        let distance = flashEndTime - now;
+        
+        if (distance < 0) {
+            flashEndTime = now + 24 * 60 * 60 * 1000;
+            localStorage.setItem('flashSaleEnd', flashEndTime);
+            distance = flashEndTime - now;
+        }
+        
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        
+        hoursEl.textContent = hours.toString().padStart(2, '0');
+        minutesEl.textContent = minutes.toString().padStart(2, '0');
+        secondsEl.textContent = seconds.toString().padStart(2, '0');
     }
     updateCountdown();
     setInterval(updateCountdown, 1000);

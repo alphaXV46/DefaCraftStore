@@ -79,7 +79,7 @@
                                 
                                 <!-- TAMBAH MENU WISHLIST & PESANAN 👇 -->
                                 <a href="{{ route('wishlist.index') }}" class="dropdown-link">
-                                    <i class="fas fa-heart"></i>
+                                    <i class="fa-solid fa-heart"></i>
                                     Wishlist
                                     @if(($wishlistCount ?? 0) > 0)
                                         <span class="cart-badge dropdown-badge">{{ $wishlistCount }}</span>
@@ -160,7 +160,7 @@
                 @endif
 
                 <li><a href="{{ route('keranjang.index') }}"><i class="fas fa-shopping-cart"></i> Keranjang</a></li>
-                <li><a href="{{ route('wishlist.index') }}"><i class="fas fa-heart"></i> Wishlist</a></li>
+                <li><a href="{{ route('wishlist.index') }}"><i class="fa-solid fa-heart"></i> Wishlist</a></li>
                 <li><a href="{{ route('transaksi.riwayat') }}"><i class="fas fa-list-alt"></i> Pesanan Saya</a></li>
                 <li><a href="{{ route('profile.edit') }}"><i class="fas fa-user"></i> Profil</a></li>
                 

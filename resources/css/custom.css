@@ -1,8 +1,9 @@
 /* ============================================
-   DEFACRAFTSTORE — WHITE THEME + DARK HEADER
+   DEFACRAFTSTORE â€” WHITE THEME + DARK HEADER
    Header = Footer color (Dark Purple Gradient)
    ============================================ */
 /* --- IMPORT FONTS --- */
+.this-is-a-test-class-unique { color: rgb(12, 34, 56) !important; }
 
 /* --- CSS VARIABLES --- */
 :root {
@@ -103,7 +104,7 @@ main {
 }
 
 /* ============================================
-   NAVBAR HEADER — DARK PURPLE (Same as Footer)
+   NAVBAR HEADER â€” DARK PURPLE (Same as Footer)
    ============================================ */
 .navbar-modern {
     position: sticky !important;
@@ -783,7 +784,7 @@ main {
 }
 
 /* ============================================
-   PRODUCT PAGE — SIDEBAR
+   PRODUCT PAGE â€” SIDEBAR
    ============================================ */
 @media (min-width: 992px) {
     .container.py-5:has(> .row.mb-4 form input[name="search"]) {
@@ -849,7 +850,7 @@ main {
         border-bottom: 1px solid #F5F5F5 !important;
     }
     .container.py-5:has(> .row.mb-4 form input[name="search"]) > .row.mb-4 .row.g-3 > div:nth-child(1)::before {
-        content: '🔍 Cari Produk' !important;
+        content: 'ðŸ” Cari Produk' !important;
         position: absolute !important;
         top: 0 !important; left: 0 !important;
         display: block !important;
@@ -871,7 +872,7 @@ main {
         border-bottom: 1px solid #F5F5F5 !important;
     }
     .container.py-5:has(> .row.mb-4 form input[name="search"]) > .row.mb-4 .row.g-3 > div:nth-child(2)::before {
-        content: '📂 Kategori' !important;
+        content: 'ðŸ“‚ Kategori' !important;
         position: absolute !important;
         top: 0 !important; left: 0 !important;
         display: block !important;
@@ -1114,7 +1115,7 @@ main {
 }
 
 /* ============================================
-   HOME - TESTIMONIALS (Dark — tetap dipertahankan)
+   HOME - TESTIMONIALS (Dark â€” tetap dipertahankan)
    ============================================ */
 .testimonial-section {
     background: linear-gradient(135deg, #4A3F5C, #5C4F6E, #4A3F5C) !important;
@@ -1395,7 +1396,7 @@ main {
 .table .bg-secondary { background: #F5F5F5 !important; border-radius: var(--radius-lg) !important; border: 2px solid rgba(0, 0, 0, 0.04) !important; }
 
 /* ============================================
-   FOOTER — DARK PURPLE (Same as Header)
+   FOOTER â€” DARK PURPLE (Same as Header)
    ============================================ */
 .footer-radical {
     background: linear-gradient(135deg, #4A3F5C 0%, #5C4F6E 50%, #4A3F5C 100%) !important;
@@ -1601,7 +1602,7 @@ input[type="range"] { accent-color: var(--primary) !important; }
 }
 
 /* ============================================
-   AUTH PAGES — WHITE CLEAN
+   AUTH PAGES â€” WHITE CLEAN
    ============================================ */
 .auth-container,
 body:has(.auth-card) {
@@ -1764,7 +1765,7 @@ body:has(.auth-card) {
 }
 
 /* ============================================
-   ADMIN DASHBOARD — WHITE CLEAN
+   ADMIN DASHBOARD â€” WHITE CLEAN
    ============================================ */
 .admin-dash {
     background: #FFFFFF !important;
@@ -2080,7 +2081,7 @@ body:has(.auth-card) {
     }
 }
 
-/* Filter button — paksa kuning */
+/* Filter button â€” paksa kuning */
 .container.py-5:has(> .row.mb-4 form input[name="search"]) > .row.mb-4 .btn-primary {
     background: linear-gradient(135deg, #FEF9C3, #EAB308, #FACC15) !important;
     box-shadow: 0 3px 10px rgba(234,179,8,0.2) !important;
@@ -2094,13 +2095,13 @@ body:has(.auth-card) {
     box-shadow: 0 0 0 3px rgba(234,179,8,0.1) !important;
 }
 
-/* Judul halaman seragam — biar natural seperti Keranjang */
+/* Judul halaman seragam â€” biar natural seperti Keranjang */
 .container.py-5 > h1,
 .container > h1.fw-bold {
     font-size: unset !important;
 }
 
-/* Wishlist title — samakan ukurannya (kalau ada class khusus) */
+/* Wishlist title â€” samakan ukurannya (kalau ada class khusus) */
 .wl-page h1,
 .wishlist-page h1,
 .page-wishlist h1,
@@ -2108,14 +2109,14 @@ body:has(.auth-card) {
     font-size: 1.4rem !important;
 }
 
-/* Gambar produk list — pas di card */
+/* Gambar produk list â€” pas di card */
 .card-img-top {
     width: 100% !important;
     min-height: 220px !important;
     object-fit: cover !important;
 }
 
-/* Profile — bersihkan pink sisa */
+/* Profile â€” bersihkan pink sisa */
 .pf-btn-pink {
     background: linear-gradient(135deg, #EAB308, #CA8A04) !important;
     box-shadow: 0 4px 14px rgba(234,179,8,0.2) !important;
@@ -2150,7 +2151,7 @@ body:has(.auth-card) {
 .pf-verify-warn a { color: #A16207 !important; }
 
 /* ============================================
-   HERO — STACKED PRODUCT IMAGES (E-commerce Style)
+   HERO â€” STACKED PRODUCT IMAGES (E-commerce Style)
    ============================================ */
 .hero-modern {
     padding: 4rem 0 3.5rem !important;
@@ -2195,7 +2196,7 @@ body:has(.auth-card) {
     margin-bottom: 2rem !important;
 }
 
-/* CTA Buttons — kuning */
+/* CTA Buttons â€” kuning */
 .hero-cta .btn-light {
     background: var(--gradient-primary) !important;
     color: #333 !important;
@@ -2255,7 +2256,7 @@ body:has(.auth-card) {
     display: block !important;
 }
 
-/* Card 1 — back, slightly left, slight rotation */
+/* Card 1 â€” back, slightly left, slight rotation */
 .hs-card-1 {
     top: 0 !important;
     left: 5% !important;
@@ -2265,7 +2266,7 @@ body:has(.auth-card) {
     filter: saturate(0.85) !important;
 }
 
-/* Card 2 — middle, front and center */
+/* Card 2 â€” middle, front and center */
 .hs-card-2 {
     top: 30px !important;
     left: 25% !important;
@@ -2273,7 +2274,7 @@ body:has(.auth-card) {
     transform: rotate(2deg) !important;
 }
 
-/* Card 3 — front-right */
+/* Card 3 â€” front-right */
 .hs-card-3 {
     top: 60px !important;
     right: 0 !important;
@@ -2283,7 +2284,7 @@ body:has(.auth-card) {
     filter: saturate(0.9) !important;
 }
 
-/* Info badge — bottom left of stacked area */
+/* Info badge â€” bottom left of stacked area */
 .hs-info {
     position: absolute !important;
     bottom: 0 !important;
@@ -2322,7 +2323,7 @@ body:has(.auth-card) {
     .hero-cta .btn-lg { padding: 0.75rem 1.25rem !important; font-size: 0.9rem !important; }
 }
 /* ============================================
-   FIX JARAK — Profil & Riwayat ke Header
+   FIX JARAK â€” Profil & Riwayat ke Header
    ============================================ */
 .pf-wrap {
     padding-top: 2rem !important;
@@ -2330,4 +2331,48 @@ body:has(.auth-card) {
 
 .op-wrap {
     padding-top: 2rem !important;
+}
+
+/* ============================================
+   WISHLIST STIKER EMOJI BUTTON
+   ============================================ */
+.btn-love-sticker {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 5;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.btn-love-sticker:hover {
+    transform: scale(1.25);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.btn-love-sticker:active {
+    transform: scale(0.9);
+}
+
+.btn-love-sticker .love-emoji {
+    font-size: 1.75rem;
+    display: block;
+    transition: transform 0.15s ease;
+    animation: lovePop 0.3s ease;
+}
+
+@keyframes lovePop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.35); }
+    100% { transform: scale(1); }
+}
+
+/* Card harus position relative agar stiker terpasang di pojok */
+.card {
+    position: relative !important;
 }

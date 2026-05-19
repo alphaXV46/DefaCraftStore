@@ -46,27 +46,6 @@ export default defineConfig(({ command, mode }) => {
                 ],
                 refresh: true,
             }),
-            
-            // ✅ Hanya jalankan PurgeCSS saat build production (npm run build)
-            // Di mode development (npm run dev), CSS dibiarkan utuh agar HMR lancar
-            command === 'build' && purge({
-                content: [
-                    './resources/views/**/*.blade.php',
-                    './resources/js/**/*.js',
-                    './resources/js/**/*.vue', // Berjaga-jaga jika menggunakan Vue
-                    // Jangan scan file CSS untuk 'content', karena CSS adalah yang akan di-purge, bukan sumber class
-                ],
-                safelist: {
-                    standard: [
-                        'html', 'body', 'show', 'active', 'collapsing', 'fade', 
-                        'modal-backdrop', 'scrolled', 'navbar-modern', 'animate'
-                    ],
-                    greedy: [
-                        /^nav-/, /^btn-/, /^alert-/, /^modal-/, /^toast-/, 
-                        /^card-/, /^badge-/, /^fa-/
-                    ]
-                }
-            }),
-        ].filter(Boolean), // Filter nilai false/null dari array plugins
+        ],
     };
 });

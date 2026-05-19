@@ -55,62 +55,7 @@ class ProdukSeeder extends Seeder
 
         // 2. Seed Tabel Produk terasosiasi dengan Kategori
         DB::table('produk')->insert([
-            // --- BLIND BOX ---
-            [
-                'nama' => 'Nanci Sweet Forest Series',
-                'kategori_id' => $kategoriIds['blind-box'],
-                'kategori' => 'Blind Box',
-                'deskripsi' => 'Blind Box Nanci Sweet Forest series dengan detail yang sangat menggemaskan dan rapi, cocok untuk koleksi pribadi Anda.',
-                'harga' => 150000.00,
-                'harga_diskon' => 0,
-                'gambar' => 'nanci_forest.webp',
-                'stok' => 12,
-                'status' => 'published',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'nama' => 'Laura Trend Toy Series',
-                'kategori_id' => $kategoriIds['blind-box'],
-                'kategori' => 'Blind Box',
-                'deskripsi' => 'Blind Box Laura series bertema tren fashion modern yang trendi, koleksi wajib bagi para pencinta art toys.',
-                'harga' => 165000.00,
-                'harga_diskon' => 149000.00, // Diskon premium
-                'gambar' => 'laura_trend.webp',
-                'stok' => 15,
-                'status' => 'published',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-
-            // --- ACTION FIGURE ---
-            [
-                'nama' => 'One Piece Luffy Gear 5 Figure',
-                'kategori_id' => $kategoriIds['action-figure'],
-                'kategori' => 'Action Figure',
-                'deskripsi' => 'Action Figure Monkey D. Luffy Gear 5 Sun God Nika dengan detail tekstur tinggi, pose bertarung yang dinamis, dan efek awan transparan.',
-                'harga' => 299000.00,
-                'harga_diskon' => 0,
-                'gambar' => 'luffy_gear5.webp',
-                'stok' => 5,
-                'status' => 'published',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'nama' => 'Naruto Shippuden Uzumaki Naruto Sage Mode',
-                'kategori_id' => $kategoriIds['action-figure'],
-                'kategori' => 'Action Figure',
-                'deskripsi' => 'Action figure Uzumaki Naruto dalam mode Sage. Menggunakan bahan PVC berkualitas tinggi dengan pewarnaan gradasi premium.',
-                'harga' => 250000.00,
-                'harga_diskon' => 220000.00,
-                'gambar' => 'naruto_sage.webp',
-                'stok' => 8,
-                'status' => 'published',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-
+            
             // --- BONEKA ---
             [
                 'nama' => 'Nanci Premium 1',

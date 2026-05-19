@@ -4,12 +4,12 @@
 
 @section('content')
 <div class="container py-5">
-    <h1 class="fw-bold mb-4"><i class="fas fa-heart"></i> Wishlist Saya</h1>
+    <h1 class="fw-bold mb-4"><i class="fa-solid fa-heart"></i> Wishlist Saya</h1>
     
     @if($wishlist->isEmpty())
         <div class="card text-center py-5">
             <div class="card-body">
-                <span class="display-1"><i class="fas fa-heart-broken"></i></span>
+                <span class="display-1"><i class="fa-solid fa-heart-broken"></i></span>
                 <h3 class="mt-3">Wishlist Anda Kosong</h3>
                 <p class="text-muted mb-4">Simpan produk favorit Anda di sini!</p>
                 <a href="{{ route('produk.index') }}" class="btn btn-primary btn-lg">
@@ -23,10 +23,29 @@
             @foreach($wishlist as $item)
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="card h-100 shadow-sm">
+                        <!-- Button Remove Love -->
+                        <button type="button" 
+                                class="btn-love-sticker"
+                                onclick="removeFromWishlist({{ $item->id }})"
+                                title="Hapus dari Wishlist">
+                            <span class="love-emoji">❤️</span>
+                        </button>
+
                         <!-- Gambar Produk -->
                         <div class="position-relative">
-                            @if($item->produk->gambar && file_exists(public_path('images/produk/' . $item->produk->gambar)))
-                                <img src="{{ asset('images/produk/' . $item->produk->gambar) }}"
+                            @php 
+                                $pathBunglon = 'images/produk/' . $item->produk->gambar;
+                                $pathOlif = 'uploads/produk/' . $item->produk->gambar;
+                            @endphp
+
+                            @if($item->produk->gambar && file_exists(public_path($pathBunglon)))
+                                <img src="{{ asset($pathBunglon) }}"
+                                     class="card-img-top" alt="{{ $item->produk->nama }}"
+                                     width="300" height="240"
+                                     style="height: 240px; object-fit: cover;"
+                                     loading="lazy" decoding="async">
+                            @elseif($item->produk->gambar && file_exists(public_path($pathOlif)))
+                                <img src="{{ asset($pathOlif) }}"
                                      class="card-img-top" alt="{{ $item->produk->nama }}"
                                      width="300" height="240"
                                      style="height: 240px; object-fit: cover;"
@@ -40,22 +59,14 @@
                             
                             <!-- Badge Stok -->
                             @if($item->produk->stok > 0)
-                                <span class="position-absolute top-0 end-0 m-2 badge bg-success">
+                                <span class="position-absolute top-0 start-0 m-2 badge bg-success">
                                     Stok: {{ $item->produk->stok }}
                                 </span>
                             @else
-                                <span class="position-absolute top-0 end-0 m-2 badge bg-danger">
+                                <span class="position-absolute top-0 start-0 m-2 badge bg-danger">
                                     Habis
                                 </span>
                             @endif
-                            
-                            <!-- Button Remove Love -->
-                            <button type="button" 
-                                    class="btn btn-danger position-absolute top-0 start-0 m-2 btn-sm rounded-circle"
-                                    onclick="removeFromWishlist({{ $item->id }})"
-                                    style="width: 40px; height: 40px;">
-                                <i class="fas fa-heart"></i>
-                            </button>
                         </div>
                         
                         <div class="card-body d-flex flex-column">
