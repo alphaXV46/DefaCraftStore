@@ -92,6 +92,10 @@
                                 </a>
                                 
                                 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                                    <a href="{{ route('admin.users.index') }}" class="dropdown-link" style="color: #4A2E80; font-weight: 600;">
+                                        <i class="fas fa-users"></i>
+                                        Kelola Pelanggan
+                                    </a>
                                     <a href="{{ route('admin.dashboard') }}" class="dropdown-link" style="color: #4A2E80; font-weight: 600;">
                                         <i class="fas fa-tachometer-alt"></i>
                                         Dashboard Admin
@@ -161,6 +165,7 @@
                 <li><a href="{{ route('profile.edit') }}">👤 Profil</a></li>
                 
                 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                    <li class="bg-light"><a href="{{ route('admin.users.index') }}">👥 Kelola Pelanggan</a></li>
                     <li class="bg-light"><a href="{{ route('admin.dashboard') }}">🔧 Dashboard Admin</a></li>
                 @endif
                 

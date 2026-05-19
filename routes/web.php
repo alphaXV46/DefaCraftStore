@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminManagementController;
+use App\Http\Controllers\Admin\AdminUserManagementController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\KeranjangController;
@@ -103,6 +104,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/transaksi', [AdminTransaksiController::class, 'index'])->name('transaksi.index');
     Route::get('/transaksi/{id}', [AdminTransaksiController::class, 'show'])->name('transaksi.show');
     Route::post('/transaksi/{id}/update-status', [AdminTransaksiController::class, 'updateStatus'])->name('transaksi.update.status');
+
+    // Route Manajemen User (Pembeli/Pelanggan)
+    Route::get('/users', [AdminUserManagementController::class, 'index'])->name('users.index');
+    Route::put('/users/{id}', [AdminUserManagementController::class, 'update'])->name('users.update');
+    Route::patch('/users/{id}/toggle', [AdminUserManagementController::class, 'toggleStatus'])->name('users.toggle');
+    Route::post('/users/{id}/reset-password', [AdminUserManagementController::class, 'resetPassword'])->name('users.reset-password');
+    Route::delete('/users/{id}', [AdminUserManagementController::class, 'destroy'])->name('users.destroy');
 });
 
 // =====================
@@ -160,4 +168,25 @@ Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('supe
         $logs = \DB::table('logs')->orderBy('created_at', 'desc')->get();
         return view('admin.logs', compact('logs'));
     })->name('logs');
+});
+
+// =====================
+// PROGRAMMATIC MIGRATION RUNNERS (Aman & Instan)
+// =====================
+Route::get('/run-migration-securely', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate');
+        return "<h3>✓ Migrasi Berhasil Dijalankan!</h3><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre><br><a href='/admin/users' style='padding: 10px 20px; background: #EAB308; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold;'>Kembali ke Manajemen Pelanggan</a>";
+    } catch (\Exception $e) {
+        return "<h3>✗ Gagal Migrasi:</h3><pre>" . $e->getMessage() . "</pre>";
+    }
+});
+
+Route::get('/run-fresh-seed-securely', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true]);
+        return "<h3>✓ Rebuild Database & Seeding Berhasil!</h3><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre><br><a href='/admin/users' style='padding: 10px 20px; background: #EAB308; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold;'>Kembali ke Manajemen Pelanggan</a>";
+    } catch (\Exception $e) {
+        return "<h3>✗ Gagal Fresh Seed:</h3><pre>" . $e->getMessage() . "</pre>";
+    }
 });

@@ -123,6 +123,18 @@
             </div>
         </a>
 
+        <a href="{{ route('admin.users.index') }}" style="flex:0 0 calc(25% - 0.75rem);min-width:200px;text-decoration:none;">
+            <div class="card shadow" style="border:1.5px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03);overflow:hidden;transition:all 0.3s;height:100%;">
+                <div style="height:4px;background:linear-gradient(135deg,#4FACFE,#00F2FE);"></div>
+                <div class="card-body" style="padding:2rem 1.5rem;text-align:center;">
+                    <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#E0F2FE,#BAE6FD);display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1rem;">👥</div>
+                    <h4 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:700;color:#333;margin-bottom:0.35rem;">Kelola Pelanggan</h4>
+                    <p style="color:#999;font-size:0.82rem;margin:0;line-height:1.4;">Moderasi, edit & reset password pembeli</p>
+                    <span style="display:inline-block;margin-top:0.75rem;background:#E0F2FE;color:#0369A1;font-size:0.7rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:50px;">{{ $totalUser }} terdaftar</span>
+                </div>
+            </div>
+        </a>
+
         {{-- LAPORAN CARD --}}
         <div onclick="openLaporan()" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openLaporan()" style="flex:0 0 calc(25% - 0.75rem);min-width:200px;cursor:pointer;">
             <div class="card shadow" style="border:1.5px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03);overflow:hidden;transition:all 0.3s;height:100%;">

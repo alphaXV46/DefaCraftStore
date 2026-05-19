@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\App\Http\Middleware\SanitizeInputMiddleware::class);
         $middleware->append(\App\Http\Middleware\GzipResponse::class);
         $middleware->append(\App\Http\Middleware\CacheStaticAssets::class);
+        $middleware->append(\App\Http\Middleware\CheckUserStatus::class);
 
         // Exclude webhook dari CSRF
         $middleware->validateCsrfTokens(except: [
