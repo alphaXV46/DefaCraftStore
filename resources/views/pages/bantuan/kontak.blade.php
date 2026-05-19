@@ -21,21 +21,21 @@
                     <div class="row g-4 mb-4">
                         <div class="col-md-4">
                             <div class="p-3 border rounded-3 text-center h-100">
-                                <div style="font-size: 2rem;">📍</div>
+                                <div style="font-size: 2rem;"><i class="fas fa-map-marker-alt"></i></div>
                                 <h6 class="fw-bold mt-2 mb-1">Lokasi</h6>
                                 <p class="text-muted mb-0" style="font-size: 0.9rem;">Bogor, Jawa Barat, Indonesia</p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="p-3 border rounded-3 text-center h-100">
-                                <div style="font-size: 2rem;">📧</div>
+                                <div style="font-size: 2rem;"><i class="fas fa-envelope"></i></div>
                                 <h6 class="fw-bold mt-2 mb-1">Email</h6>
                                 <a href="mailto:dendyfadhlullah46@gmail.com" class="text-muted text-decoration-none" style="font-size: 0.9rem; word-break: break-all;">dendyfadhlullah46@gmail.com</a>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="p-3 border rounded-3 text-center h-100">
-                                <div style="font-size: 2rem;">📱</div>
+                                <div style="font-size: 2rem;"><i class="fas fa-mobile-alt"></i></div>
                                 <h6 class="fw-bold mt-2 mb-1">WhatsApp</h6>
                                 <a href="https://wa.me/6285658080575" target="_blank" class="text-muted text-decoration-none" style="font-size: 0.9rem;">+62 856-5808-0575</a>
                             </div>
@@ -49,7 +49,7 @@
 
                     <div id="contactMap"></div>
                     <div class="mt-2 mb-4 text-center">
-                        <small class="text-muted">📍 Bogor, Jawa Barat, Indonesia</small>
+                        <small class="text-muted"><i class="fas fa-map-marker-alt"></i> Bogor, Jawa Barat, Indonesia</small>
                     </div>
                     <a href="https://wa.me/6285658080575" target="_blank"
                        class="btn btn-success d-inline-flex align-items-center gap-2 px-4 py-2 fw-bold rounded-pill">
@@ -104,7 +104,7 @@
         }).addTo(map);
 
         const StoreIcon = L.divIcon({
-            html: '🏪',
+            html: '<i class="fas fa-store"></i>',
             className: 'custom-div-icon',
             iconSize: [40, 40],
             iconAnchor: [20, 20]

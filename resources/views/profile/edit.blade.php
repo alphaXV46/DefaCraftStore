@@ -19,19 +19,19 @@
     {{-- Alerts --}}
     @if(session('status') === 'profile-updated')
         <div class="pf-alert pf-alert-ok">
-            ✅ Profil berhasil diperbarui!
+            <i class="fas fa-check-circle"></i> Profil berhasil diperbarui!
             <button class="pf-alert-close" onclick="this.parentElement.remove()">✕</button>
         </div>
     @endif
     @if(session('status') === 'password-updated')
         <div class="pf-alert pf-alert-ok">
-            🔐 Password berhasil diubah!
+            <i class="fas fa-lock"></i> Password berhasil diubah!
             <button class="pf-alert-close" onclick="this.parentElement.remove()">✕</button>
         </div>
     @endif
     @if(session('error'))
         <div class="pf-alert" style="background:#FEE2E2;color:#991B1B;border-color:#FCA5A5;">
-            ❌ {{ session('error') }}
+            <i class="fas fa-times-circle"></i> {{ session('error') }}
             <button class="pf-alert-close" onclick="this.parentElement.remove()">✕</button>
         </div>
     @endif
@@ -52,7 +52,7 @@
                         {{ strtoupper(substr($user->name, 0, 2)) }}
                     @endif
                 </div>
-                <div class="pf-avatar-edit">📷</div>
+                <div class="pf-avatar-edit"><i class="fas fa-camera"></i></div>
             </div>
             <div class="pf-hero-info">
                 <div class="pf-name">{{ $user->name }}</div>
@@ -60,14 +60,14 @@
                 <div class="pf-meta-row">
                     <span class="pf-role-badge {{ ($user->role === 'admin' || $user->role === 'superadmin') ? 'pf-role-admin' : 'pf-role-user' }}">
                         @if($user->role === 'superadmin')
-                            👑 Super Admin
+                            <i class="fas fa-crown"></i> Super Admin
                         @elseif($user->role === 'admin')
-                            👑 Admin
+                            <i class="fas fa-crown"></i> Admin
                         @else
-                            🛍️ Member
+                            <i class="fas fa-shopping-bag"></i> Member
                         @endif
                     </span>
-                    <span class="pf-since">📅 Bergabung {{ $user->created_at->format('M Y') }}</span>
+                    <span class="pf-since"><i class="fas fa-calendar-alt"></i> Bergabung {{ $user->created_at->format('M Y') }}</span>
                 </div>
             </div>
         </div>
@@ -78,21 +78,21 @@
     {{-- Quick Actions --}}
     <div class="pf-actions-row">
         <a href="{{ route('transaksi.riwayat') }}" class="pf-action">
-            <span class="pf-action-icon">📦</span>
+            <span class="pf-action-icon"><i class="fas fa-box"></i></span>
             <span class="pf-action-text">Pesanan</span>
            
         </a>
         <a href="{{ route('wishlist.index') }}" class="pf-action">
-            <span class="pf-action-icon">❤️</span>
+            <span class="pf-action-icon"><i class="fas fa-heart"></i></span>
             <span class="pf-action-text">Wishlist</span>
             
         </a>
         <a href="{{ route('keranjang.index') }}" class="pf-action">
-            <span class="pf-action-icon">🛒</span>
+            <span class="pf-action-icon"><i class="fas fa-shopping-cart"></i></span>
             <span class="pf-action-text">Keranjang</span>
         </a>
         <a href="{{ route('produk.index') }}" class="pf-action">
-            <span class="pf-action-icon">🛍️</span>
+            <span class="pf-action-icon"><i class="fas fa-shopping-bag"></i></span>
             <span class="pf-action-text">Belanja</span>
         </a>
     </div>
@@ -128,14 +128,14 @@
         <div class="pf-sidebar">
             <div class="pf-sidebar-inner">
                 <button class="pf-tab active" onclick="pfGo('info', this)">
-                    <span class="pf-tab-icon">👤</span> Info
+                    <span class="pf-tab-icon"><i class="fas fa-user"></i></span> Info
                 </button>
                 <button class="pf-tab" onclick="pfGo('password', this)">
-                    <span class="pf-tab-icon">🔐</span> Password
+                    <span class="pf-tab-icon"><i class="fas fa-lock"></i></span> Password
                 </button>
                 @if(auth()->user()->role !== 'admin' && auth()->user()->role !== 'superadmin')
                 <button class="pf-tab" onclick="pfGo('danger', this)">
-                    <span class="pf-tab-icon">⚠️</span> Akun
+                    <span class="pf-tab-icon"><i class="fas fa-exclamation-triangle"></i></span> Akun
                 </button>
                 @endif
             </div>
@@ -158,7 +158,7 @@
                         <input type="email" name="email" class="pf-input @error('email') is-invalid @enderror" value="{{ old('email', $user->email) }}" required>
                         @error('email')<span class="pf-error">{{ $message }}</span>@enderror
                         @if($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
-                            <div class="pf-verify-warn">⚠️ Email belum diverifikasi. <a href="{{ route('verification.send') }}">Kirim ulang</a></div>
+                            <div class="pf-verify-warn"><i class="fas fa-exclamation-triangle"></i> Email belum diverifikasi. <a href="{{ route('verification.send') }}">Kirim ulang</a></div>
                         @endif
                     </div>
                     <div class="pf-field">
@@ -171,7 +171,7 @@
                         <label class="pf-label">Bergabung Sejak</label>
                         <input type="text" class="pf-input" value="{{ $user->created_at->format('d F Y') }}" disabled>
                     </div>
-                    <button type="submit" class="pf-btn pf-btn-primary pf-btn-full" style="margin-top:0.5rem;">💾 Simpan Perubahan</button>
+                    <button type="submit" class="pf-btn pf-btn-primary pf-btn-full" style="margin-top:0.5rem;"><i class="fas fa-save"></i> Simpan Perubahan</button>
                 </form>
             </div>
 
@@ -195,17 +195,17 @@
                         <label class="pf-label">Konfirmasi Password Baru</label>
                         <input type="password" name="password_confirmation" class="pf-input" autocomplete="new-password" placeholder="Ulangi password baru">
                     </div>
-                    <button type="submit" class="pf-btn pf-btn-primary pf-btn-full" style="margin-top:0.5rem;">🔐 Ubah Password</button>
+                    <button type="submit" class="pf-btn pf-btn-primary pf-btn-full" style="margin-top:0.5rem;"><i class="fas fa-lock"></i> Ubah Password</button>
                 </form>
             </div>
 
             @if(auth()->user()->role !== 'admin' && auth()->user()->role !== 'superadmin')
             {{-- DANGER --}}
             <div class="pf-form-card" id="pf-danger">
-                <div class="pf-form-title" style="color:#E53935;">⚠️ Zona Berbahaya</div>
+                <div class="pf-form-title" style="color:#E53935;"><i class="fas fa-exclamation-triangle"></i> Zona Berbahaya</div>
                 <div class="pf-form-desc">Tindakan di sini tidak bisa dibatalkan.</div>
                 <div class="pf-danger-box">
-                    <p>🗑️ Menghapus akun akan menghilangkan seluruh data secara permanen — termasuk riwayat pesanan, wishlist, dan informasi profil kamu.</p>
+                    <p><i class="fas fa-trash-alt"></i> Menghapus akun akan menghilangkan seluruh data secara permanen — termasuk riwayat pesanan, wishlist, dan informasi profil kamu.</p>
                     <button type="button" class="pf-btn pf-btn-red pf-btn-full" onclick="document.getElementById('pfDelModal').classList.add('show')">Hapus Akun Saya</button>
                 </div>
             </div>
@@ -220,7 +220,7 @@
             <a href="{{ route('transaksi.riwayat') }}">Lihat Semua →</a>
         </div>
         @if($recentOrders->isEmpty())
-            <div class="pf-empty-state"><span>📦</span>Belum ada pesanan</div>
+            <div class="pf-empty-state"><span><i class="fas fa-box"></i></span>Belum ada pesanan</div>
         @else
             <div class="pf-recent-list">
                 @foreach($recentOrders as $order)
@@ -241,7 +241,7 @@
                     @if($firstDetail && $firstDetail->produk && $firstDetail->produk->gambar && file_exists(public_path('images/produk/' . $firstDetail->produk->gambar)))
                         <img src="{{ asset('images/produk/' . $firstDetail->produk->gambar) }}" class="pf-recent-img" alt="">
                     @else
-                        <div class="pf-recent-img-ph">📦</div>
+                        <div class="pf-recent-img-ph"><i class="fas fa-box"></i></div>
                     @endif
                     <div class="pf-recent-info">
                         <div class="pf-recent-name">{{ $firstDetail->nama_produk ?? 'Produk' }}{{ $order->details->count() > 1 ? ' +' . ($order->details->count() - 1) : '' }}</div>
@@ -258,17 +258,17 @@
     {{-- Tips Cards --}}
     <div class="pf-tips-grid">
         <div class="pf-tip-card">
-            <span class="pf-tip-icon">🔒</span>
+            <span class="pf-tip-icon"><i class="fas fa-lock"></i></span>
             <div class="pf-tip-title">Keamanan Akun</div>
             <div class="pf-tip-desc">Gunakan password yang kuat dan jangan bagikan ke siapapun.</div>
         </div>
         <div class="pf-tip-card">
-            <span class="pf-tip-icon">📱</span>
+            <span class="pf-tip-icon"><i class="fas fa-mobile-alt"></i></span>
             <div class="pf-tip-title">Notifikasi WA</div>
             <div class="pf-tip-desc">Tambahkan nomor WhatsApp untuk update pesanan real-time.</div>
         </div>
         <div class="pf-tip-card">
-            <span class="pf-tip-icon">⭐</span>
+            <span class="pf-tip-icon"><i class="fas fa-star"></i></span>
             <div class="pf-tip-title">Review Produk</div>
             <div class="pf-tip-desc">Bantu pembeli lain dengan review produk yang sudah kamu beli.</div>
         </div>
@@ -281,7 +281,7 @@
 <div class="pf-modal-bg" id="pfDelModal">
     <div class="pf-modal">
         <div class="pf-modal-head">
-            <h5>⚠️ Konfirmasi Hapus</h5>
+            <h5><i class="fas fa-exclamation-triangle"></i> Konfirmasi Hapus</h5>
             <button class="pf-modal-x" onclick="document.getElementById('pfDelModal').classList.remove('show')">✕</button>
         </div>
         <div class="pf-modal-body">

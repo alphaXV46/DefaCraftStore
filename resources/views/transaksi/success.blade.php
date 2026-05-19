@@ -17,10 +17,10 @@
 
             {{-- Header --}}
             <div class="success-header">
-                <div class="checkmark-circle">✅</div>
+                <div class="checkmark-circle"><i class="fas fa-check-circle"></i></div>
                 <div class="success-title">Pesanan Berhasil!</div>
                 <div class="success-subtitle">
-                    Terima kasih telah berbelanja di DefaCraftStore 🎉
+                    Terima kasih telah berbelanja di DefaCraftStore <i class="fas fa-award"></i>
                 </div>
             </div>
 
@@ -35,37 +35,37 @@
 
                     {{-- Detail --}}
                     <div class="detail-row">
-                        <span class="detail-label">📅 Tanggal</span>
+                        <span class="detail-label"><i class="fas fa-calendar-alt"></i> Tanggal</span>
                         <span class="detail-value">{{ $transaksi->created_at->format('d M Y, H:i') }}</span>
                     </div>
 
                     <div class="detail-row">
-                        <span class="detail-label">📍 Dikirim ke</span>
+                        <span class="detail-label"><i class="fas fa-map-marker-alt"></i> Dikirim ke</span>
                         <span class="detail-value">{{ $transaksi->nama_pembeli }}, {{ $transaksi->city_name ?? $transaksi->alamat }}</span>
                     </div>
 
                     @if($transaksi->kurir)
                     <div class="detail-row">
-                        <span class="detail-label">🚚 Kurir</span>
+                        <span class="detail-label"><i class="fas fa-truck"></i> Kurir</span>
                         <span class="detail-value">{{ $transaksi->kurir }} {{ $transaksi->layanan_kurir }} ({{ $transaksi->estimasi }})</span>
                     </div>
                     @endif
 
                     <div class="detail-row">
-                        <span class="detail-label">💳 Metode Bayar</span>
+                        <span class="detail-label"><i class="fas fa-credit-card"></i> Metode Bayar</span>
                         <span class="detail-value">
                             @switch($transaksi->metode_pembayaran)
-                                @case('QRIS') 📱 QRIS / E-Wallet @break
-                                @case('VA')   🏦 Virtual Account @break
-                                @case('CC')   💳 Kartu Kredit @break
-                                @case('COD')  💵 COD @break
+                                @case('QRIS') <i class="fas fa-mobile-alt"></i> QRIS / E-Wallet @break
+                                @case('VA')   <i class="fas fa-university"></i> Virtual Account @break
+                                @case('CC')   <i class="fas fa-credit-card"></i> Kartu Kredit @break
+                                @case('COD')  <i class="fas fa-money-bill-wave"></i> COD @break
                                 @default {{ $transaksi->metode_pembayaran }}
                             @endswitch
                         </span>
                     </div>
 
                     <div class="detail-row">
-                        <span class="detail-label">📦 Status</span>
+                        <span class="detail-label"><i class="fas fa-box"></i> Status</span>
                         <span class="detail-value">{!! $transaksi->getStatusBadge() !!}</span>
                     </div>
 
@@ -84,19 +84,19 @@
             {{-- Info langkah selanjutnya --}}
             @if($transaksi)
             <div class="step-info">
-                <div class="step-info-title">📋 Langkah Selanjutnya:</div>
+                <div class="step-info-title"><i class="fas fa-list-alt"></i> Langkah Selanjutnya:</div>
                 @if($transaksi->metode_pembayaran === 'COD')
-                    <div class="step-item">✅ Pesanan kamu sedang diproses oleh admin</div>
-                    <div class="step-item">📦 Barang akan segera dikemas dan dikirim</div>
-                    <div class="step-item">💵 Siapkan uang tunai saat kurir tiba</div>
+                    <div class="step-item"><i class="fas fa-check-circle"></i> Pesanan kamu sedang diproses oleh admin</div>
+                    <div class="step-item"><i class="fas fa-box"></i> Barang akan segera dikemas dan dikirim</div>
+                    <div class="step-item"><i class="fas fa-money-bill-wave"></i> Siapkan uang tunai saat kurir tiba</div>
                 @elseif($transaksi->status === 'pending')
                     <div class="step-item">⏳ Selesaikan pembayaran secepatnya</div>
-                    <div class="step-item">📧 Cek email untuk instruksi pembayaran</div>
-                    <div class="step-item">📦 Pesanan akan diproses setelah pembayaran dikonfirmasi</div>
+                    <div class="step-item"><i class="fas fa-envelope"></i> Cek email untuk instruksi pembayaran</div>
+                    <div class="step-item"><i class="fas fa-box"></i> Pesanan akan diproses setelah pembayaran dikonfirmasi</div>
                 @else
-                    <div class="step-item">✅ Pembayaran berhasil dikonfirmasi</div>
-                    <div class="step-item">📦 Pesanan sedang diproses oleh admin</div>
-                    <div class="step-item">🚚 Nomor resi akan dikirim via WhatsApp</div>
+                    <div class="step-item"><i class="fas fa-check-circle"></i> Pembayaran berhasil dikonfirmasi</div>
+                    <div class="step-item"><i class="fas fa-box"></i> Pesanan sedang diproses oleh admin</div>
+                    <div class="step-item"><i class="fas fa-truck"></i> Nomor resi akan dikirim via WhatsApp</div>
                 @endif
             </div>
             @endif
@@ -104,10 +104,10 @@
             {{-- Action Buttons --}}
             <div class="action-buttons">
                 <a href="{{ route('transaksi.riwayat') }}" class="btn-primary-custom">
-                    📋 Lihat Status Pesanan
+                    <i class="fas fa-list-alt"></i> Lihat Status Pesanan
                 </a>
                 <a href="{{ route('produk.index') }}" class="btn-outline-custom">
-                    🛍️ Lanjut Belanja
+                    <i class="fas fa-shopping-bag"></i> Lanjut Belanja
                 </a>
             </div>
 

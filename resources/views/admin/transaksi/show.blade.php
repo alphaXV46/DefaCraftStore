@@ -42,7 +42,7 @@
                         </div>
                         <div class="col-md-6 text-md-end">
                             <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateStatusModal">
-                                🔄 Update Status
+                                <i class="fas fa-sync-alt"></i> Update Status
                             </button>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
             <!-- Detail Produk -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0">📦 Produk yang Dibeli</h5>
+                    <h5 class="mb-0"><i class="fas fa-box"></i> Produk yang Dibeli</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -113,7 +113,7 @@
                                                 @else
                                                     <div class="bg-secondary rounded d-flex align-items-center justify-content-center" 
                                                          style="width: 60px; height: 60px;">
-                                                        <span>📦</span>
+                                                        <span><i class="fas fa-box"></i></span>
                                                     </div>
                                                 @endif
                                                 <div>
@@ -147,7 +147,7 @@
             @if($transaksi->bukti_bayar)
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0">💳 Bukti Pembayaran</h5>
+                    <h5 class="mb-0"><i class="fas fa-credit-card"></i> Bukti Pembayaran</h5>
                 </div>
                 <div class="card-body text-center">
                     <img src="{{ asset('images/bukti_bayar/' . $transaksi->bukti_bayar) }}" 
@@ -158,7 +158,7 @@
                         <a href="{{ asset('images/bukti_bayar/' . $transaksi->bukti_bayar) }}" 
                            target="_blank" 
                            class="btn btn-primary">
-                            🔍 Lihat Full Size
+                            <i class="fas fa-search"></i> Lihat Full Size
                         </a>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
             <!-- Info Customer -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0">👤 Informasi Customer</h5>
+                    <h5 class="mb-0"><i class="fas fa-user"></i> Informasi Customer</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -185,7 +185,7 @@
                     <div class="mb-3">
                         <strong>WhatsApp:</strong><br>
                         <a href="https://wa.me/{{ $transaksi->nomor_wa }}" target="_blank" class="btn btn-success btn-sm">
-                            📱 {{ $transaksi->nomor_wa }}
+                            <i class="fas fa-mobile-alt"></i> {{ $transaksi->nomor_wa }}
                         </a>
                     </div>
                     <div class="mb-0">
@@ -197,7 +197,7 @@
                         <div class="mt-2 text-center">
                             <a href="https://www.google.com/maps/search/?api=1&query={{ $transaksi->latitude }},{{ $transaksi->longitude }}" 
                                target="_blank" class="btn btn-sm btn-outline-primary">
-                                🗺️ Buka di Google Maps
+                                <i class="fas fa-map-marked-alt"></i> Buka di Google Maps
                             </a>
                         </div>
                     @endif
@@ -207,15 +207,15 @@
             <!-- Info Pembayaran -->
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0">💰 Informasi Pembayaran</h5>
+                    <h5 class="mb-0"><i class="fas fa-wallet"></i> Informasi Pembayaran</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
                         <strong>Metode:</strong><br>
                         @if($transaksi->metode_pembayaran == 'QRIS')
-                            <span class="badge bg-info">📱 QRIS</span>
+                            <span class="badge bg-info"><i class="fas fa-mobile-alt"></i> QRIS</span>
                         @else
-                            <span class="badge bg-success">💵 COD</span>
+                            <span class="badge bg-success"><i class="fas fa-money-bill-wave"></i> COD</span>
                         @endif
                     </div>
                     <div class="mb-3">
@@ -286,7 +286,7 @@
                     </div>
                     
                     <div class="alert alert-warning mb-0">
-                        <strong>⚠️ Perhatian:</strong><br>
+                        <strong><i class="fas fa-exclamation-triangle"></i> Perhatian:</strong><br>
                         - Jika status diubah ke "Dibatalkan", stok produk akan dikembalikan<br>
                         - Pastikan cek bukti pembayaran sebelum approve
                     </div>
@@ -296,7 +296,7 @@
                         Batal
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        💾 Update Status
+                        <i class="fas fa-save"></i> Update Status
                     </button>
                 </div>
             </form>
@@ -351,7 +351,7 @@
 
             // Use custom L.divIcon to prevent 404 broken image marker issues from standard Leaflet CDN assets
             const DeliveryIcon = L.divIcon({
-                html: '📍',
+                html: '<i class="fas fa-map-marker-alt"></i>',
                 className: 'custom-div-icon',
                 iconSize: [30, 30],
                 iconAnchor: [15, 30]

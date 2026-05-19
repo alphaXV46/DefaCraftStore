@@ -14,7 +14,7 @@
 @section('content')
 <div class="checkout-wrapper">
     <div class="container">
-        <h1 class="fw-bold mb-4">📦 Checkout</h1>
+        <h1 class="fw-bold mb-4"><i class="fas fa-box"></i> Checkout</h1>
 
         <div class="row g-4 align-items-start">
 
@@ -36,7 +36,7 @@
                     {{-- DATA PEMBELI --}}
                     <div class="card mb-4 border-0 shadow-sm">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold mb-4">👤 Data Pembeli</h5>
+                            <h5 class="fw-bold mb-4"><i class="fas fa-user"></i> Data Pembeli</h5>
 
                             <div class="mb-3">
                                 <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
@@ -70,12 +70,12 @@
                     {{-- ALAMAT PENGIRIMAN --}}
                     <div class="card mb-4 border-0 shadow-sm">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold mb-4">📍 Alamat Pengiriman</h5>
+                            <h5 class="fw-bold mb-4"><i class="fas fa-map-marker-alt"></i> Alamat Pengiriman</h5>
 
                             {{-- Tombol peta --}}
                             <button type="button" class="btn btn-outline-primary mb-3 w-100"
                                     data-bs-toggle="modal" data-bs-target="#mapModal">
-                                🗺️ Pilih Lokasi dari Peta
+                                <i class="fas fa-map-marked-alt"></i> Pilih Lokasi dari Peta
                             </button>
 
                             {{-- Search kecamatan --}}
@@ -92,7 +92,7 @@
                                     </div>
                                 </div>
                                 <div id="destinationSelected" class="alert alert-success mt-2 py-2 px-3 small mb-0" style="display:none;">
-                                    ✅ <strong>Terpilih:</strong> <span id="destinationSelectedText"></span>
+                                    <i class="fas fa-check-circle"></i> <strong>Terpilih:</strong> <span id="destinationSelectedText"></span>
                                 </div>
                             </div>
 
@@ -110,7 +110,7 @@
 
                             {{-- Preview dari peta --}}
                             <div id="mapAddressPreview" class="alert alert-info mt-3 mb-0 py-2 small" style="display:none;">
-                                🗺️ <span id="mapAddressText"></span>
+                                <i class="fas fa-map-marked-alt"></i> <span id="mapAddressText"></span>
                             </div>
                         </div>
                     </div>
@@ -118,7 +118,7 @@
                     {{-- PILIH KURIR (Progressive Disclosure) --}}
                     <div class="card mb-4 border-0 shadow-sm" id="kurirSection" style="display:none;">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold mb-4">🚚 Pilih Kurir & Ongkos Kirim</h5>
+                            <h5 class="fw-bold mb-4"><i class="fas fa-truck"></i> Pilih Kurir & Ongkos Kirim</h5>
 
                             <div id="ongkirLoading" style="display:none;" class="text-center py-3">
                                 <div class="spinner-border text-primary" role="status"></div>
@@ -145,7 +145,7 @@
                     {{-- METODE PEMBAYARAN --}}
                     <div class="card mb-4 border-0 shadow-sm">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold mb-4">💳 Metode Pembayaran</h5>
+                            <h5 class="fw-bold mb-4"><i class="fas fa-credit-card"></i> Metode Pembayaran</h5>
 
                             @error('metode_pembayaran')
                                 <div class="alert alert-danger py-2 mb-3">{{ $message }}</div>
@@ -157,7 +157,7 @@
                                            id="pay_qris" value="QRIS"
                                            {{ old('metode_pembayaran', 'QRIS') == 'QRIS' ? 'checked' : '' }}>
                                     <label class="payment-card d-block p-3 rounded w-100 h-100" for="pay_qris">
-                                        <div class="fw-bold">📱 QRIS / E-Wallet</div>
+                                        <div class="fw-bold"><i class="fas fa-mobile-alt"></i> QRIS / E-Wallet</div>
                                         <small class="text-muted">GoPay, OVO, ShopeePay, DANA</small>
                                     </label>
                                 </div>
@@ -166,7 +166,7 @@
                                            id="pay_va" value="VA"
                                            {{ old('metode_pembayaran') == 'VA' ? 'checked' : '' }}>
                                     <label class="payment-card d-block p-3 rounded w-100 h-100" for="pay_va">
-                                        <div class="fw-bold">🏦 Virtual Account</div>
+                                        <div class="fw-bold"><i class="fas fa-university"></i> Virtual Account</div>
                                         <small class="text-muted">BCA, BNI, BRI, Mandiri</small>
                                     </label>
                                 </div>
@@ -175,7 +175,7 @@
                                            id="pay_cc" value="CC"
                                            {{ old('metode_pembayaran') == 'CC' ? 'checked' : '' }}>
                                     <label class="payment-card d-block p-3 rounded w-100 h-100" for="pay_cc">
-                                        <div class="fw-bold">💳 Kartu Kredit / Debit</div>
+                                        <div class="fw-bold"><i class="fas fa-credit-card"></i> Kartu Kredit / Debit</div>
                                         <small class="text-muted">Visa, Mastercard</small>
                                     </label>
                                 </div>
@@ -184,7 +184,7 @@
                                            id="pay_cod" value="COD"
                                            {{ old('metode_pembayaran') == 'COD' ? 'checked' : '' }}>
                                     <label class="payment-card d-block p-3 rounded w-100 h-100" for="pay_cod">
-                                        <div class="fw-bold">💵 COD</div>
+                                        <div class="fw-bold"><i class="fas fa-money-bill-wave"></i> COD</div>
                                         <small class="text-muted">Bayar tunai saat barang sampai</small>
                                     </label>
                                 </div>
@@ -197,7 +197,7 @@
                     {{-- SUBMIT --}}
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary btn-lg shadow">
-                            🚀 Buat Pesanan Sekarang
+                            <i class="fas fa-paper-plane"></i> Buat Pesanan Sekarang
                         </button>
                     </div>
 
@@ -208,7 +208,7 @@
             <div class="col-lg-4">
                 <div class="summary-card card border-0 shadow-sm">
                     <div class="card-body p-4">
-                        <h5 class="fw-bold mb-3">🧾 Ringkasan Pesanan</h5>
+                        <h5 class="fw-bold mb-3"><i class="fas fa-receipt"></i> Ringkasan Pesanan</h5>
 
                         @foreach($keranjang as $item)
                         <div class="d-flex justify-content-between mb-2 small">
@@ -244,7 +244,7 @@
                         </div>
 
                         <div id="estimasiInfo" class="alert alert-info mt-3 mb-0 py-2 small" style="display:none;">
-                            🚚 <span id="estimasiText"></span>
+                            <i class="fas fa-truck"></i> <span id="estimasiText"></span>
                         </div>
                     </div>
                 </div>
@@ -259,15 +259,15 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">🗺️ Pilih Lokasi Pengiriman</h5>
+                <h5 class="modal-title"><i class="fas fa-map-marked-alt"></i> Pilih Lokasi Pengiriman</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="input-group mb-3">
                     <input type="text" id="mapSearch" class="form-control"
                            placeholder="Cari alamat...">
-                    <button class="btn btn-primary" type="button" onclick="searchMapAddress()">🔍 Cari</button>
-                    <button class="btn btn-outline-secondary" type="button" onclick="getMyLocation()">📍 Lokasi Saya</button>
+                    <button class="btn btn-primary" type="button" onclick="searchMapAddress()"><i class="fas fa-search"></i> Cari</button>
+                    <button class="btn btn-outline-secondary" type="button" onclick="getMyLocation()"><i class="fas fa-map-marker-alt"></i> Lokasi Saya</button>
                 </div>
                 <div id="map"></div>
                 {{-- Detail Alamat Terdeteksi (Gaya User) --}}
@@ -302,7 +302,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                 <button type="button" class="btn btn-primary" id="confirmLocationBtn"
                         onclick="confirmLocation()" disabled>
-                    ✅ Gunakan Lokasi Ini
+                    <i class="fas fa-check-circle"></i> Gunakan Lokasi Ini
                 </button>
             </div>
         </div>
@@ -433,7 +433,7 @@ document.getElementById('mapModal')?.addEventListener('shown.bs.modal', function
 
         // Custom Icons
         const StoreIcon = L.divIcon({
-            html: '🏪',
+            html: '<i class="fas fa-store"></i>',
             className: 'custom-div-icon',
             iconSize: [30, 30],
             iconAnchor: [15, 15]
@@ -469,7 +469,7 @@ document.getElementById('mapModal')?.addEventListener('shown.bs.modal', function
 function placeMarker(latlng) {
     if (marker) map.removeLayer(marker);
     const HomeIcon = L.divIcon({
-        html: '📍',
+        html: '<i class="fas fa-map-marker-alt"></i>',
         className: 'custom-div-icon',
         iconSize: [30, 30],
         iconAnchor: [15, 30]
@@ -844,7 +844,7 @@ async function doSearchDestination(keyword) {
     const dropdown = document.getElementById('destinationDropdown');
     if (!dropdown || keyword.length < MIN_SEARCH_CHARS) return;
 
-    dropdown.innerHTML     = '<div class="destination-item text-muted">🔍 Mencari...</div>';
+    dropdown.innerHTML     = '<div class="destination-item text-muted"><i class="fas fa-search"></i> Mencari...</div>';
     dropdown.style.display = 'block';
 
     try {
@@ -957,7 +957,7 @@ function selectDestination(item) {
     if (elSelText) elSelText.textContent  = item.label;
     if (elSelBox)  elSelBox.style.display = 'block';
 
-    // ⚠️ Kecamatan TIDAK boleh mengisi textarea alamat_lengkap — user isi manual
+    // <i class="fas fa-exclamation-triangle"></i> Kecamatan TIDAK boleh mengisi textarea alamat_lengkap — user isi manual
     // (Textarea #input_alamat TIDAK disentuh di sini)
 
     document.querySelectorAll('.saved-address-card').forEach(c => {
@@ -1019,7 +1019,7 @@ function buildKurirCard(item) {
                 <span class="kurir-card__service">${item.service}</span>
             </div>
             <div class="kurir-card__price">Rp ${Number(item.cost).toLocaleString('id-ID')}</div>
-            <div class="kurir-card__etd">📦 Estimasi ${item.etd}</div>
+            <div class="kurir-card__etd"><i class="fas fa-box"></i> Estimasi ${item.etd}</div>
         </div>
     `;
     col.querySelector('.kurir-card').addEventListener('click', function() {

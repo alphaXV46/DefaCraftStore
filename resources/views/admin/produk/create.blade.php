@@ -22,7 +22,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">➕ Tambah Produk Baru</h4>
+                    <h4 class="mb-0"><i class="fas fa-plus"></i> Tambah Produk Baru</h4>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.produk.store') }}" method="POST" enctype="multipart/form-data">
@@ -159,10 +159,10 @@
                         <!-- Buttons -->
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary">
-                                💾 Simpan Produk
+                                <i class="fas fa-save"></i> Simpan Produk
                             </button>
                             <a href="{{ route('admin.produk.index') }}" class="btn btn-secondary">
-                                ❌ Batal
+                                <i class="fas fa-times-circle"></i> Batal
                             </a>
                         </div>
                     </form>

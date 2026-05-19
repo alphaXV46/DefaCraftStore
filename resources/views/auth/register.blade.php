@@ -21,7 +21,7 @@
                 <div class="form-group">
                     <label for="name" class="form-label">Nama Lengkap</label>
                     <div class="input-group-icon">
-                        <span class="input-icon">👤</span>
+                        <span class="input-icon"><i class="fas fa-user"></i></span>
                         <input id="name" 
                                type="text" 
                                name="name" 
@@ -40,7 +40,7 @@
                 <div class="form-group">
                     <label for="email" class="form-label">Email</label>
                     <div class="input-group-icon">
-                        <span class="input-icon">📧</span>
+                        <span class="input-icon"><i class="fas fa-envelope"></i></span>
                         <input id="email" 
                                type="email" 
                                name="email" 
@@ -58,7 +58,7 @@
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
                     <div class="input-group-icon">
-                        <span class="input-icon">🔒</span>
+                        <span class="input-icon"><i class="fas fa-lock"></i></span>
                         <input id="password" 
                                type="password" 
                                name="password" 
@@ -76,7 +76,7 @@
                 <div class="form-group">
                     <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
                     <div class="input-group-icon">
-                        <span class="input-icon">🔐</span>
+                        <span class="input-icon"><i class="fas fa-lock"></i></span>
                         <input id="password_confirmation" 
                                type="password" 
                                name="password_confirmation" 

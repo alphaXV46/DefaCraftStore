@@ -24,7 +24,7 @@
         @if(session('temp_password'))
             <div class="alert alert-warning border-0 shadow-sm mb-4" style="border-radius: 18px; background: linear-gradient(135deg, #FFFDF5, #FEF3C7); padding: 1.5rem; border-left: 5px solid #D97706 !important;">
                 <div class="d-flex align-items-start gap-3">
-                    <span style="font-size: 1.8rem; line-height: 1;">🔑</span>
+                    <span style="font-size: 1.8rem; line-height: 1;"><i class="fas fa-key"></i></span>
                     <div style="flex: 1;">
                         <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 800; color: #92400E; margin-bottom: 0.25rem;">Password Sementara Berhasil Dibuat!</h4>
                         <p style="font-size: 0.88rem; color: #B45309; margin-bottom: 0.75rem;">
@@ -33,7 +33,7 @@
                         <div class="d-flex align-items-center gap-2" style="max-width: 400px;">
                             <input type="text" id="tempPasswordInput" readonly value="{{ session('temp_password') }}" class="form-control text-center" style="font-family: 'Courier New', Courier, monospace; font-size: 1.15rem; font-weight: 800; letter-spacing: 2px; color: #B45309; background: #fff; border: 1.5px solid #FCD34D; border-radius: 10px; padding: 0.4rem 1rem;">
                             <button onclick="copyTempPassword()" class="btn btn-warning" style="background: #EAB308; border: none; border-radius: 10px; color: #fff; font-weight: 700; font-size: 0.88rem; padding: 0.5rem 1.25rem; display: inline-flex; align-items: center; gap: 0.3rem;">
-                                📋 Salin
+                                <i class="fas fa-list-alt"></i> Salin
                             </button>
                         </div>
                         <span id="copyFeedback" style="font-size: 0.78rem; color: #059669; font-weight: 700; margin-top: 0.35rem; display: none;">✓ Berhasil disalin ke clipboard!</span>
@@ -109,7 +109,7 @@
                     <div class="col-md-5">
                         <label for="search" class="form-label" style="font-weight: 700; font-size: 0.8rem; color: #555; text-transform: uppercase;">Pencarian Pelanggan</label>
                         <div class="input-group">
-                            <span class="input-group-text" style="background: #FAFAFA; border: 1.5px solid #E0E0E0; border-right: none; border-radius: 10px 0 0 10px; color: #aaa;">🔍</span>
+                            <span class="input-group-text" style="background: #FAFAFA; border: 1.5px solid #E0E0E0; border-right: none; border-radius: 10px 0 0 10px; color: #aaa;"><i class="fas fa-search"></i></span>
                             <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Cari nama, email, nomor Whatsapp..." class="form-control" style="border: 1.5px solid #E0E0E0; border-radius: 0 10px 10px 0; font-size: 0.88rem; padding: 0.5rem 0.75rem; box-shadow: none;">
                         </div>
                     </div>
@@ -137,7 +137,7 @@
         <div class="card shadow" style="border:1.5px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03);overflow:hidden;">
             <div class="card-body" style="padding:1.5rem;">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
-                    <h5 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:700;color:#333;margin:0;">📋 Daftar Pembeli Terdaftar</h5>
+                    <h5 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:700;color:#333;margin:0;"><i class="fas fa-list-alt"></i> Daftar Pembeli Terdaftar</h5>
                 </div>
 
                 @if($users->isEmpty())
@@ -194,7 +194,7 @@
                                             <form action="{{ route('admin.users.reset-password', $user->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mereset password pelanggan {{ $user->name }} menjadi password acak sementara?')">
                                                 @csrf
                                                 <button type="submit" class="btn btn-sm btn-outline-warning" style="border-radius:8px;font-weight:600;font-size:0.75rem;padding:0.25rem 0.6rem;background:#fff;border:1.5px solid #FCD34D;color:#D97706;" title="Reset Password Ke Acak">
-                                                    🔑 Reset Pass
+                                                    <i class="fas fa-key"></i> Reset Pass
                                                 </button>
                                             </form>
 
@@ -208,7 +208,7 @@
                                                     </button>
                                                 @else
                                                     <button type="submit" class="btn btn-sm btn-outline-success" style="border-radius:8px;font-weight:600;font-size:0.75rem;padding:0.25rem 0.6rem;background:#fff;border:1.5px solid #86EFAC;color:#16A34A;" title="Aktifkan Kembali">
-                                                        🔓 Unban
+                                                        <i class="fas fa-lock-open"></i> Unban
                                                     </button>
                                                 @endif
                                             </form>
@@ -218,7 +218,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-outline-dark" style="border-radius:8px;font-weight:600;font-size:0.75rem;padding:0.25rem 0.6rem;background:#fff;border:1.5px solid #333;color:#333;" title="Hapus Permanen">
-                                                    🗑️ Hapus
+                                                    <i class="fas fa-trash-alt"></i> Hapus
                                                 </button>
                                             </form>
                                         </div>

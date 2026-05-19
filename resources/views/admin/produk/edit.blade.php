@@ -100,7 +100,7 @@
                                 @else
                                     <div class="bg-secondary rounded d-inline-flex align-items-center justify-content-center text-white" 
                                          style="width: 200px; height: 200px;">
-                                        <span class="fs-1">📦</span>
+                                        <span class="fs-1"><i class="fas fa-box"></i></span>
                                     </div>
                                 @endif
                             </div>
@@ -127,10 +127,10 @@
                         <!-- Buttons -->
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-warning">
-                                💾 Update Produk
+                                <i class="fas fa-save"></i> Update Produk
                             </button>
                             <a href="{{ route('admin.produk.index') }}" class="btn btn-secondary">
-                                ❌ Batal
+                                <i class="fas fa-times-circle"></i> Batal
                             </a>
                         </div>
                     </form>

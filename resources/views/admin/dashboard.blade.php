@@ -8,7 +8,7 @@
 
     {{-- Title --}}
     <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.4rem;font-weight:800;color:#333;position:relative;display:inline-block;padding-bottom:0.5rem;margin-bottom:0.25rem;">
-        🔧 Admin Dashboard
+        <i class="fas fa-tools"></i> Admin Dashboard
         <span style="position:absolute;bottom:0;left:0;width:60px;height:4px;background:linear-gradient(135deg,#FEF9C3,#EAB308,#FACC15);border-radius:4px;display:block;"></span>
     </h1>
     <p style="color:#999;font-size:0.85rem;margin-bottom:1.5rem;">Selamat datang kembali, <strong style="color:#333;">{{ auth()->user()->name }}</strong> — {{ now()->format('l, d F Y') }}</p>
@@ -29,9 +29,9 @@
                         <div>
                             <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;opacity:0.8;margin-bottom:0.3rem;">Total Produk</div>
                             <div style="font-size:2rem;font-weight:800;line-height:1.1;">{{ $totalProduk }}</div>
-                            <div style="font-size:0.75rem;opacity:0.7;margin-top:0.3rem;">📦 Item terdaftar</div>
+                            <div style="font-size:0.75rem;opacity:0.7;margin-top:0.3rem;"><i class="fas fa-box"></i> Item terdaftar</div>
                         </div>
-                        <div style="font-size:3rem;opacity:0.5;line-height:1;">📦</div>
+                        <div style="font-size:3rem;opacity:0.5;line-height:1;"><i class="fas fa-box"></i></div>
                     </div>
                     <div style="margin-top:0.75rem;height:4px;background:rgba(255,255,255,0.2);border-radius:4px;overflow:hidden;">
                         <div style="height:100%;width:{{ min($totalProduk * 10, 100) }}%;background:rgba(255,255,255,0.5);border-radius:4px;transition:width 1s ease;"></div>
@@ -46,9 +46,9 @@
                         <div>
                             <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;opacity:0.8;margin-bottom:0.3rem;">Total Transaksi</div>
                             <div style="font-size:2rem;font-weight:800;line-height:1.1;">{{ $totalTransaksi }}</div>
-                            <div style="font-size:0.75rem;opacity:0.7;margin-top:0.3rem;">🛒 Pesanan masuk</div>
+                            <div style="font-size:0.75rem;opacity:0.7;margin-top:0.3rem;"><i class="fas fa-shopping-cart"></i> Pesanan masuk</div>
                         </div>
-                        <div style="font-size:3rem;opacity:0.5;line-height:1;">🛒</div>
+                        <div style="font-size:3rem;opacity:0.5;line-height:1;"><i class="fas fa-shopping-cart"></i></div>
                     </div>
                     <div style="margin-top:0.75rem;height:4px;background:rgba(255,255,255,0.2);border-radius:4px;overflow:hidden;">
                         <div style="height:100%;width:{{ min($totalTransaksi * 5, 100) }}%;background:rgba(255,255,255,0.5);border-radius:4px;transition:width 1s ease;"></div>
@@ -82,9 +82,9 @@
                             <div style="font-size:1.5rem;font-weight:800;line-height:1.1;">
                                 Rp {{ number_format($totalPendapatan, 0, ',', '.') }}
                             </div>
-                            <div style="font-size:0.75rem;opacity:0.7;margin-top:0.3rem;">💰 Total revenue</div>
+                            <div style="font-size:0.75rem;opacity:0.7;margin-top:0.3rem;"><i class="fas fa-wallet"></i> Total revenue</div>
                         </div>
-                        <div style="font-size:3rem;opacity:0.5;line-height:1;">💰</div>
+                        <div style="font-size:3rem;opacity:0.5;line-height:1;"><i class="fas fa-wallet"></i></div>
                     </div>
                     <div style="margin-top:0.75rem;height:4px;background:rgba(255,255,255,0.2);border-radius:4px;overflow:hidden;">
                         <div style="height:100%;width:{{ min($totalPendapatan / 50000, 100) }}%;background:rgba(255,255,255,0.5);border-radius:4px;transition:width 1s ease;"></div>
@@ -102,7 +102,7 @@
             <div class="card shadow" style="border:1.5px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03);overflow:hidden;transition:all 0.3s;height:100%;">
                 <div style="height:4px;background:linear-gradient(135deg,#667EEA,#764BA2);"></div>
                 <div class="card-body" style="padding:2rem 1.5rem;text-align:center;">
-                    <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#EDE7F6,#D1C4E9);display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1rem;">📦</div>
+                    <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#EDE7F6,#D1C4E9);display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1rem;"><i class="fas fa-box"></i></div>
                     <h4 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:700;color:#333;margin-bottom:0.35rem;">Kelola Produk</h4>
                     <p style="color:#999;font-size:0.82rem;margin:0;line-height:1.4;">Tambah, edit & hapus produk toko</p>
                 </div>
@@ -113,7 +113,7 @@
             <div class="card shadow" style="border:1.5px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03);overflow:hidden;transition:all 0.3s;height:100%;">
                 <div style="height:4px;background:linear-gradient(135deg,#11998E,#38EF7D);"></div>
                 <div class="card-body" style="padding:2rem 1.5rem;text-align:center;">
-                    <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#D1FAE5,#A7F3D0);display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1rem;">📊</div>
+                    <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#D1FAE5,#A7F3D0);display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1rem;"><i class="fas fa-chart-bar"></i></div>
                     <h4 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:700;color:#333;margin-bottom:0.35rem;">Kelola Transaksi</h4>
                     <p style="color:#999;font-size:0.82rem;margin:0;line-height:1.4;">Approve pembayaran & update status</p>
                     @if($pendingCount > 0)
@@ -140,7 +140,7 @@
             <div class="card shadow" style="border:1.5px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03);overflow:hidden;transition:all 0.3s;height:100%;">
                 <div style="height:4px;background:linear-gradient(135deg,#F7971E,#FFD200);"></div>
                 <div class="card-body" style="padding:2rem 1.5rem;text-align:center;">
-                    <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#FEF3C7,#FDE68A);display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1rem;">📈</div>
+                    <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#FEF3C7,#FDE68A);display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1rem;"><i class="fas fa-chart-line"></i></div>
                     <h4 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:700;color:#333;margin-bottom:0.35rem;">Laporan</h4>
                     <p style="color:#999;font-size:0.82rem;margin:0;line-height:1.4;">Ringkasan penjualan & transaksi</p>
                     <span style="display:inline-block;margin-top:0.75rem;background:#FEF3C7;color:#92400E;font-size:0.7rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:50px;">{{ $totalTransaksi }} data</span>
@@ -157,7 +157,7 @@
             <div class="card shadow" style="border:1.5px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03);overflow:hidden;">
                 <div class="card-body" style="padding:1.5rem;">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-                        <h5 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:700;color:#333;margin:0;">📋 Transaksi Terbaru</h5>
+                        <h5 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:700;color:#333;margin:0;"><i class="fas fa-list-alt"></i> Transaksi Terbaru</h5>
                         <a href="{{ route('admin.transaksi.index') }}" style="font-size:0.82rem;font-weight:600;color:#EAB308;text-decoration:none;">Lihat Semua →</a>
                     </div>
 
@@ -182,14 +182,14 @@
                                 <tbody>
                                     @foreach($transaksi as $item)
                                         @php
-                                            $sc = ['bg' => '#F5F5F5', 'color' => '#666', 'icon' => '❓'];
+                                            $sc = ['bg' => '#F5F5F5', 'color' => '#666', 'icon' => '<i class="fas fa-question-circle"></i>'];
                                             switch($item->status) {
                                                 case 'pending': $sc = ['bg' => '#FEF3C7', 'color' => '#92400E', 'icon' => '⏳']; break;
-                                                case 'paid': $sc = ['bg' => '#DBEAFE', 'color' => '#1E40AF', 'icon' => '💳']; break;
-                                                case 'processing': $sc = ['bg' => '#F3E8FF', 'color' => '#6B21A8', 'icon' => '📦']; break;
-                                                case 'shipped': $sc = ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '🚚']; break;
-                                                case 'completed': $sc = ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '✅']; break;
-                                                case 'cancelled': $sc = ['bg' => '#FEF2F2', 'color' => '#991B1B', 'icon' => '❌']; break;
+                                                case 'paid': $sc = ['bg' => '#DBEAFE', 'color' => '#1E40AF', 'icon' => '<i class="fas fa-credit-card"></i>']; break;
+                                                case 'processing': $sc = ['bg' => '#F3E8FF', 'color' => '#6B21A8', 'icon' => '<i class="fas fa-box"></i>']; break;
+                                                case 'shipped': $sc = ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '<i class="fas fa-truck"></i>']; break;
+                                                case 'completed': $sc = ['bg' => '#ECFDF5', 'color' => '#065F46', 'icon' => '<i class="fas fa-check-circle"></i>']; break;
+                                                case 'cancelled': $sc = ['bg' => '#FEF2F2', 'color' => '#991B1B', 'icon' => '<i class="fas fa-times-circle"></i>']; break;
                                                 case 'expired': $sc = ['bg' => '#FEF2F2', 'color' => '#991B1B', 'icon' => '⏰']; break;
                                             }
                                         @endphp
@@ -227,7 +227,7 @@
 
             <div class="card shadow" style="border:1.5px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03);overflow:hidden;">
                 <div class="card-body" style="padding:1.25rem;">
-                    <h5 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.95rem;font-weight:700;color:#333;margin:0 0 1rem 0;">📊 Distribusi Status</h5>
+                    <h5 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.95rem;font-weight:700;color:#333;margin:0 0 1rem 0;"><i class="fas fa-chart-bar"></i> Distribusi Status</h5>
 
                     @foreach($statusData as $sd)
                     <div style="margin-bottom:0.65rem;">
@@ -248,11 +248,11 @@
 
             <div class="card shadow" style="border:1.5px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03);overflow:hidden;">
                 <div class="card-body" style="padding:1.25rem;">
-                    <h5 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.95rem;font-weight:700;color:#333;margin:0 0 1rem 0;">💡 Info Cepat</h5>
+                    <h5 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.95rem;font-weight:700;color:#333;margin:0 0 1rem 0;"><i class="fas fa-lightbulb"></i> Info Cepat</h5>
                     <div style="display:flex;flex-direction:column;gap:0.6rem;">
                         @if($pendingCount > 0)
                         <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:#FFF8E1;border-radius:10px;border:1px solid rgba(234,179,8,0.12);">
-                            <span style="font-size:1rem;">🔔</span>
+                            <span style="font-size:1rem;"><i class="fas fa-bell"></i></span>
                             <div>
                                 <div style="font-size:0.78rem;font-weight:700;color:#92400E;">{{ $pendingCount }} pesanan menunggu</div>
                                 <div style="font-size:0.68rem;color:#B45309;">Perlu diproses segera</div>
@@ -261,7 +261,7 @@
                         @endif
                         @if($shippedCount > 0)
                         <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:#EFF6FF;border-radius:10px;border:1px solid rgba(59,130,246,0.12);">
-                            <span style="font-size:1rem;">🚚</span>
+                            <span style="font-size:1rem;"><i class="fas fa-truck"></i></span>
                             <div>
                                 <div style="font-size:0.78rem;font-weight:700;color:#1E40AF;">{{ $shippedCount }} sedang dikirim</div>
                                 <div style="font-size:0.68rem;color:#2563EB;">Dalam perjalanan ke pembeli</div>
@@ -320,7 +320,7 @@
 <div id="lpModal" style="position:fixed;top:0;right:0;width:88%;max-width:880px;height:100%;background:#F8F9FB;z-index:99999;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);overflow:hidden;display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,0.12);transform:translateX(100%);">
     <div style="background:linear-gradient(135deg,#4A3F5C,#5C4F6E);padding:1.75rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
         <h3 style="font-size:1.4rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:0.75rem;font-family:'Plus Jakarta Sans',sans-serif;">
-            <span style="width:44px;height:44px;background:rgba(234,179,8,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">📈</span>
+            <span style="width:44px;height:44px;background:rgba(234,179,8,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;"><i class="fas fa-chart-line"></i></span>
             Laporan Penjualan
         </h3>
         <button onclick="closeLaporan()" style="width:42px;height:42px;background:rgba(255,255,255,0.1);border:none;border-radius:12px;color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s;" onmouseover="this.style.background='rgba(234,179,8,0.5)';this.style.transform='rotate(90deg)'" onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.transform='rotate(0deg)'">✕</button>
@@ -437,14 +437,14 @@
                         <tbody>
                             @foreach($transaksi as $item)
                                 @php
-                                    $sl = ['Unknown','#F5F5F5','#666','❓'];
+                                    $sl = ['Unknown','#F5F5F5','#666','<i class="fas fa-question-circle"></i>'];
                                     switch($item->status) {
                                         case 'pending': $sl = ['Menunggu', '#FEF3C7', '#92400E', '⏳']; break;
-                                        case 'paid': $sl = ['Dibayar', '#DBEAFE', '#1E40AF', '💳']; break;
-                                        case 'processing': $sl = ['Diproses', '#F3E8FF', '#6B21A8', '📦']; break;
-                                        case 'shipped': $sl = ['Dikirim', '#ECFDF5', '#065F46', '🚚']; break;
-                                        case 'completed': $sl = ['Selesai', '#ECFDF5', '#065F46', '✅']; break;
-                                        case 'cancelled': $sl = ['Dibatalkan', '#FEF2F2', '#991B1B', '❌']; break;
+                                        case 'paid': $sl = ['Dibayar', '#DBEAFE', '#1E40AF', '<i class="fas fa-credit-card"></i>']; break;
+                                        case 'processing': $sl = ['Diproses', '#F3E8FF', '#6B21A8', '<i class="fas fa-box"></i>']; break;
+                                        case 'shipped': $sl = ['Dikirim', '#ECFDF5', '#065F46', '<i class="fas fa-truck"></i>']; break;
+                                        case 'completed': $sl = ['Selesai', '#ECFDF5', '#065F46', '<i class="fas fa-check-circle"></i>']; break;
+                                        case 'cancelled': $sl = ['Dibatalkan', '#FEF2F2', '#991B1B', '<i class="fas fa-times-circle"></i>']; break;
                                         case 'expired': $sl = ['Kadaluarsa', '#FEF2F2', '#991B1B', '⏰']; break;
                                     }
                                 @endphp

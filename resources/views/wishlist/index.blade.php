@@ -4,12 +4,12 @@
 
 @section('content')
 <div class="container py-5">
-    <h1 class="fw-bold mb-4">❤️ Wishlist Saya</h1>
+    <h1 class="fw-bold mb-4"><i class="fas fa-heart"></i> Wishlist Saya</h1>
     
     @if($wishlist->isEmpty())
         <div class="card text-center py-5">
             <div class="card-body">
-                <span class="display-1">💔</span>
+                <span class="display-1"><i class="fas fa-heart-broken"></i></span>
                 <h3 class="mt-3">Wishlist Anda Kosong</h3>
                 <p class="text-muted mb-4">Simpan produk favorit Anda di sini!</p>
                 <a href="{{ route('produk.index') }}" class="btn btn-primary btn-lg">
@@ -34,7 +34,7 @@
                             @else
                                 <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center text-white"
                                      style="height: 240px;">
-                                    <span class="fs-1">📦</span>
+                                    <span class="fs-1"><i class="fas fa-box"></i></span>
                                 </div>
                             @endif
                             
@@ -54,7 +54,7 @@
                                     class="btn btn-danger position-absolute top-0 start-0 m-2 btn-sm rounded-circle"
                                     onclick="removeFromWishlist({{ $item->id }})"
                                     style="width: 40px; height: 40px;">
-                                ❤️
+                                <i class="fas fa-heart"></i>
                             </button>
                         </div>
                         
@@ -76,7 +76,7 @@
                                     <form action="{{ route('wishlist.move.cart', $item->id) }}" method="POST">
                                         @csrf
                                         <button type="submit" class="btn btn-primary w-100">
-                                            🛒 Pindah ke Keranjang
+                                            <i class="fas fa-shopping-cart"></i> Pindah ke Keranjang
                                         </button>
                                     </form>
                                 @else

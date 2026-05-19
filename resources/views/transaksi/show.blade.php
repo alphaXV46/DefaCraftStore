@@ -15,13 +15,13 @@
     {{-- Flash messages --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
-            ✅ {{ session('success') }}
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
     @if(session('error'))
         <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
-            ❌ {{ session('error') }}
+            <i class="fas fa-times-circle"></i> {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
@@ -29,7 +29,7 @@
     {{-- Page Header --}}
     <div class="row align-items-center mb-4">
         <div class="col">
-            <h1 class="fw-bold mb-0">📋 Detail Pesanan</h1>
+            <h1 class="fw-bold mb-0"><i class="fas fa-list-alt"></i> Detail Pesanan</h1>
             <p class="text-muted mb-0">
                 Order #{{ $transaksi->id }}
                 @if($transaksi->order_id)
@@ -52,7 +52,7 @@
             {{-- Status & Timeline --}}
             <div class="card detail-card shadow-sm mb-4">
                 <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between">
-                    <strong>📊 Status Pesanan</strong>
+                    <strong><i class="fas fa-chart-bar"></i> Status Pesanan</strong>
                     {!! $transaksi->getStatusBadge() !!}
                 </div>
                 <div class="card-body">
@@ -61,18 +61,18 @@
                     <div class="status-timeline">
                         @php
                             $steps = [
-                                ['icon' => '📝', 'label' => 'Pesanan Dibuat',
+                                ['icon' => '<i class="fas fa-pen"></i>', 'label' => 'Pesanan Dibuat',
                                  'statuses' => ['pending','paid','processing','shipped','completed']],
-                                ['icon' => '💳', 'label' => 'Pembayaran',
+                                ['icon' => '<i class="fas fa-credit-card"></i>', 'label' => 'Pembayaran',
                                  'statuses' => ['paid','processing','shipped','completed'],
                                  'active'   => ['pending']],
-                                ['icon' => '📦', 'label' => 'Diproses',
+                                ['icon' => '<i class="fas fa-box"></i>', 'label' => 'Diproses',
                                  'statuses' => ['processing','shipped','completed'],
                                  'active'   => ['paid']],
-                                ['icon' => '🚚', 'label' => 'Dikirim',
+                                ['icon' => '<i class="fas fa-truck"></i>', 'label' => 'Dikirim',
                                  'statuses' => ['shipped','completed'],
                                  'active'   => ['processing']],
-                                ['icon' => '✅', 'label' => 'Selesai',
+                                ['icon' => '<i class="fas fa-check-circle"></i>', 'label' => 'Selesai',
                                  'statuses' => ['completed'],
                                  'active'   => ['shipped']],
                             ];
@@ -91,7 +91,7 @@
                     </div>
                     @else
                     <div class="alert alert-danger mb-0">
-                        ❌ Pesanan ini
+                        <i class="fas fa-times-circle"></i> Pesanan ini
                         {{ $transaksi->status === 'cancelled' ? 'dibatalkan' : 'kedaluwarsa (tidak dibayar)' }}
                     </div>
                     @endif
@@ -101,7 +101,7 @@
                     <div class="resi-box mt-3">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <div>
-                                <div class="text-muted small fw-semibold mb-1">🚚 Nomor Resi Pengiriman</div>
+                                <div class="text-muted small fw-semibold mb-1"><i class="fas fa-truck"></i> Nomor Resi Pengiriman</div>
                                 <div class="resi-code">{{ $transaksi->resi }}</div>
                                 <div class="text-muted small mt-1">
                                     {{ strtoupper($transaksi->kurir ?? '') }}
@@ -111,11 +111,11 @@
                             <div class="d-flex gap-2 flex-wrap">
                                 <button class="btn btn-sm btn-outline-primary"
                                         onclick="copyResi('{{ $transaksi->resi }}')">
-                                    📋 Salin Resi
+                                    <i class="fas fa-list-alt"></i> Salin Resi
                                 </button>
                                 <a href="https://www.google.com/search?q=cek+resi+{{ $transaksi->resi }}"
                                    target="_blank" class="btn btn-sm btn-info text-white">
-                                    🔍 Lacak Paket
+                                    <i class="fas fa-search"></i> Lacak Paket
                                 </a>
                             </div>
                         </div>
@@ -127,7 +127,7 @@
                     <div class="confirm-alert mt-3">
                         <div class="d-flex align-items-start gap-3 flex-wrap">
                             <div class="flex-grow-1">
-                                <div class="fw-bold text-success mb-1">📦 Paket Sudah Sampai?</div>
+                                <div class="fw-bold text-success mb-1"><i class="fas fa-box"></i> Paket Sudah Sampai?</div>
                                 <div class="text-muted small">
                                     Konfirmasi bahwa barang sudah kamu terima dengan baik.
                                     Setelah konfirmasi, status pesanan akan berubah menjadi <strong>Selesai</strong>.
@@ -138,7 +138,7 @@
                                 @csrf
                                 <button type="button" class="btn btn-success"
                                         onclick="konfirmasiDiterima()">
-                                    ✅ Pesanan Sudah Diterima
+                                    <i class="fas fa-check-circle"></i> Pesanan Sudah Diterima
                                 </button>
                             </form>
                         </div>
@@ -148,7 +148,7 @@
                     {{-- Completed info --}}
                     @if($transaksi->status === 'completed')
                     <div class="alert alert-success mt-3 mb-0">
-                        ✅ Pesanan telah selesai. Terima kasih sudah belanja di DefaCraftStore! 🎉
+                        <i class="fas fa-check-circle"></i> Pesanan telah selesai. Terima kasih sudah belanja di DefaCraftStore! <i class="fas fa-award"></i>
                     </div>
                     @endif
 
@@ -158,7 +158,7 @@
             {{-- Produk --}}
             <div class="card detail-card shadow-sm mb-4">
                 <div class="card-header bg-white border-bottom">
-                    <strong>📦 Produk yang Dibeli</strong>
+                    <strong><i class="fas fa-box"></i> Produk yang Dibeli</strong>
                 </div>
                 <div class="card-body">
                     @foreach($transaksi->details as $detail)
@@ -168,7 +168,7 @@
                             <img src="{{ asset('images/produk/' . $detail->produk->gambar) }}"
                                  class="product-img shadow-sm" alt="{{ $detail->nama_produk }}">
                         @else
-                            <div class="product-img-placeholder">📦</div>
+                            <div class="product-img-placeholder"><i class="fas fa-box"></i></div>
                         @endif
                         <div class="flex-grow-1">
                             <div class="fw-bold">{{ $detail->nama_produk }}</div>
@@ -211,7 +211,7 @@
             @if($transaksi->catatan || $transaksi->notes)
             <div class="card detail-card shadow-sm mb-4">
                 <div class="card-body">
-                    <strong>📝 Catatan:</strong>
+                    <strong><i class="fas fa-pen"></i> Catatan:</strong>
                     <p class="mb-0 mt-1 text-muted">{{ $transaksi->catatan ?? $transaksi->notes }}</p>
                 </div>
             </div>
@@ -230,22 +230,22 @@
                 <div class="card-body d-flex flex-column gap-3">
 
                     <div class="info-section">
-                        <div class="text-muted small fw-semibold mb-2">📅 Tanggal Pesan</div>
+                        <div class="text-muted small fw-semibold mb-2"><i class="fas fa-calendar-alt"></i> Tanggal Pesan</div>
                         <div>{{ $transaksi->created_at->format('d M Y, H:i') }}</div>
                         <div class="text-muted small">{{ $transaksi->created_at->diffForHumans() }}</div>
                     </div>
 
                     <div class="info-section">
-                        <div class="text-muted small fw-semibold mb-2">💰 Pembayaran</div>
+                        <div class="text-muted small fw-semibold mb-2"><i class="fas fa-wallet"></i> Pembayaran</div>
                         @switch($transaksi->metode_pembayaran)
                             @case('QRIS')
-                                <span class="badge bg-info">📱 QRIS / E-Wallet</span> @break
+                                <span class="badge bg-info"><i class="fas fa-mobile-alt"></i> QRIS / E-Wallet</span> @break
                             @case('VA')
-                                <span class="badge bg-primary">🏦 Virtual Account</span> @break
+                                <span class="badge bg-primary"><i class="fas fa-university"></i> Virtual Account</span> @break
                             @case('CC')
-                                <span class="badge bg-warning text-dark">💳 Kartu Kredit</span> @break
+                                <span class="badge bg-warning text-dark"><i class="fas fa-credit-card"></i> Kartu Kredit</span> @break
                             @case('COD')
-                                <span class="badge bg-success">💵 COD</span> @break
+                                <span class="badge bg-success"><i class="fas fa-money-bill-wave"></i> COD</span> @break
                             @default
                                 <span class="badge bg-secondary">{{ $transaksi->metode_pembayaran }}</span>
                         @endswitch
@@ -254,13 +254,13 @@
                         @endif
                         @if($transaksi->paid_at)
                             <div class="text-success small mt-1">
-                                ✅ Dibayar: {{ $transaksi->paid_at->format('d M Y, H:i') }}
+                                <i class="fas fa-check-circle"></i> Dibayar: {{ $transaksi->paid_at->format('d M Y, H:i') }}
                             </div>
                         @endif
                     </div>
 
                     <div class="info-section">
-                        <div class="text-muted small fw-semibold mb-2">📍 Alamat Pengiriman</div>
+                        <div class="text-muted small fw-semibold mb-2"><i class="fas fa-map-marker-alt"></i> Alamat Pengiriman</div>
                         <div class="fw-bold">{{ $transaksi->nama_pembali ?? $transaksi->nama_pembeli }}</div>
                         <div class="text-muted small">{{ $transaksi->alamat }}</div>
                         @if($transaksi->city_name)
@@ -268,13 +268,13 @@
                         @endif
                         <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $transaksi->nomor_wa) }}"
                            target="_blank" class="text-decoration-none small d-block mt-1">
-                            📱 {{ $transaksi->nomor_wa }}
+                            <i class="fas fa-mobile-alt"></i> {{ $transaksi->nomor_wa }}
                         </a>
                     </div>
 
                     @if($transaksi->kurir)
                     <div class="info-section">
-                        <div class="text-muted small fw-semibold mb-2">🚚 Kurir</div>
+                        <div class="text-muted small fw-semibold mb-2"><i class="fas fa-truck"></i> Kurir</div>
                         <div class="fw-bold">
                             {{ strtoupper($transaksi->kurir) }} {{ $transaksi->layanan_kurir }}
                         </div>
@@ -298,7 +298,7 @@
                     @if($transaksi->status === 'pending' && $transaksi->metode_pembayaran !== 'COD' && $transaksi->snap_token)
                     <button class="btn btn-primary w-100"
                             onclick="bayarSekarang('{{ $transaksi->snap_token }}')">
-                        💳 Bayar Sekarang
+                        <i class="fas fa-credit-card"></i> Bayar Sekarang
                     </button>
                     @endif
 
@@ -309,7 +309,7 @@
                           onsubmit="return confirm('Yakin ingin membatalkan pesanan ini?')">
                         @csrf
                         <button type="submit" class="btn btn-outline-danger w-100">
-                            ❌ Batalkan Pesanan
+                            <i class="fas fa-times-circle"></i> Batalkan Pesanan
                         </button>
                     </form>
                     @endif
@@ -317,7 +317,7 @@
                     {{-- Hubungi Penjual --}}
                     <a href="https://wa.me/6281234567890?text=Halo,%20saya%20ingin%20bertanya%20tentang%20pesanan%20%23{{ $transaksi->id }}"
                        target="_blank" class="btn btn-outline-success w-100">
-                        💬 Hubungi Penjual
+                        <i class="fas fa-comments"></i> Hubungi Penjual
                     </a>
 
                     <a href="{{ route('transaksi.riwayat') }}" class="btn btn-outline-secondary w-100">
@@ -336,7 +336,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-body text-center py-4">
-                <div class="display-4 mb-3">📦</div>
+                <div class="display-4 mb-3"><i class="fas fa-box"></i></div>
                 <h5 class="fw-bold mb-2">Konfirmasi Penerimaan</h5>
                 <p class="text-muted mb-4">
                     Pastikan kamu sudah menerima barang dalam kondisi baik sebelum mengkonfirmasi.
@@ -347,7 +347,7 @@
                             data-bs-dismiss="modal">Batal</button>
                     <button type="button" class="btn btn-success px-4"
                             onclick="document.getElementById('formDiterima').submit()">
-                        ✅ Ya, Sudah Diterima
+                        <i class="fas fa-check-circle"></i> Ya, Sudah Diterima
                     </button>
                 </div>
             </div>

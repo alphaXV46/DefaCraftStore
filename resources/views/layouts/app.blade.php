@@ -153,10 +153,10 @@
                 .then(data => {
                     // Kembalikan ikon loading ke status baru setelah respons
                     if (data.status === 'added') {
-                        span.textContent = '❤️'; // Ikon sudah ada di wishlist
+                        span.textContent = '<i class="fas fa-heart"></i>'; // Ikon sudah ada di wishlist
                         showToast(data.message || 'Ditambahkan ke Wishlist!', 'success');
                     } else if (data.status === 'removed') {
-                        span.textContent = '🤍'; // Ikon belum ada di wishlist
+                        span.textContent = '<i class="far fa-heart"></i>'; // Ikon belum ada di wishlist
                         showToast(data.message || 'Dihapus dari Wishlist!', 'info');
                     } else {
                         // Jika status tidak dikenal

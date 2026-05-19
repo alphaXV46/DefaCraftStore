@@ -34,7 +34,7 @@
                     <div class="form-group">
                         <label for="email" class="form-label">Email</label>
                         <div class="input-group-icon">
-                            <span class="input-icon">📧</span>
+                            <span class="input-icon"><i class="fas fa-envelope"></i></span>
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="nama@example.com">
                         </div>
                          @error('email')
@@ -47,7 +47,7 @@
                     <div class="form-group">
                         <label for="password" class="form-label">Password</label>
                         <div class="input-group-icon" style="position: relative;">
-                            <span class="input-icon">🔒</span>
+                            <span class="input-icon"><i class="fas fa-lock"></i></span>
                             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="••••••••" style="padding-right: 45px;">
                             <span id="togglePassword" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 10;">
                                 👁️

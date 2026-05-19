@@ -151,22 +151,22 @@
             </div>
         </form>
         <ul class="mobile-nav-list">
-            <li><a href="{{ route('home') }}">🏠 Home</a></li>
-            <li><a href="{{ route('produk.index') }}">📦 Produk</a></li>
+            <li><a href="{{ route('home') }}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="{{ route('produk.index') }}"><i class="fas fa-box"></i> Produk</a></li>
             @auth
                 @if(auth()->user()->role === 'superadmin')
                     <li class="bg-light"><a href="{{ route('superadmin.manage') }}">👥 Kelola Admin</a></li>
                     <li class="bg-light"><a href="{{ route('superadmin.logs') }}">📜 Log Aktivitas</a></li>
                 @endif
 
-                <li><a href="{{ route('keranjang.index') }}">🛒 Keranjang</a></li>
-                <li><a href="{{ route('wishlist.index') }}">❤️ Wishlist</a></li>
-                <li><a href="{{ route('transaksi.riwayat') }}">📋 Pesanan Saya</a></li>
-                <li><a href="{{ route('profile.edit') }}">👤 Profil</a></li>
+                <li><a href="{{ route('keranjang.index') }}"><i class="fas fa-shopping-cart"></i> Keranjang</a></li>
+                <li><a href="{{ route('wishlist.index') }}"><i class="fas fa-heart"></i> Wishlist</a></li>
+                <li><a href="{{ route('transaksi.riwayat') }}"><i class="fas fa-list-alt"></i> Pesanan Saya</a></li>
+                <li><a href="{{ route('profile.edit') }}"><i class="fas fa-user"></i> Profil</a></li>
                 
                 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
                     <li class="bg-light"><a href="{{ route('admin.users.index') }}">👥 Kelola Pelanggan</a></li>
-                    <li class="bg-light"><a href="{{ route('admin.dashboard') }}">🔧 Dashboard Admin</a></li>
+                    <li class="bg-light"><a href="{{ route('admin.dashboard') }}"><i class="fas fa-tools"></i> Dashboard Admin</a></li>
                 @endif
                 
                 <li>
@@ -176,7 +176,7 @@
                     </form>
                 </li>
             @else
-                <li><a href="{{ route('login') }}">🔑 Login</a></li>
+                <li><a href="{{ route('login') }}"><i class="fas fa-key"></i> Login</a></li>
             @endauth
         </ul>
     </div>

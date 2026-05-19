@@ -8,12 +8,12 @@
 
 @section('content')
 <div class="container py-5">
-    <h1 class="fw-bold mb-4">🛒 Keranjang Belanja</h1>
+    <h1 class="fw-bold mb-4"><i class="fas fa-shopping-cart"></i> Keranjang Belanja</h1>
     
     @if($keranjang->isEmpty())
         <!-- Ganti alert dengan card modern -->
         <div class="empty-cart-card text-center py-5 shadow-sm rounded-4 bg-white">
-            <span class="display-1">🛒</span>
+            <span class="display-1"><i class="fas fa-shopping-cart"></i></span>
             <h3 class="mt-3">Keranjang Anda Kosong</h3>
             <p class="text-muted mb-4">Yuk belanja produk lucu kami!</p>
             <a href="{{ route('produk.index') }}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill">
@@ -68,7 +68,7 @@
                                     @else
                                         <div class="bg-light rounded-3 d-flex align-items-center justify-content-center border" 
                                              style="width: 100px; height: 100px;">
-                                            <span>📦</span>
+                                            <span><i class="fas fa-box"></i></span>
                                         </div>
                                     @endif
                                 </div>
@@ -134,7 +134,7 @@
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger"
                                                 onclick="return confirm('Hapus produk ini dari keranjang?')">
-                                            🗑️ Hapus
+                                            <i class="fas fa-trash-alt"></i> Hapus
                                         </button>
                                     </form>
                                 </div>
@@ -148,7 +148,7 @@
                         ← Lanjut Belanja
                     </a>
                     <a href="{{ route('wishlist.index') }}" class="btn btn-outline-primary rounded-pill">
-                        ❤️ Lihat Wishlist
+                        <i class="fas fa-heart"></i> Lihat Wishlist
                     </a>
                 </div>
             </div>
@@ -176,7 +176,7 @@
                         <!-- Ganti alert info dengan card modern -->
                         @if($total < 200000 && $total > 0)
                             <div class="info-message-card mb-4 rounded-3 border-0 small">
-                                <div class="alert-icon d-inline">💡</div>
+                                <div class="alert-icon d-inline"><i class="fas fa-lightbulb"></i></div>
                                 <p class="d-inline">
                                     Belanja Rp {{ number_format(200000 - $total, 0, ',', '.') }} lagi untuk gratis ongkir!
                                 </p>

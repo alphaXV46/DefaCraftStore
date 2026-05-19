@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container py-5">
-    <h1 class="fw-bold mb-4">Semua Produk 🛍️</h1>
+    <h1 class="fw-bold mb-4">Semua Produk <i class="fas fa-shopping-bag"></i></h1>
     
     <!-- Filter & Search -->
     <div class="row mb-4">
@@ -54,9 +54,9 @@
                                     onclick="toggleWishlist({{ $item->id }}, this)"
                                     data-produk-id="{{ $item->id }}">
                                 @if(auth()->user()->hasWishlist($item->id))
-                                    <span style="font-size: 1.5rem;">❤️</span>
+                                    <span style="font-size: 1.5rem;"><i class="fas fa-heart"></i></span>
                                 @else
-                                    <span style="font-size: 1.5rem;">🤍</span>
+                                    <span style="font-size: 1.5rem;"><i class="far fa-heart"></i></span>
                                 @endif
                             </button>
                         @endauth
@@ -88,7 +88,7 @@
                                  loading="lazy" decoding="async">
                         @else
                             <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center text-white" style="height: 200px;">
-                                <span class="fs-1">📦</span>
+                                <span class="fs-1"><i class="fas fa-box"></i></span>
                             </div>
                         @endif
                         

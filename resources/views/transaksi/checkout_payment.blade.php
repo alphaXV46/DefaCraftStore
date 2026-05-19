@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-5 mb-5 text-center">
     <div class="card shadow-sm p-5" style="border-radius: 20px; border: none; background: #f8faff;">
-        <h2 class="fw-bold text-primary">Selesaikan Pembayaran ✨</h2>
+        <h2 class="fw-bold text-primary">Selesaikan Pembayaran <i class="fas fa-star"></i></h2>
         <p class="text-muted">Pesanan <strong>#{{ $transaksi->id }}</strong> berhasil dibuat.</p>
         
         <div class="my-4">

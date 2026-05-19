@@ -5,7 +5,7 @@
 @section('content')
 <div class="container py-5" style="padding-bottom: 400px !important;">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="fw-bold">📊 Kelola Transaksi</h1>
+        <h1 class="fw-bold"><i class="fas fa-chart-bar"></i> Kelola Transaksi</h1>
         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary">
             ← Dashboard
         </a>
@@ -48,7 +48,7 @@
         <div class="card-body">
             @if($transaksi->isEmpty())
                 <div class="text-center py-5">
-                    <span class="display-3">📦</span>
+                    <span class="display-3"><i class="fas fa-box"></i></span>
                     <h4 class="mt-3">Belum Ada Transaksi</h4>
                     <p class="text-muted">Transaksi akan muncul di sini</p>
                 </div>
@@ -97,9 +97,9 @@
                                     <!-- Metode -->
                                     <td>
                                         @if($order->metode_pembayaran == 'QRIS')
-                                            <span class="badge bg-info">📱 QRIS</span>
+                                            <span class="badge bg-info"><i class="fas fa-mobile-alt"></i> QRIS</span>
                                         @else
-                                            <span class="badge bg-success">💵 COD</span>
+                                            <span class="badge bg-success"><i class="fas fa-money-bill-wave"></i> COD</span>
                                         @endif
                                     </td>
                                     

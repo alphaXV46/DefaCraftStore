@@ -30,7 +30,7 @@
                              loading="eager" fetchpriority="high" decoding="sync">
                     @else
                         <div class="placeholder-image">
-                            <span class="placeholder-icon">📦</span>
+                            <span class="placeholder-icon"><i class="fas fa-box"></i></span>
                         </div>
                     @endif
                 </div>
@@ -63,15 +63,15 @@
                         <div class="stock-label">Ketersediaan:</div>
                         @if($produk->stok > 10)
                             <span class="stock-badge stock-available">
-                                ✅ Stok Tersedia ({{ $produk->stok }})
+                                <i class="fas fa-check-circle"></i> Stok Tersedia ({{ $produk->stok }})
                             </span>
                         @elseif($produk->stok > 0)
                             <span class="stock-badge stock-limited">
-                                ⚠️ Stok Terbatas ({{ $produk->stok }})
+                                <i class="fas fa-exclamation-triangle"></i> Stok Terbatas ({{ $produk->stok }})
                             </span>
                         @else
                             <span class="stock-badge stock-out">
-                                ❌ Stok Habis
+                                <i class="fas fa-times-circle"></i> Stok Habis
                             </span>
                         @endif
                     </div>
@@ -96,10 +96,10 @@
                                     
                                     <div class="d-flex gap-2 mt-3 flex-column flex-sm-row">
                                         <button type="submit" class="cart-button w-100">
-                                            🛒 Tambah ke Keranjang
+                                            <i class="fas fa-shopping-cart"></i> Tambah ke Keranjang
                                         </button>
                                         <button type="submit" formaction="{{ route('beli-langsung') }}" class="cart-button w-100" style="background-color: #10b981; border-color: #10b981;">
-                                            ⚡ Beli Langsung
+                                            <i class="fas fa-bolt"></i> Beli Langsung
                                         </button>
                                     </div>
                                 </form>
@@ -127,7 +127,7 @@
         
         <!-- Related Products Section -->
         <div class="related-products-section">
-            <h3 class="section-title">Produk Terkait 🎨</h3>
+            <h3 class="section-title">Produk Terkait <i class="fas fa-palette"></i></h3>
             <div class="row g-4">
                 @forelse($produkTerkait as $item)
                     <div class="col-lg-3 col-md-4 col-sm-6">
@@ -149,7 +149,7 @@
                                          loading="lazy" decoding="async">
                                 @else
                                     <div class="related-product-placeholder">
-                                        <span class="fs-1">📦</span>
+                                        <span class="fs-1"><i class="fas fa-box"></i></span>
                                     </div>
                                 @endif
                                 

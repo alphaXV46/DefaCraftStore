@@ -14,7 +14,7 @@
     <div class="op-topbar">
         <a href="{{ url()->previous() }}" class="op-back">←</a>
         <h1>Riwayat Pesanan</h1>
-        <a href="{{ route('produk.index') }}" class="op-shop-btn">🛍️</a>
+        <a href="{{ route('produk.index') }}" class="op-shop-btn"><i class="fas fa-shopping-bag"></i></a>
     </div>
 
     @if($transaksi->isEmpty())
@@ -31,7 +31,7 @@
         {{-- Stats --}}
         <div class="op-stats">
             <div class="op-stat">
-                <span class="op-stat-icon">📋</span>
+                <span class="op-stat-icon"><i class="fas fa-list-alt"></i></span>
                 <div class="op-stat-num">{{ $semua }}</div>
                 <div class="op-stat-label">Semua</div>
             </div>
@@ -41,12 +41,12 @@
                 <div class="op-stat-label">Menunggu</div>
             </div>
             <div class="op-stat">
-                <span class="op-stat-icon">✅</span>
+                <span class="op-stat-icon"><i class="fas fa-check-circle"></i></span>
                 <div class="op-stat-num">{{ $selesai }}</div>
                 <div class="op-stat-label">Selesai</div>
             </div>
             <div class="op-stat">
-                <span class="op-stat-icon">❌</span>
+                <span class="op-stat-icon"><i class="fas fa-times-circle"></i></span>
                 <div class="op-stat-num">{{ $batal }}</div>
                 <div class="op-stat-label">Dibatalkan</div>
             </div>
@@ -54,9 +54,9 @@
 
         {{-- Tips --}}
         <div class="op-tips">
-            <span class="op-tips-icon">💡</span>
+            <span class="op-tips-icon"><i class="fas fa-lightbulb"></i></span>
             <div class="op-tips-text">
-                <strong>Butuh bantuan?</strong> Klik 💬 untuk chat via WhatsApp, atau tekan <strong>Detail</strong> untuk info lengkap pesanan.
+                <strong>Butuh bantuan?</strong> Klik <i class="fas fa-comments"></i> untuk chat via WhatsApp, atau tekan <strong>Detail</strong> untuk info lengkap pesanan.
             </div>
         </div>
 
@@ -77,14 +77,14 @@
             @php
                 $badgeMap = [
                     'pending'    => ['icon' => '⏳', 'text' => 'Menunggu'],
-                    'paid'       => ['icon' => '💳', 'text' => 'Dibayar'],
-                    'processing' => ['icon' => '📦', 'text' => 'Diproses'],
-                    'shipped'    => ['icon' => '🚚', 'text' => 'Dikirim'],
-                    'completed'  => ['icon' => '✅', 'text' => 'Selesai'],
-                    'cancelled'  => ['icon' => '❌', 'text' => 'Dibatalkan'],
+                    'paid'       => ['icon' => '<i class="fas fa-credit-card"></i>', 'text' => 'Dibayar'],
+                    'processing' => ['icon' => '<i class="fas fa-box"></i>', 'text' => 'Diproses'],
+                    'shipped'    => ['icon' => '<i class="fas fa-truck"></i>', 'text' => 'Dikirim'],
+                    'completed'  => ['icon' => '<i class="fas fa-check-circle"></i>', 'text' => 'Selesai'],
+                    'cancelled'  => ['icon' => '<i class="fas fa-times-circle"></i>', 'text' => 'Dibatalkan'],
                     'expired'    => ['icon' => '⏰', 'text' => 'Kedaluwarsa'],
                 ];
-                $b = $badgeMap[$order->status] ?? ['icon' => '❓', 'text' => $order->status];
+                $b = $badgeMap[$order->status] ?? ['icon' => '<i class="fas fa-question-circle"></i>', 'text' => $order->status];
             @endphp
             <div class="op-item" data-status="{{ $order->status }}">
                 <div class="op-card">
@@ -105,7 +105,7 @@
                                      width="80" height="80"
                                      loading="lazy" decoding="async">
                             @else
-                                <div class="op-product-img-ph">📦</div>
+                                <div class="op-product-img-ph"><i class="fas fa-box"></i></div>
                             @endif
                             <div class="op-product-info">
                                 <div class="op-product-name-row">
@@ -124,15 +124,15 @@
                         </div>
                         <div class="op-actions">
                             @if($order->status === 'pending' && $order->metode_pembayaran !== 'COD' && $order->snap_token)
-                                <button class="op-btn op-btn-primary" onclick="bayarSekarang('{{ $order->snap_token }}')">💳 Bayar</button>
+                                <button class="op-btn op-btn-primary" onclick="bayarSekarang('{{ $order->snap_token }}')"><i class="fas fa-credit-card"></i> Bayar</button>
                             @endif
                             @if($order->status === 'shipped' && $order->resi)
-                                <a href="https://www.google.com/search?q=cek+resi+{{ $order->resi }}" target="_blank" class="op-btn op-btn-blue">🔍 Lacak</a>
+                                <a href="https://www.google.com/search?q=cek+resi+{{ $order->resi }}" target="_blank" class="op-btn op-btn-blue"><i class="fas fa-search"></i> Lacak</a>
                             @endif
                             @if($order->status === 'shipped')
                                 <form action="{{ route('transaksi.received', $order->id) }}" method="POST" style="display:contents;" onsubmit="return confirm('Konfirmasi pesanan sudah diterima?')">
                                     @csrf
-                                    <button type="submit" class="op-btn op-btn-green">✅ Diterima</button>
+                                    <button type="submit" class="op-btn op-btn-green"><i class="fas fa-check-circle"></i> Diterima</button>
                                 </form>
                             @endif
                             @if($order->status === 'pending')
@@ -141,7 +141,7 @@
                                     <button type="submit" class="op-btn op-btn-red-outline">Batalkan</button>
                                 </form>
                             @endif
-                            <a href="https://wa.me/6281234567890?text=Halo, saya ingin bertanya tentang pesanan %23{{ $order->id }}" target="_blank" class="op-btn op-btn-wa-outline">💬</a>
+                            <a href="https://wa.me/6281234567890?text=Halo, saya ingin bertanya tentang pesanan %23{{ $order->id }}" target="_blank" class="op-btn op-btn-wa-outline"><i class="fas fa-comments"></i></a>
                             <a href="{{ route('transaksi.show', $order->id) }}" class="op-btn op-btn-gray">Detail</a>
                         </div>
                     </div>

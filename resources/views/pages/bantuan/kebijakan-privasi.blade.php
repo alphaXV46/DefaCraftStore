@@ -35,7 +35,7 @@
                     </ul>
 
                     <div class="alert d-flex gap-3 mt-4" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px;">
-                        <span style="font-size: 1.5rem;">🔒</span>
+                        <span style="font-size: 1.5rem;"><i class="fas fa-lock"></i></span>
                         <div>
                             <strong style="color: #166534;">Komitmen Perlindungan Data Anda</strong>
                             <p class="mb-0 mt-1" style="color: #15803d;">Kami berkomitmen penuh bahwa nama, alamat, nomor HP, dan alamat email Anda <strong>tidak akan pernah dijual, dipinjamkan, atau dibagikan kepada pihak ketiga mana pun</strong> untuk tujuan komersial atau pemasaran tanpa izin eksplisit dari Anda.</p>

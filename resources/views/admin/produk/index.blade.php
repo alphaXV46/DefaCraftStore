@@ -5,13 +5,13 @@
 @section('content')
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="fw-bold">📦 Kelola Produk</h1>
+        <h1 class="fw-bold"><i class="fas fa-box"></i> Kelola Produk</h1>
         <div>
             <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary me-2">
                 ← Dashboard
             </a>
             <a href="{{ route('admin.produk.create') }}" class="btn btn-primary">
-                ➕ Tambah Produk Baru
+                <i class="fas fa-plus"></i> Tambah Produk Baru
             </a>
         </div>
     </div>
@@ -40,7 +40,7 @@
         <div class="card-body">
             @if($produk->isEmpty())
                 <div class="text-center py-5">
-                    <span class="display-3">📦</span>
+                    <span class="display-3"><i class="fas fa-box"></i></span>
                     <h4 class="mt-3">Belum Ada Produk</h4>
                     <p class="text-muted">Tambahkan produk pertama Anda!</p>
                     <a href="{{ route('admin.produk.create') }}" class="btn btn-primary">
@@ -77,7 +77,7 @@
                                         @else
                                             <div class="bg-secondary rounded d-flex align-items-center justify-content-center" 
                                                 style="width: 60px; height: 60px;">
-                                                <span>📦</span>
+                                                <span><i class="fas fa-box"></i></span>
                                             </div>
                                         @endif
                                     </td>
@@ -128,7 +128,7 @@
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit" class="btn btn-sm btn-outline-primary" style="padding: 0px 5px; font-size: 10px;" title="Ubah Status">
-                                                    🔄
+                                                    <i class="fas fa-sync-alt"></i>
                                                 </button>
                                             </form>
                                         </div>
@@ -151,7 +151,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
-                                                    🗑️
+                                                    <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </form>
                                         </div>

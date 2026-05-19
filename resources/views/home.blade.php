@@ -25,7 +25,7 @@
                 </p>
                 <div class="hero-cta d-flex gap-3">
                     <a href="{{ route('produk.index') }}" class="btn btn-light btn-lg">
-                        🛍️ Belanja Sekarang
+                        <i class="fas fa-shopping-bag"></i> Belanja Sekarang
                     </a>
                     <a href="#featured" class="btn btn-outline-light btn-lg">
                         Lihat Koleksi
@@ -82,7 +82,7 @@
         <div class="col-md-4">
             <a href="{{ route('produk.index', ['kategori' => 'Blind Box']) }}" class="text-decoration-none">
                 <div class="category-card">
-                    <div class="category-icon">🎁</div>
+                    <div class="category-icon"><i class="fas fa-gift"></i></div>
                     <h3 class="category-name">Blind Box</h3>
                     <p class="category-count">120+ Produk</p>
                 </div>
@@ -91,7 +91,7 @@
         <div class="col-md-4">
             <a href="{{ route('produk.index', ['kategori' => 'Action Figure']) }}" class="text-decoration-none">
                 <div class="category-card">
-                    <div class="category-icon">⚡</div>
+                    <div class="category-icon"><i class="fas fa-bolt"></i></div>
                     <h3 class="category-name">Action Figure</h3>
                     <p class="category-count">80+ Produk</p>
                 </div>
@@ -100,7 +100,7 @@
         <div class="col-md-4">
             <a href="{{ route('produk.index', ['kategori' => 'Boneka']) }}" class="text-decoration-none">
                 <div class="category-card">
-                    <div class="category-icon">🧸</div>
+                    <div class="category-icon"><i class="fas fa-shapes"></i></div>
                     <h3 class="category-name">Boneka</h3>
                     <p class="category-count">95+ Produk</p>
                 </div>
@@ -114,7 +114,7 @@
     <div class="flash-sale-section">
         <div class="text-center text-white">
             <div class="flash-badge">
-                ⚡ FLASH SALE
+                <i class="fas fa-bolt"></i> FLASH SALE
             </div>
             <h2 class="fw-bold display-6 mb-2">Diskon Hingga 50%!</h2>
             <p class="fs-5 mb-0">Yuk Buruan, penawaran terbatas!</p>
@@ -173,10 +173,10 @@
 <!-- Features Grid -->
 <section class="container mb-5 scroll-animate" data-animation="slide-up">
     <div class="features-grid">
-        <x-feature-item icon="🚚" title="Gratis Ongkir" desc="Gratis ongkir untuk pembelian di atas Rp 200.000" />
+        <x-feature-item icon="<i class="fas fa-truck"></i>" title="Gratis Ongkir" desc="Gratis ongkir untuk pembelian di atas Rp 200.000" />
         <x-feature-item icon="💎" title="Kualitas Terbaik" desc="100% original dari seri desainer art toys pilihan" />
-        <x-feature-item icon="🔒" title="Pembayaran Aman" desc="Sistem pembayaran terpercaya dan terenkripsi" />
-        <x-feature-item icon="⭐" title="Kepuasan Terjamin" desc="Garansi 100% uang kembali jika tidak puas" />
+        <x-feature-item icon="<i class="fas fa-lock"></i>" title="Pembayaran Aman" desc="Sistem pembayaran terpercaya dan terenkripsi" />
+        <x-feature-item icon="<i class="fas fa-star"></i>" title="Kepuasan Terjamin" desc="Garansi 100% uang kembali jika tidak puas" />
     </div>
 </section>
 
